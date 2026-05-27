@@ -51,12 +51,6 @@ class BusinessCentralClient:
 
         return BusinessCentralAPI(self)
 
-    @property
-    def read(self) -> BusinessCentralAPI:
-        """Backward-compatible alias for :attr:`api`."""
-
-        return self.api
-
     def get(
         self,
         path: str,
