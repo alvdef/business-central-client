@@ -1,0 +1,42 @@
+[build-system]
+requires = ["hatchling>=1.25"]
+build-backend = "hatchling.build"
+
+[project]
+name = "business-central-client"
+version = "0.1.0"
+description = "Generated SDK for Microsoft Dynamics 365 Business Central API v2.0."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [
+  { name = "Business Central Client contributors" }
+]
+dependencies = [
+  "beautifulsoup4>=4.12.3",
+  "httpx>=0.27.0",
+  "msal>=1.30.0",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.2.0",
+  "ruff>=0.6.0",
+]
+
+[project.scripts]
+bc-client = "business_central_client.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/business_central_client"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "C4", "SIM"]

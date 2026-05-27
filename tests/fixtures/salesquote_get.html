@@ -1,0 +1,27 @@
+<!doctype html>
+<html>
+  <head>
+    <meta name="description" content="Retrieve the properties and relationships of a sales quote object for Business Central." />
+  </head>
+  <body>
+    <main>
+      <h1>Get salesQuote</h1>
+      <p>Retrieve a sales quote object.</p>
+
+      <h2>HTTP request</h2>
+      <pre><code>GET businesscentralPrefix/companies({id})/salesQuotes({id})</code></pre>
+
+      <h2>Response</h2>
+      <p>If successful, this method returns a sales quote object.</p>
+
+      <h2>Example</h2>
+      <h3>Request</h3>
+      <pre><code>GET https://api.businesscentral.dynamics.com/v2.0/production/api/v2.0/companies({companyId})/salesQuotes({salesQuoteId})</code></pre>
+      <h3>Response</h3>
+      <pre><code>{
+  "id": "11111111-1111-1111-1111-111111111111",
+  "number": "SQ1001"
+}</code></pre>
+    </main>
+  </body>
+</html>
