@@ -4,7 +4,7 @@ import re
 from collections import defaultdict
 from textwrap import indent
 
-from business_central_client.generator.ir import DocsSnapshot, Endpoint
+from business_central_client.generator.contract import ContractGraph, OperationContract
 from business_central_client.generator.names import pascal_case, pluralize, snake_case
 
 HEADER = '''from __future__ import annotations
@@ -14,11 +14,22 @@ from typing import Any
 from urllib.parse import quote
 
 from business_central_client.client import BusinessCentralClient
+from business_central_client.generated import models as _models
 from business_central_client.odata import ODataQuery
 
 
 def _path_value(value: str) -> str:
     return quote(str(value), safe="")
+
+
+def _body_payload(
+    body: _models.BusinessCentralModel | Mapping[str, Any] | None,
+) -> Mapping[str, Any] | None:
+    if body is None:
+        return None
+    if isinstance(body, _models.BusinessCentralModel):
+        return body.model_dump(by_alias=True, exclude_none=True)
+    return body
 
 
 class _EntityClient:
@@ -34,18 +45,18 @@ class BusinessCentralAPI:
 '''
 
 
-def render_sdk(snapshot: DocsSnapshot) -> str:
-    endpoints = sorted(
-        snapshot.all_endpoints(),
-        key=lambda endpoint: (
-            endpoint.resource,
-            endpoint.action,
-            endpoint.method,
-            endpoint.path,
-            endpoint.operation_id,
+def render_sdk(contract: ContractGraph) -> str:
+    operations = sorted(
+        contract.operations,
+        key=lambda operation: (
+            operation.resource,
+            operation.action,
+            operation.method,
+            operation.path,
+            operation.operation_id,
         ),
     )
-    grouped = _group_endpoints(endpoints)
+    grouped = _group_operations(operations)
 
     body = HEADER
     if not grouped:
@@ -55,15 +66,15 @@ def render_sdk(snapshot: DocsSnapshot) -> str:
         body += _render_api_property(resource)
     body += "\n"
 
-    for resource, resource_endpoints in grouped.items():
-        body += "\n" + _render_entity_class(resource, resource_endpoints)
+    for resource, resource_operations in grouped.items():
+        body += "\n" + _render_entity_class(resource, resource_operations)
     return body
 
 
-def _group_endpoints(endpoints: list[Endpoint]) -> dict[str, list[Endpoint]]:
-    grouped: dict[str, list[Endpoint]] = defaultdict(list)
-    for endpoint in endpoints:
-        grouped[endpoint.resource].append(endpoint)
+def _group_operations(operations: list[OperationContract]) -> dict[str, list[OperationContract]]:
+    grouped: dict[str, list[OperationContract]] = defaultdict(list)
+    for operation in operations:
+        grouped[operation.resource].append(operation)
     return dict(sorted(grouped.items()))
 
 
@@ -79,32 +90,33 @@ def _render_api_property(resource: str) -> str:
 '''
 
 
-def _render_entity_class(resource: str, endpoints: list[Endpoint]) -> str:
+def _render_entity_class(resource: str, operations: list[OperationContract]) -> str:
     class_name = _entity_class_name(resource)
     body = f'''class {class_name}(_EntityClient):
     """Generated operations for ``{pluralize(snake_case(resource))}``."""
 '''
 
     used_names: set[str] = set()
-    for endpoint in endpoints:
-        body += "\n" + _render_endpoint_method(endpoint, used_names)
+    for operation in operations:
+        body += "\n" + _render_operation_method(operation, used_names)
     return body
 
 
-def _render_endpoint_method(endpoint: Endpoint, used_names: set[str]) -> str:
-    method_name = _method_name(endpoint)
+def _render_operation_method(operation: OperationContract, used_names: set[str]) -> str:
+    method_name = _method_name(operation)
     if method_name in used_names:
-        method_name = f"{method_name}_{_operation_suffix(endpoint)}"
+        method_name = f"{method_name}_{_operation_suffix(operation)}"
     used_names.add(method_name)
 
-    path_params = endpoint.path_params
-    signature_params = "".join(f"        {snake_case(param)}: str,\n" for param in path_params)
-    body_param = _body_param(endpoint)
-    etag_param = _etag_param(endpoint)
-    docstring = _docstring(endpoint)
-    path_expression = _path_expression(endpoint.path)
-    call = _client_call(endpoint)
-    return_type = _return_type(endpoint)
+    signature_params = "".join(
+        f"        {snake_case(param)}: str,\n" for param in operation.path_params
+    )
+    body_param = _body_param(operation)
+    etag_param = _etag_param(operation)
+    docstring = _docstring(operation)
+    path_expression = _path_expression(operation.path)
+    call = _client_call(operation)
+    return_type = _return_type(operation)
 
     source = f'''    def {method_name}(
         self,
@@ -120,83 +132,132 @@ def _render_endpoint_method(endpoint: Endpoint, used_names: set[str]) -> str:
     return source
 
 
-def _method_name(endpoint: Endpoint) -> str:
-    if endpoint.action == "list":
+def _method_name(operation: OperationContract) -> str:
+    if operation.action == "list":
         return "list"
-    return snake_case(endpoint.action)
+    return snake_case(operation.action)
 
 
-def _operation_suffix(endpoint: Endpoint) -> str:
-    operation = snake_case(endpoint.operation_id)
-    resource = snake_case(endpoint.resource)
-    operation = operation.removeprefix("dynamics_")
-    operation = operation.removeprefix(f"{resource}_")
-    return operation or snake_case(endpoint.method.lower())
+def _operation_suffix(operation: OperationContract) -> str:
+    operation_id = snake_case(operation.operation_id)
+    resource = snake_case(operation.resource)
+    operation_id = operation_id.removeprefix("dynamics_")
+    operation_id = operation_id.removeprefix(f"{resource}_")
+    return operation_id or snake_case(operation.method.lower())
 
 
-def _body_param(endpoint: Endpoint) -> str:
-    if endpoint.method in {"POST", "PATCH", "PUT"}:
-        return "        body: Mapping[str, Any] | None = None,\n"
-    return ""
+def _body_param(operation: OperationContract) -> str:
+    if operation.method not in {"POST", "PATCH", "PUT"}:
+        return ""
+    body_type = (
+        f"_models.{operation.request_model} | Mapping[str, Any] | None"
+        if operation.request_model
+        else "Mapping[str, Any] | None"
+    )
+    return f"        body: {body_type} = None,\n"
 
 
-def _etag_param(endpoint: Endpoint) -> str:
-    if endpoint.method in {"PATCH", "DELETE"}:
+def _etag_param(operation: OperationContract) -> str:
+    if operation.method in {"PATCH", "DELETE"}:
         return "        etag: str | None = None,\n"
     return ""
 
 
-def _client_call(endpoint: Endpoint) -> str:
-    if endpoint.method == "GET" and endpoint.action == "list":
+def _client_call(operation: OperationContract) -> str:
+    if operation.method == "GET" and operation.response_is_collection:
+        if operation.response_model:
+            return (
+                "        items = self._client.get_value(path, query=query, params=params)\n"
+                f"        return [_models.{operation.response_model}.model_validate(item) "
+                "for item in items]"
+            )
         return "        return self._client.get_value(path, query=query, params=params)"
-    if endpoint.method == "GET":
+    if operation.method == "GET":
+        if operation.response_model:
+            return (
+                "        data = self._client.get(path, query=query, params=params)\n"
+                f"        return _models.{operation.response_model}.model_validate(data)"
+            )
         return "        return self._client.get(path, query=query, params=params)"
-    if endpoint.method == "POST":
-        return "        return self._client.post(path, json=body, query=query, params=params)"
-    if endpoint.method in {"PATCH", "PUT"}:
+    if operation.method == "POST":
+        if operation.response_model:
+            return (
+                "        data = self._client.post(\n"
+                "            path,\n"
+                "            json=_body_payload(body),\n"
+                "            query=query,\n"
+                "            params=params,\n"
+                "        )\n"
+                f"        return _models.{operation.response_model}.model_validate(data)"
+            )
         return (
-            "        return self._client.patch(\n"
+            "        return self._client.post(\n"
             "            path,\n"
-            "            json=body,\n"
+            "            json=_body_payload(body),\n"
+            "            query=query,\n"
+            "            params=params,\n"
+            "        )"
+        )
+    if operation.method in {"PATCH", "PUT"}:
+        assignment = "data = " if operation.response_model else "return "
+        call = (
+            f"        {assignment}self._client.patch(\n"
+            "            path,\n"
+            "            json=_body_payload(body),\n"
             "            query=query,\n"
             "            params=params,\n"
             "            etag=etag,\n"
             "        )"
         )
-    if endpoint.method == "DELETE":
+        if operation.response_model:
+            return f"{call}\n        return _models.{operation.response_model}.model_validate(data)"
+        return call
+    if operation.method == "DELETE":
         return "        return self._client.delete(path, query=query, params=params, etag=etag)"
     return (
-        f'        return self._client.request("{endpoint.method}", '
+        f'        return self._client.request("{operation.method}", '
         "path, query=query, params=params)"
     )
 
 
-def _return_type(endpoint: Endpoint) -> str:
-    if endpoint.method == "DELETE":
+def _return_type(operation: OperationContract) -> str:
+    if operation.method == "DELETE":
         return "None"
-    if endpoint.method == "GET" and endpoint.action == "list":
+    if operation.response_model and operation.response_is_collection:
+        return f"list[_models.{operation.response_model}]"
+    if operation.response_model:
+        return f"_models.{operation.response_model}"
+    if operation.method == "GET" and operation.response_is_collection:
         return "list[dict[str, Any]]"
     return "dict[str, Any]"
 
 
-def _docstring(endpoint: Endpoint) -> str:
-    lines = [f'"""{endpoint.title}']
-    if endpoint.summary:
-        lines.extend(["", _escape_docstring(endpoint.summary)])
+def _docstring(operation: OperationContract) -> str:
+    lines = [f'"""{operation.title}']
+    if operation.summary:
+        lines.extend(["", _escape_docstring(operation.summary)])
     lines.extend(
         [
             "",
-            f"HTTP method: {endpoint.method}",
-            f"Docs: {endpoint.docs_url}",
-            f"Operation id: {endpoint.operation_id}",
+            f"HTTP method: {operation.method}",
+            f"Docs: {operation.docs_url}",
+            f"Operation id: {operation.operation_id}",
         ]
     )
-    example = endpoint.examples[0] if endpoint.examples else None
-    if example and example.request:
-        snippet = _escape_docstring(_trim_example(example.request))
+    if operation.request_model:
+        lines.append(f"Request model: {operation.request_model}")
+    if operation.response_model:
+        response = (
+            f"list[{operation.response_model}]"
+            if operation.response_is_collection
+            else operation.response_model
+        )
+        lines.append(f"Response model: {response}")
+    if operation.request_example:
+        snippet = _escape_docstring(_trim_example(operation.request_example))
         lines.extend(["", "Example request:", snippet])
-    if example and example.response:
-        snippet = _escape_docstring(_trim_example(example.response))
+    if operation.response_example:
+        snippet = _escape_docstring(_trim_example(operation.response_example))
         lines.extend(["", "Example response:", snippet])
     lines.append('"""')
     return "\n".join(lines)

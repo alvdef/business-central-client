@@ -1,6 +1,7 @@
 from typing import Any
 
 from business_central_client.generated import BusinessCentralAPI
+from business_central_client.generated.models import SalesQuote, SalesQuoteCreate
 
 
 class FakeClient:
@@ -45,14 +46,18 @@ def test_checked_in_generated_sales_quote_methods_build_paths() -> None:
 
     quote = endpoints.sales_quotes.get("company id", "quote/id")
     quotes = endpoints.sales_quotes.list("company id")
-    created = endpoints.sales_quotes.create("company id", {"number": "SQ1001"})
+    created = endpoints.sales_quotes.create("company id", SalesQuoteCreate(number="SQ1001"))
 
-    assert quote == {"path": "/companies(company%20id)/salesQuotes(quote%2Fid)"}
-    assert quotes == [{"path": "/companies(company%20id)/salesQuotes"}]
-    assert created == {
+    assert quote.model_extra == {"path": "/companies(company%20id)/salesQuotes(quote%2Fid)"}
+    assert [item.model_extra for item in quotes] == [
+        {"path": "/companies(company%20id)/salesQuotes"}
+    ]
+    assert created.model_extra == {
         "path": "/companies(company%20id)/salesQuotes",
         "json": {"number": "SQ1001"},
     }
+    assert isinstance(quote, SalesQuote)
+    assert isinstance(created, SalesQuote)
     assert client.calls == [
         ("get", "/companies(company%20id)/salesQuotes(quote%2Fid)"),
         ("get_value", "/companies(company%20id)/salesQuotes"),

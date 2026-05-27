@@ -1,4 +1,5 @@
-from business_central_client.generator.ir import DocsSnapshot, Endpoint
+from business_central_client.generator.contract import build_contract
+from business_central_client.generator.ir import DocsSnapshot, Endpoint, Example
 from business_central_client.generator.sdk import render_sdk
 
 
@@ -15,6 +16,16 @@ def test_render_sdk_generates_entity_scoped_methods_with_doc_links() -> None:
                 title="Create salesQuote",
                 docs_url="https://learn.microsoft.com/create",
                 summary="Create one sales quote.",
+                examples=(
+                    Example(
+                        title="Example",
+                        request='POST /salesQuotes\n{"number": "SQ1001"}',
+                        response=(
+                            '{"id": "00000000-0000-0000-0000-000000000000", '
+                            '"number": "SQ1001"}'
+                        ),
+                    ),
+                ),
             ),
             Endpoint(
                 operation_id="dynamics_salesquote_get",
@@ -25,11 +36,21 @@ def test_render_sdk_generates_entity_scoped_methods_with_doc_links() -> None:
                 title="Get salesQuote",
                 docs_url="https://learn.microsoft.com/get",
                 summary="Retrieve one sales quote.",
+                examples=(
+                    Example(
+                        title="Example",
+                        request="GET /salesQuotes({id})",
+                        response=(
+                            '{"id": "00000000-0000-0000-0000-000000000000", '
+                            '"number": "SQ1001"}'
+                        ),
+                    ),
+                ),
             ),
         ],
     )
 
-    generated = render_sdk(snapshot)
+    generated = render_sdk(build_contract(snapshot))
 
     assert "def sales_quotes(self) -> SalesQuotesClient:" in generated
     assert "class SalesQuotesClient(_EntityClient):" in generated
@@ -37,9 +58,9 @@ def test_render_sdk_generates_entity_scoped_methods_with_doc_links() -> None:
     assert "def get(" in generated
     assert "company_id: str" in generated
     assert "sales_quote_id: str" in generated
-    assert "body: Mapping[str, Any] | None = None" in generated
+    assert "body: _models.SalesQuoteCreate | Mapping[str, Any] | None = None" in generated
     assert "Docs: https://learn.microsoft.com/get" in generated
-    assert "return self._client.post(path, json=body, query=query, params=params)" in generated
+    assert "return _models.SalesQuote.model_validate(data)" in generated
 
 
 def test_render_sdk_is_deterministic() -> None:
@@ -54,7 +75,7 @@ def test_render_sdk_is_deterministic() -> None:
             docs_url="https://learn.microsoft.com/customer",
         )
     ]
-    first = render_sdk(DocsSnapshot.create(source_url="x", endpoints=endpoints))
-    second = render_sdk(DocsSnapshot.create(source_url="x", endpoints=endpoints))
+    first = render_sdk(build_contract(DocsSnapshot.create(source_url="x", endpoints=endpoints)))
+    second = render_sdk(build_contract(DocsSnapshot.create(source_url="x", endpoints=endpoints)))
 
     assert first == second

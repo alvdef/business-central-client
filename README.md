@@ -36,6 +36,7 @@ python -m pip install -e ".[dev]"
 
 ```python
 from business_central_client import BusinessCentralClient, BusinessCentralConfig
+from business_central_client.generated.models import SalesQuoteCreate
 
 config = BusinessCentralConfig(
     tenant_id="00000000-0000-0000-0000-000000000000",
@@ -46,7 +47,7 @@ config = BusinessCentralConfig(
 )
 
 with BusinessCentralClient(config) as client:
-    companies = client.get("/companies")
+    companies = client.api.companies.list()
     sales_quotes = client.api.sales_quotes.list(company_id="company-guid")
     sales_quote = client.api.sales_quotes.get(
         company_id="company-guid",
@@ -54,11 +55,12 @@ with BusinessCentralClient(config) as client:
     )
     created = client.api.sales_quotes.create(
         company_id="company-guid",
-        body={"customerNumber": "10000"},
+        body=SalesQuoteCreate(customer_number="10000"),
     )
 ```
 
-Generated methods are exposed through `client.api`, grouped by entity.
+Generated methods are exposed through `client.api`, grouped by entity. Generated
+Pydantic models are exposed through `business_central_client.generated.models`.
 
 ## Regenerate From Microsoft Learn
 
@@ -66,10 +68,14 @@ Generated methods are exposed through `client.api`, grouped by entity.
 bc-client regenerate \
   --index-url https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/ \
   --ir-path docs/business-central-v2.ir.json \
+  --contract-path docs/business-central-v2.contract.json \
+  --models-output src/business_central_client/generated/models.py \
   --output src/business_central_client/generated/resources.py
 ```
 
-The scraper stores docs URLs and examples in the IR so generated docstrings can point back to the source page.
+The scraper stores docs URLs and examples in the endpoint IR. The contract graph
+then infers request/response models, field aliases, field types, and operation
+return types before rendering the SDK.
 
 ## Development Checks
 

@@ -5,11 +5,22 @@ from typing import Any
 from urllib.parse import quote
 
 from business_central_client.client import BusinessCentralClient
+from business_central_client.generated import models as _models
 from business_central_client.odata import ODataQuery
 
 
 def _path_value(value: str) -> str:
     return quote(str(value), safe="")
+
+
+def _body_payload(
+    body: _models.BusinessCentralModel | Mapping[str, Any] | None,
+) -> Mapping[str, Any] | None:
+    if body is None:
+        return None
+    if isinstance(body, _models.BusinessCentralModel):
+        return body.model_dump(by_alias=True, exclude_none=True)
+    return body
 
 
 class _EntityClient:
@@ -550,7 +561,7 @@ class AccountsClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.Account:
         """Get accounts
 
         Gets an account object in Dynamics 365 Business Central.
@@ -558,6 +569,7 @@ class AccountsClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_account_get
         Operation id: dynamics_account_get
+        Response model: Account
 
         Example request:
         GET https://{businesscentralPrefix}/api/v2.0/companies({id})/accounts({id})
@@ -585,7 +597,8 @@ class AccountsClient(_EntityClient):
             + _path_value(account_id)
             + ')'
         )
-        return self._client.get(path, query=query, params=params)
+        data = self._client.get(path, query=query, params=params)
+        return _models.Account.model_validate(data)
 
     def list(
         self,
@@ -593,7 +606,7 @@ class AccountsClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> list[dict[str, Any]]:
+    ) -> list[_models.Account]:
         """List accounts
 
         List accounts objects.
@@ -601,10 +614,12 @@ class AccountsClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_account_get
         Operation id: dynamics_account_list
+        Response model: list[Account]
         """
 
         path = '/companies(' + _path_value(company_id) + ')/accounts'
-        return self._client.get_value(path, query=query, params=params)
+        items = self._client.get_value(path, query=query, params=params)
+        return [_models.Account.model_validate(item) for item in items]
 
 class AccountingPeriodsClient(_EntityClient):
     """Generated operations for ``accounting_periods``."""
@@ -616,7 +631,7 @@ class AccountingPeriodsClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.AccountingPeriod:
         """Get accountingPeriods
 
         Gets an accounting period object in Dynamics 365 Business Central.
@@ -624,6 +639,7 @@ class AccountingPeriodsClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_accountingperiod_get
         Operation id: dynamics_accountingperiod_get
+        Response model: AccountingPeriod
 
         Example request:
         GET https://{businesscentralPrefix}/api/v2.0/companies({id})/accountingPeriods({id})
@@ -647,7 +663,8 @@ class AccountingPeriodsClient(_EntityClient):
             + _path_value(accounting_period_id)
             + ')'
         )
-        return self._client.get(path, query=query, params=params)
+        data = self._client.get(path, query=query, params=params)
+        return _models.AccountingPeriod.model_validate(data)
 
     def list(
         self,
@@ -655,7 +672,7 @@ class AccountingPeriodsClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> list[dict[str, Any]]:
+    ) -> list[_models.AccountingPeriod]:
         """List accountingPeriods
 
         List accountingPeriods objects.
@@ -663,10 +680,12 @@ class AccountingPeriodsClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_accountingperiod_get
         Operation id: dynamics_accountingperiod_list
+        Response model: list[AccountingPeriod]
         """
 
         path = '/companies(' + _path_value(company_id) + ')/accountingPeriods'
-        return self._client.get_value(path, query=query, params=params)
+        items = self._client.get_value(path, query=query, params=params)
+        return [_models.AccountingPeriod.model_validate(item) for item in items]
 
 class AgedAccountsPayablesClient(_EntityClient):
     """Generated operations for ``aged_accounts_payables``."""
@@ -678,7 +697,7 @@ class AgedAccountsPayablesClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.AgedAccountsPayable:
         """Get agedAccountsPayable
 
         Gets an aged accounts payable object in Dynamics 365 Business Central.
@@ -686,6 +705,7 @@ class AgedAccountsPayablesClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_agedaccountspayable_get
         Operation id: dynamics_agedaccountspayable_get
+        Response model: AgedAccountsPayable
 
         Example request:
         GET https://{businesscentralPrefix}/api/v2.0/companies({id})/agedAccountsPayables({ve...
@@ -713,7 +733,8 @@ class AgedAccountsPayablesClient(_EntityClient):
             + _path_value(vendor_id)
             + ')'
         )
-        return self._client.get(path, query=query, params=params)
+        data = self._client.get(path, query=query, params=params)
+        return _models.AgedAccountsPayable.model_validate(data)
 
     def list(
         self,
@@ -721,7 +742,7 @@ class AgedAccountsPayablesClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> list[dict[str, Any]]:
+    ) -> list[_models.AgedAccountsPayable]:
         """List agedAccountsPayables
 
         List agedAccountsPayables objects.
@@ -729,10 +750,12 @@ class AgedAccountsPayablesClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_agedaccountspayable_get
         Operation id: dynamics_agedaccountspayable_list
+        Response model: list[AgedAccountsPayable]
         """
 
         path = '/companies(' + _path_value(company_id) + ')/agedAccountsPayables'
-        return self._client.get_value(path, query=query, params=params)
+        items = self._client.get_value(path, query=query, params=params)
+        return [_models.AgedAccountsPayable.model_validate(item) for item in items]
 
 class AgedAccountsReceivablesClient(_EntityClient):
     """Generated operations for ``aged_accounts_receivables``."""
@@ -744,7 +767,7 @@ class AgedAccountsReceivablesClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.AgedAccountsReceivable:
         """Get agedAccountsReceivable
 
         Gets an aged accounts receivable object in Dynamics 365 Business Central.
@@ -752,6 +775,7 @@ class AgedAccountsReceivablesClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_agedaccountsreceivable_get
         Operation id: dynamics_agedaccountsreceivable_get
+        Response model: AgedAccountsReceivable
 
         Example request:
         GET https://{businesscentralPrefix}/api/v2.0/companies({id})/agedAccountsReceivables(...
@@ -779,7 +803,8 @@ class AgedAccountsReceivablesClient(_EntityClient):
             + _path_value(customer_id)
             + ')'
         )
-        return self._client.get(path, query=query, params=params)
+        data = self._client.get(path, query=query, params=params)
+        return _models.AgedAccountsReceivable.model_validate(data)
 
     def list(
         self,
@@ -787,7 +812,7 @@ class AgedAccountsReceivablesClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> list[dict[str, Any]]:
+    ) -> list[_models.AgedAccountsReceivable]:
         """List agedAccountsReceivables
 
         List agedAccountsReceivables objects.
@@ -795,10 +820,12 @@ class AgedAccountsReceivablesClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_agedaccountsreceivable_get
         Operation id: dynamics_agedaccountsreceivable_list
+        Response model: list[AgedAccountsReceivable]
         """
 
         path = '/companies(' + _path_value(company_id) + ')/agedAccountsReceivables'
-        return self._client.get_value(path, query=query, params=params)
+        items = self._client.get_value(path, query=query, params=params)
+        return [_models.AgedAccountsReceivable.model_validate(item) for item in items]
 
 class ApplyVendorEntriesClient(_EntityClient):
     """Generated operations for ``apply_vendor_entries``."""
@@ -812,7 +839,7 @@ class ApplyVendorEntriesClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.ApplyVendorEntry:
         """Get applyVendorEntries
 
         Gets an apply vendor entry object in Dynamics 365 Business Central.
@@ -820,6 +847,7 @@ class ApplyVendorEntriesClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_applyvendorentry_get
         Operation id: dynamics_applyvendorentry_get
+        Response model: ApplyVendorEntry
 
         Example request:
         GET https://{businesscentralPrefix}/api/v2.0/companies({id})/applyVendorEntries({id})
@@ -851,7 +879,8 @@ class ApplyVendorEntriesClient(_EntityClient):
             + _path_value(apply_vendor_entry_id)
             + ')'
         )
-        return self._client.get(path, query=query, params=params)
+        data = self._client.get(path, query=query, params=params)
+        return _models.ApplyVendorEntry.model_validate(data)
 
     def list(
         self,
@@ -861,7 +890,7 @@ class ApplyVendorEntriesClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> list[dict[str, Any]]:
+    ) -> list[_models.ApplyVendorEntry]:
         """List applyVendorEntries
 
         List applyVendorEntries objects.
@@ -869,6 +898,7 @@ class ApplyVendorEntriesClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_applyvendorentry_get
         Operation id: dynamics_applyvendorentry_list
+        Response model: list[ApplyVendorEntry]
         """
 
         path = (
@@ -880,7 +910,8 @@ class ApplyVendorEntriesClient(_EntityClient):
             + _path_value(vendor_payment_id)
             + ')/applyVendorEntries'
         )
-        return self._client.get_value(path, query=query, params=params)
+        items = self._client.get_value(path, query=query, params=params)
+        return [_models.ApplyVendorEntry.model_validate(item) for item in items]
 
     def update(
         self,
@@ -888,12 +919,12 @@ class ApplyVendorEntriesClient(_EntityClient):
         vendor_payment_journal_id: str,
         vendor_payment_id: str,
         apply_vendor_entry_id: str,
-        body: Mapping[str, Any] | None = None,
+        body: _models.ApplyVendorEntryUpdate | Mapping[str, Any] | None = None,
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
         etag: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.ApplyVendorEntry:
         """Update applyVendorEntries
 
         Updates an  apply vendor entry object in Dynamics 365 Business Central.
@@ -901,6 +932,8 @@ class ApplyVendorEntriesClient(_EntityClient):
         HTTP method: PATCH
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_applyvendorentry_update
         Operation id: dynamics_applyvendorentry_update
+        Request model: ApplyVendorEntryUpdate
+        Response model: ApplyVendorEntry
 
         Example request:
         PATCH https://{businesscentralPrefix}/api/v2.0/companies({id})/applyVendorEntries({id})
@@ -937,13 +970,14 @@ class ApplyVendorEntriesClient(_EntityClient):
             + _path_value(apply_vendor_entry_id)
             + ')'
         )
-        return self._client.patch(
+        data = self._client.patch(
             path,
-            json=body,
+            json=_body_payload(body),
             query=query,
             params=params,
             etag=etag,
         )
+        return _models.ApplyVendorEntry.model_validate(data)
 
 class AttachmentsClient(_EntityClient):
     """Generated operations for ``attachments``."""
@@ -951,11 +985,11 @@ class AttachmentsClient(_EntityClient):
     def create(
         self,
         company_id: str,
-        body: Mapping[str, Any] | None = None,
+        body: _models.AttachmentCreate | Mapping[str, Any] | None = None,
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.Attachment:
         """Create attachments
 
         Creates an attachment object in Dynamics 365 Business Central.
@@ -963,6 +997,8 @@ class AttachmentsClient(_EntityClient):
         HTTP method: POST
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_attachment_create
         Operation id: dynamics_attachment_create
+        Request model: AttachmentCreate
+        Response model: Attachment
 
         Example request:
         POST https://{businesscentralPrefix}/api/v2.0/companies({id})/attachments({id})
@@ -990,7 +1026,13 @@ class AttachmentsClient(_EntityClient):
         """
 
         path = '/companies(' + _path_value(company_id) + ')/attachments'
-        return self._client.post(path, json=body, query=query, params=params)
+        data = self._client.post(
+            path,
+            json=_body_payload(body),
+            query=query,
+            params=params,
+        )
+        return _models.Attachment.model_validate(data)
 
     def delete(
         self,
@@ -1032,7 +1074,7 @@ class AttachmentsClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.Attachment:
         """Get attachments
 
         Gets an attachments object in Dynamics 365 Business Central.
@@ -1040,6 +1082,7 @@ class AttachmentsClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_attachment_get
         Operation id: dynamics_attachment_get
+        Response model: Attachment
 
         Example request:
         GET https://{businesscentralPrefix}/api/v1.0/companies({id})/attachments?$filter=pare...
@@ -1062,7 +1105,8 @@ class AttachmentsClient(_EntityClient):
             + _path_value(journal_line_id)
             + " and parentType eq 'Journal'"
         )
-        return self._client.get(path, query=query, params=params)
+        data = self._client.get(path, query=query, params=params)
+        return _models.Attachment.model_validate(data)
 
 class AttachmentContentsClient(_EntityClient):
     """Generated operations for ``attachment_contents``."""
@@ -1076,7 +1120,7 @@ class AttachmentContentsClient(_EntityClient):
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
         etag: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.AttachmentContent:
         """Update attachments
 
         Uploads the attachment in Dynamics 365 Business Central.
@@ -1084,6 +1128,7 @@ class AttachmentContentsClient(_EntityClient):
         HTTP method: PATCH
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_attachment_update
         Operation id: dynamics_attachment_update
+        Response model: AttachmentContent
 
         Example request:
         PATCH https://{businesscentralPrefix}/api/v2.0/companies({companyId})/attachments(par...
@@ -1109,13 +1154,14 @@ class AttachmentContentsClient(_EntityClient):
             + _path_value(attachment_id)
             + ')/attachmentContent'
         )
-        return self._client.patch(
+        data = self._client.patch(
             path,
-            json=body,
+            json=_body_payload(body),
             query=query,
             params=params,
             etag=etag,
         )
+        return _models.AttachmentContent.model_validate(data)
 
 class BalanceSheetsClient(_EntityClient):
     """Generated operations for ``balance_sheets``."""
@@ -1126,7 +1172,7 @@ class BalanceSheetsClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.BalanceSheet:
         """Get balanceSheet
 
         Gets a balance sheet object in Dynamics 365 Business Central.
@@ -1134,6 +1180,7 @@ class BalanceSheetsClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_balancesheet_get
         Operation id: dynamics_balancesheet_get
+        Response model: BalanceSheet
 
         Example request:
         GET https://{businesscentralPrefix}/api/v2.0/companies({id})/balanceSheet?$orderby=li...
@@ -1151,7 +1198,8 @@ class BalanceSheetsClient(_EntityClient):
         """
 
         path = '/companies(' + _path_value(company_id) + ')/balanceSheets'
-        return self._client.get(path, query=query, params=params)
+        data = self._client.get(path, query=query, params=params)
+        return _models.BalanceSheet.model_validate(data)
 
 class BankAccountsClient(_EntityClient):
     """Generated operations for ``bank_accounts``."""
@@ -1159,11 +1207,11 @@ class BankAccountsClient(_EntityClient):
     def create(
         self,
         company_id: str,
-        body: Mapping[str, Any] | None = None,
+        body: _models.BankAccountCreate | Mapping[str, Any] | None = None,
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.BankAccount:
         """Create bankAccounts
 
         Creates a bankAccount object in Dynamics 365 Business Central.
@@ -1171,6 +1219,8 @@ class BankAccountsClient(_EntityClient):
         HTTP method: POST
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_bankaccount_create
         Operation id: dynamics_bankaccount_create
+        Request model: BankAccountCreate
+        Response model: BankAccount
 
         Example request:
         POST https://{businesscentralPrefix}/api/v2.0/companies({id})/bankAccounts
@@ -1193,7 +1243,13 @@ class BankAccountsClient(_EntityClient):
         """
 
         path = '/companies(' + _path_value(company_id) + ')/bankAccounts'
-        return self._client.post(path, json=body, query=query, params=params)
+        data = self._client.post(
+            path,
+            json=_body_payload(body),
+            query=query,
+            params=params,
+        )
+        return _models.BankAccount.model_validate(data)
 
     def delete(
         self,
@@ -1235,7 +1291,7 @@ class BankAccountsClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.BankAccount:
         """Get bankAccounts
 
         Gets a bankAccount object in Dynamics 365 Business Central.
@@ -1243,6 +1299,7 @@ class BankAccountsClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_bankaccount_get
         Operation id: dynamics_bankaccount_get
+        Response model: BankAccount
 
         Example request:
         GET https://{businesscentralPrefix}/api/v2.0/companies({id})/bankAccounts({id})
@@ -1262,7 +1319,8 @@ class BankAccountsClient(_EntityClient):
             + _path_value(bank_account_id)
             + ')'
         )
-        return self._client.get(path, query=query, params=params)
+        data = self._client.get(path, query=query, params=params)
+        return _models.BankAccount.model_validate(data)
 
     def list(
         self,
@@ -1270,7 +1328,7 @@ class BankAccountsClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> list[dict[str, Any]]:
+    ) -> list[_models.BankAccount]:
         """List bankAccounts
 
         List bankAccounts objects.
@@ -1278,21 +1336,23 @@ class BankAccountsClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_bankaccount_get
         Operation id: dynamics_bankaccount_list
+        Response model: list[BankAccount]
         """
 
         path = '/companies(' + _path_value(company_id) + ')/bankAccounts'
-        return self._client.get_value(path, query=query, params=params)
+        items = self._client.get_value(path, query=query, params=params)
+        return [_models.BankAccount.model_validate(item) for item in items]
 
     def update(
         self,
         company_id: str,
         bank_account_id: str,
-        body: Mapping[str, Any] | None = None,
+        body: _models.BankAccountUpdate | Mapping[str, Any] | None = None,
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
         etag: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.BankAccount:
         """Update bankAccounts
 
         Updates a bankAccount object in Dynamics 365 Business Central.
@@ -1300,6 +1360,8 @@ class BankAccountsClient(_EntityClient):
         HTTP method: PATCH
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_bankaccount_update
         Operation id: dynamics_bankaccount_update
+        Request model: BankAccountUpdate
+        Response model: BankAccount
 
         Example request:
         PATCH https://{businesscentralPrefix}/api/v2.0/companies({id})/bankAccounts({id})
@@ -1327,13 +1389,14 @@ class BankAccountsClient(_EntityClient):
             + _path_value(bank_account_id)
             + ')'
         )
-        return self._client.patch(
+        data = self._client.patch(
             path,
-            json=body,
+            json=_body_payload(body),
             query=query,
             params=params,
             etag=etag,
         )
+        return _models.BankAccount.model_validate(data)
 
 class CashFlowStatementsClient(_EntityClient):
     """Generated operations for ``cash_flow_statements``."""
@@ -1344,7 +1407,7 @@ class CashFlowStatementsClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.CashFlowStatement:
         """Get cashFlowStatements
 
         Gets a cash flow statement object in Dynamics 365 Business Central.
@@ -1352,6 +1415,7 @@ class CashFlowStatementsClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_cashflowstatement_get
         Operation id: dynamics_cashflowstatement_get
+        Response model: CashFlowStatement
 
         Example request:
         GET https://{businesscentralPrefix}/api/v2.0/companies({id})/cashFlowStatements?$orde...
@@ -1369,7 +1433,8 @@ class CashFlowStatementsClient(_EntityClient):
         """
 
         path = '/companies(' + _path_value(company_id) + ')/cashFlowStatements'
-        return self._client.get(path, query=query, params=params)
+        data = self._client.get(path, query=query, params=params)
+        return _models.CashFlowStatement.model_validate(data)
 
 class CompaniesClient(_EntityClient):
     """Generated operations for ``companies``."""
@@ -1379,7 +1444,7 @@ class CompaniesClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.Company:
         """Get companies
 
         Gets a company object in Dynamics 365 Business Central.
@@ -1387,6 +1452,7 @@ class CompaniesClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_company_get
         Operation id: dynamics_company_get
+        Response model: Company
 
         Example request:
         GET https://{businesscentralPrefix}/api/v2.0/companies
@@ -1407,7 +1473,8 @@ class CompaniesClient(_EntityClient):
         """
 
         path = '/companies'
-        return self._client.get(path, query=query, params=params)
+        data = self._client.get(path, query=query, params=params)
+        return _models.Company.model_validate(data)
 
 class CompanyInformationsClient(_EntityClient):
     """Generated operations for ``company_informations``."""
@@ -1418,7 +1485,7 @@ class CompanyInformationsClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.CompanyInformation:
         """Get companyInformation
 
         Gets a company information object in Dynamics 365 Business Central.
@@ -1426,6 +1493,7 @@ class CompanyInformationsClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_companyinformation_get
         Operation id: dynamics_companyinformation_get
+        Response model: CompanyInformation
 
         Example request:
         GET https://{businesscentralPrefix}/api/v2.0/companies({id})/companyInformation
@@ -1447,18 +1515,19 @@ class CompanyInformationsClient(_EntityClient):
         """
 
         path = '/companies(' + _path_value(company_id) + ')/companyInformation'
-        return self._client.get(path, query=query, params=params)
+        data = self._client.get(path, query=query, params=params)
+        return _models.CompanyInformation.model_validate(data)
 
     def update(
         self,
         company_id: str,
         company_information_id: str,
-        body: Mapping[str, Any] | None = None,
+        body: _models.CompanyInformationUpdate | Mapping[str, Any] | None = None,
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
         etag: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.CompanyInformation:
         """Update companyInformation
 
         Updates a company information object in Dynamics 365 Business Central.
@@ -1466,6 +1535,8 @@ class CompanyInformationsClient(_EntityClient):
         HTTP method: PATCH
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_companyinformation_update
         Operation id: dynamics_companyinformation_update
+        Request model: CompanyInformationUpdate
+        Response model: CompanyInformation
 
         Example request:
         PATCH https://{businesscentralPrefix}/api/v2.0/companies({id})/companyInformation({id})
@@ -1499,13 +1570,14 @@ class CompanyInformationsClient(_EntityClient):
             + _path_value(company_information_id)
             + ')'
         )
-        return self._client.patch(
+        data = self._client.patch(
             path,
-            json=body,
+            json=_body_payload(body),
             query=query,
             params=params,
             etag=etag,
         )
+        return _models.CompanyInformation.model_validate(data)
 
 class ContactsClient(_EntityClient):
     """Generated operations for ``contacts``."""
@@ -1514,11 +1586,11 @@ class ContactsClient(_EntityClient):
         self,
         company_id: str,
         contact_id: str,
-        body: Mapping[str, Any] | None = None,
+        body: _models.ContactCreate | Mapping[str, Any] | None = None,
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.Contact:
         """Create contacts
 
         Creates a contact object in Dynamics 365 Business Central.
@@ -1526,6 +1598,8 @@ class ContactsClient(_EntityClient):
         HTTP method: POST
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_contact_create
         Operation id: dynamics_contact_create
+        Request model: ContactCreate
+        Response model: Contact
 
         Example request:
         POST https://{businesscentralPrefix}/api/v2.0/companies({id})/contacts({id})
@@ -1565,7 +1639,13 @@ class ContactsClient(_EntityClient):
             + _path_value(contact_id)
             + ')'
         )
-        return self._client.post(path, json=body, query=query, params=params)
+        data = self._client.post(
+            path,
+            json=_body_payload(body),
+            query=query,
+            params=params,
+        )
+        return _models.Contact.model_validate(data)
 
     def delete(
         self,
@@ -1607,7 +1687,7 @@ class ContactsClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.Contact:
         """Get contacts
 
         Gets a contact object in Dynamics 365 Business Central.
@@ -1615,6 +1695,7 @@ class ContactsClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_contact_get
         Operation id: dynamics_contact_get
+        Response model: Contact
 
         Example request:
         GET https://{businesscentralPrefix}/api/v2.0/companies({id})/contacts({id})
@@ -1642,7 +1723,8 @@ class ContactsClient(_EntityClient):
             + _path_value(contact_id)
             + ')'
         )
-        return self._client.get(path, query=query, params=params)
+        data = self._client.get(path, query=query, params=params)
+        return _models.Contact.model_validate(data)
 
     def list(
         self,
@@ -1650,7 +1732,7 @@ class ContactsClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> list[dict[str, Any]]:
+    ) -> list[_models.Contact]:
         """List contacts
 
         List contacts objects.
@@ -1658,21 +1740,23 @@ class ContactsClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_contact_get
         Operation id: dynamics_contact_list
+        Response model: list[Contact]
         """
 
         path = '/companies(' + _path_value(company_id) + ')/contacts'
-        return self._client.get_value(path, query=query, params=params)
+        items = self._client.get_value(path, query=query, params=params)
+        return [_models.Contact.model_validate(item) for item in items]
 
     def update(
         self,
         company_id: str,
         contact_id: str,
-        body: Mapping[str, Any] | None = None,
+        body: _models.ContactUpdate | Mapping[str, Any] | None = None,
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
         etag: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.Contact:
         """Update contacts
 
         Updates a  contact object in Dynamics 365 Business Central.
@@ -1680,6 +1764,8 @@ class ContactsClient(_EntityClient):
         HTTP method: PATCH
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_contact_update
         Operation id: dynamics_contact_update
+        Request model: ContactUpdate
+        Response model: Contact
 
         Example request:
         PATCH https://{businesscentralPrefix}/api/v2.0/companies({id})/contacts({id})
@@ -1712,13 +1798,14 @@ class ContactsClient(_EntityClient):
             + _path_value(contact_id)
             + ')'
         )
-        return self._client.patch(
+        data = self._client.patch(
             path,
-            json=body,
+            json=_body_payload(body),
             query=query,
             params=params,
             etag=etag,
         )
+        return _models.Contact.model_validate(data)
 
 class ContactsInformationsClient(_EntityClient):
     """Generated operations for ``contacts_informations``."""
@@ -1730,7 +1817,7 @@ class ContactsInformationsClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.ContactsInformation:
         """Get contactInformation
 
         Gets a contact information object in Dynamics 365 Business Central.
@@ -1738,6 +1825,7 @@ class ContactsInformationsClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_contactinformation_get
         Operation id: dynamics_contactinformation_get
+        Response model: ContactsInformation
 
         Example request:
         GET https://{businesscentralPrefix}/api/v2.0/companies({id})/customers({id})/contacts...
@@ -1765,7 +1853,8 @@ class ContactsInformationsClient(_EntityClient):
             + _path_value(vendor_id)
             + ')/contactsInformation'
         )
-        return self._client.get(path, query=query, params=params)
+        data = self._client.get(path, query=query, params=params)
+        return _models.ContactsInformation.model_validate(data)
 
 class ContentsClient(_EntityClient):
     """Generated operations for ``contents``."""
@@ -1778,7 +1867,7 @@ class ContentsClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.Content:
         """Get purchaseInvoice pdfDocument
 
         Gets a PDF document on a purchaseInvoice in Dynamics 365 Business Central.
@@ -1786,6 +1875,7 @@ class ContentsClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_purchaseinvoice_pdfdocument
         Operation id: dynamics_purchaseinvoice_pdfdocument
+        Response model: Content
 
         Example request:
         GET https://{businesscentralPrefix}/api/v2.0/companies({id})/purchaseInvoices({invoic...
@@ -1814,7 +1904,8 @@ class ContentsClient(_EntityClient):
             + _path_value(pdf_document_id)
             + ')/content'
         )
-        return self._client.get(path, query=query, params=params)
+        data = self._client.get(path, query=query, params=params)
+        return _models.Content.model_validate(data)
 
     def pdf_document_salescreditmemo_pdfdocument(
         self,
@@ -1824,7 +1915,7 @@ class ContentsClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.Content:
         """Get salesCreditMemo pdfDocument
 
         Gets a PDF document on a salesCreditMemo in Dynamics 365 Business Central.
@@ -1832,6 +1923,7 @@ class ContentsClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_salescreditmemo_pdfdocument
         Operation id: dynamics_salescreditmemo_pdfdocument
+        Response model: Content
 
         Example request:
         GET https://{businesscentralPrefix}/api/v2.0/companies({id})/salesCreditMemos({credit...
@@ -1860,7 +1952,8 @@ class ContentsClient(_EntityClient):
             + _path_value(pdf_document_id)
             + ')/content'
         )
-        return self._client.get(path, query=query, params=params)
+        data = self._client.get(path, query=query, params=params)
+        return _models.Content.model_validate(data)
 
     def pdf_document_salesinvoice_pdfdocument(
         self,
@@ -1869,7 +1962,7 @@ class ContentsClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.Content:
         """Get salesInvoice pdfDocument
 
         Gets a PDF document on a salesInvoice in Dynamics 365 Business Central.
@@ -1877,6 +1970,7 @@ class ContentsClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_salesinvoice_pdfdocument
         Operation id: dynamics_salesinvoice_pdfdocument
+        Response model: Content
 
         Example request:
         GET https://{businesscentralPrefix}/api/v2.0/companies({id})/salesInvoices({id})/pdfD...
@@ -1905,7 +1999,8 @@ class ContentsClient(_EntityClient):
             + _path_value(invoice_id)
             + ')/content'
         )
-        return self._client.get(path, query=query, params=params)
+        data = self._client.get(path, query=query, params=params)
+        return _models.Content.model_validate(data)
 
     def pdf_document_salesquote_pdfdocument(
         self,
@@ -1915,7 +2010,7 @@ class ContentsClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.Content:
         """Get salesQuote pdfDocument
 
         Gets a PDF document on a salesQuote in Dynamics 365 Business Central.
@@ -1923,6 +2018,7 @@ class ContentsClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_salesquote_pdfdocument
         Operation id: dynamics_salesquote_pdfdocument
+        Response model: Content
 
         Example request:
         GET https://{businesscentralPrefix}/api/v2.0/companies({id})/salesQuotes({quoteId})/p...
@@ -1951,7 +2047,8 @@ class ContentsClient(_EntityClient):
             + _path_value(invoice_id)
             + ')/content'
         )
-        return self._client.get(path, query=query, params=params)
+        data = self._client.get(path, query=query, params=params)
+        return _models.Content.model_validate(data)
 
 class CountriesRegionsClient(_EntityClient):
     """Generated operations for ``countries_regions``."""
@@ -1959,11 +2056,11 @@ class CountriesRegionsClient(_EntityClient):
     def create(
         self,
         company_id: str,
-        body: Mapping[str, Any] | None = None,
+        body: _models.CountriesRegionCreate | Mapping[str, Any] | None = None,
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.CountriesRegion:
         """Create countriesRegions
 
         Creates a countryRegion object in Dynamics 365 Business Central.
@@ -1971,6 +2068,8 @@ class CountriesRegionsClient(_EntityClient):
         HTTP method: POST
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_countryregion_create
         Operation id: dynamics_countryregion_create
+        Request model: CountriesRegionCreate
+        Response model: CountriesRegion
 
         Example request:
         POST https://{businesscentralPrefix}/api/v2.0/companies({id})/countriesRegions
@@ -1996,7 +2095,13 @@ class CountriesRegionsClient(_EntityClient):
         """
 
         path = '/companies(' + _path_value(company_id) + ')/countriesRegions'
-        return self._client.post(path, json=body, query=query, params=params)
+        data = self._client.post(
+            path,
+            json=_body_payload(body),
+            query=query,
+            params=params,
+        )
+        return _models.CountriesRegion.model_validate(data)
 
     def delete(
         self,
@@ -2038,7 +2143,7 @@ class CountriesRegionsClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.CountriesRegion:
         """Get countriesRegions
 
         Gets a countryRegion object in Dynamics 365 Business Central.
@@ -2046,6 +2151,7 @@ class CountriesRegionsClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_countryregion_get
         Operation id: dynamics_countryregion_get
+        Response model: CountriesRegion
 
         Example request:
         GET https://{businesscentralPrefix}/api/v2.0/companies({id})/countriesRegions({id})
@@ -2067,7 +2173,8 @@ class CountriesRegionsClient(_EntityClient):
             + _path_value(countries_region_id)
             + ')'
         )
-        return self._client.get(path, query=query, params=params)
+        data = self._client.get(path, query=query, params=params)
+        return _models.CountriesRegion.model_validate(data)
 
     def list(
         self,
@@ -2075,7 +2182,7 @@ class CountriesRegionsClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> list[dict[str, Any]]:
+    ) -> list[_models.CountriesRegion]:
         """List countriesRegions
 
         List countriesRegions objects.
@@ -2083,21 +2190,23 @@ class CountriesRegionsClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_countryregion_get
         Operation id: dynamics_countryregion_list
+        Response model: list[CountriesRegion]
         """
 
         path = '/companies(' + _path_value(company_id) + ')/countriesRegions'
-        return self._client.get_value(path, query=query, params=params)
+        items = self._client.get_value(path, query=query, params=params)
+        return [_models.CountriesRegion.model_validate(item) for item in items]
 
     def update(
         self,
         company_id: str,
         countries_region_id: str,
-        body: Mapping[str, Any] | None = None,
+        body: _models.CountriesRegionUpdate | Mapping[str, Any] | None = None,
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
         etag: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.CountriesRegion:
         """Update countriesRegions
 
         Updates a countryRegion object in Dynamics 365 Business Central.
@@ -2105,6 +2214,8 @@ class CountriesRegionsClient(_EntityClient):
         HTTP method: PATCH
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_countryregion_update
         Operation id: dynamics_countryregion_update
+        Request model: CountriesRegionUpdate
+        Response model: CountriesRegion
 
         Example request:
         PATCH https://{businesscentralPrefix}/api/v2.0/companies({id})/countriesRegions({id})
@@ -2134,13 +2245,14 @@ class CountriesRegionsClient(_EntityClient):
             + _path_value(countries_region_id)
             + ')'
         )
-        return self._client.patch(
+        data = self._client.patch(
             path,
-            json=body,
+            json=_body_payload(body),
             query=query,
             params=params,
             etag=etag,
         )
+        return _models.CountriesRegion.model_validate(data)
 
 class CurrenciesClient(_EntityClient):
     """Generated operations for ``currencies``."""
@@ -2148,11 +2260,11 @@ class CurrenciesClient(_EntityClient):
     def create(
         self,
         company_id: str,
-        body: Mapping[str, Any] | None = None,
+        body: _models.CurrencyCreate | Mapping[str, Any] | None = None,
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.Currency:
         """Create currencies
 
         Creates a currency object in Dynamics 365 Business Central.
@@ -2160,6 +2272,8 @@ class CurrenciesClient(_EntityClient):
         HTTP method: POST
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_currency_create
         Operation id: dynamics_currency_create
+        Request model: CurrencyCreate
+        Response model: Currency
 
         Example request:
         POST https://{businesscentralPrefix}/api/v2.0/companies({id})/currencies
@@ -2191,7 +2305,13 @@ class CurrenciesClient(_EntityClient):
         """
 
         path = '/companies(' + _path_value(company_id) + ')/currencies'
-        return self._client.post(path, json=body, query=query, params=params)
+        data = self._client.post(
+            path,
+            json=_body_payload(body),
+            query=query,
+            params=params,
+        )
+        return _models.Currency.model_validate(data)
 
     def delete(
         self,
@@ -2233,7 +2353,7 @@ class CurrenciesClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.Currency:
         """Get currencies
 
         Gets a currency object in Dynamics 365 Business Central.
@@ -2241,6 +2361,7 @@ class CurrenciesClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_currency_get
         Operation id: dynamics_currency_get
+        Response model: Currency
 
         Example request:
         GET https://{businesscentralPrefix}/api/v2.0/companies({id})/currencies({id})
@@ -2264,7 +2385,8 @@ class CurrenciesClient(_EntityClient):
             + _path_value(currency_id)
             + ')'
         )
-        return self._client.get(path, query=query, params=params)
+        data = self._client.get(path, query=query, params=params)
+        return _models.Currency.model_validate(data)
 
     def list(
         self,
@@ -2272,7 +2394,7 @@ class CurrenciesClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> list[dict[str, Any]]:
+    ) -> list[_models.Currency]:
         """List currencies
 
         List currencies objects.
@@ -2280,21 +2402,23 @@ class CurrenciesClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_currency_get
         Operation id: dynamics_currency_list
+        Response model: list[Currency]
         """
 
         path = '/companies(' + _path_value(company_id) + ')/currencies'
-        return self._client.get_value(path, query=query, params=params)
+        items = self._client.get_value(path, query=query, params=params)
+        return [_models.Currency.model_validate(item) for item in items]
 
     def update(
         self,
         company_id: str,
         currency_id: str,
-        body: Mapping[str, Any] | None = None,
+        body: _models.CurrencyUpdate | Mapping[str, Any] | None = None,
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
         etag: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.Currency:
         """Update currencies
 
         Updates a currency object in Dynamics 365 Business Central.
@@ -2302,6 +2426,8 @@ class CurrenciesClient(_EntityClient):
         HTTP method: PATCH
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_currency_update
         Operation id: dynamics_currency_update
+        Request model: CurrencyUpdate
+        Response model: Currency
 
         Example request:
         PATCH https://{businesscentralPrefix}/api/v2.0/companies({id})/currencies({id})
@@ -2333,13 +2459,14 @@ class CurrenciesClient(_EntityClient):
             + _path_value(currency_id)
             + ')'
         )
-        return self._client.patch(
+        data = self._client.patch(
             path,
-            json=body,
+            json=_body_payload(body),
             query=query,
             params=params,
             etag=etag,
         )
+        return _models.Currency.model_validate(data)
 
 class CurrencyExchangeRatesClient(_EntityClient):
     """Generated operations for ``currency_exchange_rates``."""
@@ -2351,7 +2478,7 @@ class CurrencyExchangeRatesClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.CurrencyExchangeRate:
         """Get currencyExchangeRates
 
         Gets a currency exchange rate object in Dynamics 365 Business Central.
@@ -2359,6 +2486,7 @@ class CurrencyExchangeRatesClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_currencyexchangerate_get
         Operation id: dynamics_currencyexchangerate_get
+        Response model: CurrencyExchangeRate
 
         Example request:
         GET https://{businesscentralPrefix}/api/v2.0/companies({id})/currencyExchangeRates({id})
@@ -2382,7 +2510,8 @@ class CurrencyExchangeRatesClient(_EntityClient):
             + _path_value(currency_exchange_rate_id)
             + ')'
         )
-        return self._client.get(path, query=query, params=params)
+        data = self._client.get(path, query=query, params=params)
+        return _models.CurrencyExchangeRate.model_validate(data)
 
     def list(
         self,
@@ -2390,7 +2519,7 @@ class CurrencyExchangeRatesClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> list[dict[str, Any]]:
+    ) -> list[_models.CurrencyExchangeRate]:
         """List currencyExchangeRates
 
         List currencyExchangeRates objects.
@@ -2398,10 +2527,12 @@ class CurrencyExchangeRatesClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_currencyexchangerate_get
         Operation id: dynamics_currencyexchangerate_list
+        Response model: list[CurrencyExchangeRate]
         """
 
         path = '/companies(' + _path_value(company_id) + ')/currencyExchangeRates'
-        return self._client.get_value(path, query=query, params=params)
+        items = self._client.get_value(path, query=query, params=params)
+        return [_models.CurrencyExchangeRate.model_validate(item) for item in items]
 
 class CustomersClient(_EntityClient):
     """Generated operations for ``customers``."""
@@ -2409,11 +2540,11 @@ class CustomersClient(_EntityClient):
     def create(
         self,
         company_id: str,
-        body: Mapping[str, Any] | None = None,
+        body: _models.CustomerCreate | Mapping[str, Any] | None = None,
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.Customer:
         """Create customers
 
         Creates a customer object in Dynamics 365 Business Central.
@@ -2421,6 +2552,8 @@ class CustomersClient(_EntityClient):
         HTTP method: POST
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_customer_create
         Operation id: dynamics_customer_create
+        Request model: CustomerCreate
+        Response model: Customer
 
         Example request:
         POST https://{businesscentralPrefix}/api/v2.0/companies({id})/customers
@@ -2454,7 +2587,13 @@ class CustomersClient(_EntityClient):
         """
 
         path = '/companies(' + _path_value(company_id) + ')/customers'
-        return self._client.post(path, json=body, query=query, params=params)
+        data = self._client.post(
+            path,
+            json=_body_payload(body),
+            query=query,
+            params=params,
+        )
+        return _models.Customer.model_validate(data)
 
     def delete(
         self,
@@ -2496,7 +2635,7 @@ class CustomersClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.Customer:
         """Get customers
 
         Gets a customer object with properties and relationships in Dynamics 365 Business Central.
@@ -2504,6 +2643,7 @@ class CustomersClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_customer_get
         Operation id: dynamics_customer_get
+        Response model: Customer
         """
 
         path = (
@@ -2513,7 +2653,8 @@ class CustomersClient(_EntityClient):
             + _path_value(customer_id)
             + ')'
         )
-        return self._client.get(path, query=query, params=params)
+        data = self._client.get(path, query=query, params=params)
+        return _models.Customer.model_validate(data)
 
     def list(
         self,
@@ -2521,7 +2662,7 @@ class CustomersClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> list[dict[str, Any]]:
+    ) -> list[_models.Customer]:
         """List customers
 
         List customers objects.
@@ -2529,21 +2670,23 @@ class CustomersClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_customer_get
         Operation id: dynamics_customer_list
+        Response model: list[Customer]
         """
 
         path = '/companies(' + _path_value(company_id) + ')/customers'
-        return self._client.get_value(path, query=query, params=params)
+        items = self._client.get_value(path, query=query, params=params)
+        return [_models.Customer.model_validate(item) for item in items]
 
     def update(
         self,
         company_id: str,
         customer_id: str,
-        body: Mapping[str, Any] | None = None,
+        body: _models.CustomerUpdate | Mapping[str, Any] | None = None,
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
         etag: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.Customer:
         """Update customers
 
         Updates a customer object in Dynamics 365 Business Central.
@@ -2551,6 +2694,8 @@ class CustomersClient(_EntityClient):
         HTTP method: PATCH
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_customer_update
         Operation id: dynamics_customer_update
+        Request model: CustomerUpdate
+        Response model: Customer
 
         Example request:
         PATCH https://{businesscentralPrefix}/api/v2.0/companies({id})/customers({id})
@@ -2584,13 +2729,14 @@ class CustomersClient(_EntityClient):
             + _path_value(customer_id)
             + ')'
         )
-        return self._client.patch(
+        data = self._client.patch(
             path,
-            json=body,
+            json=_body_payload(body),
             query=query,
             params=params,
             etag=etag,
         )
+        return _models.Customer.model_validate(data)
 
 class CustomerContactsClient(_EntityClient):
     """Generated operations for ``customer_contacts``."""
@@ -2635,7 +2781,7 @@ class CustomerContactsClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.CustomerContact:
         """Get customerContacts
 
         Gets a customer contact object in Dynamics 365 Business Central.
@@ -2643,6 +2789,7 @@ class CustomerContactsClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_customercontact_get
         Operation id: dynamics_customercontact_get
+        Response model: CustomerContact
 
         Example request:
         GET https://{businesscentralPrefix}/api/v2.0/companies({id})/customerContacts({id})
@@ -2667,7 +2814,8 @@ class CustomerContactsClient(_EntityClient):
             + _path_value(customer_contact_id)
             + ')'
         )
-        return self._client.get(path, query=query, params=params)
+        data = self._client.get(path, query=query, params=params)
+        return _models.CustomerContact.model_validate(data)
 
     def list(
         self,
@@ -2675,7 +2823,7 @@ class CustomerContactsClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> list[dict[str, Any]]:
+    ) -> list[_models.CustomerContact]:
         """List customerContacts
 
         List customerContacts objects.
@@ -2683,21 +2831,23 @@ class CustomerContactsClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_customercontact_get
         Operation id: dynamics_customercontact_list
+        Response model: list[CustomerContact]
         """
 
         path = '/companies(' + _path_value(company_id) + ')/customerContacts'
-        return self._client.get_value(path, query=query, params=params)
+        items = self._client.get_value(path, query=query, params=params)
+        return [_models.CustomerContact.model_validate(item) for item in items]
 
     def update(
         self,
         company_id: str,
         customer_contact_id: str,
-        body: Mapping[str, Any] | None = None,
+        body: _models.CustomerContactUpdate | Mapping[str, Any] | None = None,
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
         etag: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.CustomerContact:
         """Update customerContacts
 
         Updates a  customer contact object in Dynamics 365 Business Central.
@@ -2705,6 +2855,8 @@ class CustomerContactsClient(_EntityClient):
         HTTP method: PATCH
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_customercontact_update
         Operation id: dynamics_customercontact_update
+        Request model: CustomerContactUpdate
+        Response model: CustomerContact
 
         Example request:
         PATCH https://{businesscentralPrefix}/api/v2.0/companies({id})/customerContacts({id})
@@ -2737,13 +2889,14 @@ class CustomerContactsClient(_EntityClient):
             + _path_value(customer_contact_id)
             + ')'
         )
-        return self._client.patch(
+        data = self._client.patch(
             path,
-            json=body,
+            json=_body_payload(body),
             query=query,
             params=params,
             etag=etag,
         )
+        return _models.CustomerContact.model_validate(data)
 
 class CustomerFinancialDetailsClient(_EntityClient):
     """Generated operations for ``customer_financial_details``."""
@@ -2754,7 +2907,7 @@ class CustomerFinancialDetailsClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.CustomerFinancialDetail:
         """Get customerFinancialDetails
 
         Gets a customerFinancialDetail object in Dynamics 365 Business Central.
@@ -2762,6 +2915,7 @@ class CustomerFinancialDetailsClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_customerfinancialdetail_get
         Operation id: dynamics_customerfinancialdetail_get
+        Response model: CustomerFinancialDetail
 
         Example request:
         GET https://{businesscentralPrefix}/api/v2.0/companies({id})/customerFinancialDetails
@@ -2777,7 +2931,8 @@ class CustomerFinancialDetailsClient(_EntityClient):
         """
 
         path = '/companies(' + _path_value(company_id) + ')/customerFinancialDetails'
-        return self._client.get(path, query=query, params=params)
+        data = self._client.get(path, query=query, params=params)
+        return _models.CustomerFinancialDetail.model_validate(data)
 
 class CustomerPaymentsClient(_EntityClient):
     """Generated operations for ``customer_payments``."""
@@ -2787,11 +2942,11 @@ class CustomerPaymentsClient(_EntityClient):
         company_id: str,
         customer_payment_journal_id: str,
         customer_payment_id: str,
-        body: Mapping[str, Any] | None = None,
+        body: _models.CustomerPaymentCreate | Mapping[str, Any] | None = None,
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.CustomerPayment:
         """Create customerPayments
 
         Creates a customer payment object in Dynamics 365 Business Central.
@@ -2799,6 +2954,8 @@ class CustomerPaymentsClient(_EntityClient):
         HTTP method: POST
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_customerPayment_create
         Operation id: dynamics_customerPayment_create
+        Request model: CustomerPaymentCreate
+        Response model: CustomerPayment
 
         Example request:
         POST https://{businesscentralPrefix}/api/v2.0/companies({id})/customerPayment
@@ -2840,7 +2997,13 @@ class CustomerPaymentsClient(_EntityClient):
             + _path_value(customer_payment_id)
             + ')'
         )
-        return self._client.post(path, json=body, query=query, params=params)
+        data = self._client.post(
+            path,
+            json=_body_payload(body),
+            query=query,
+            params=params,
+        )
+        return _models.CustomerPayment.model_validate(data)
 
     def delete(
         self,
@@ -2886,7 +3049,7 @@ class CustomerPaymentsClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.CustomerPayment:
         """Get customerPayments
 
         Gets a customer payment object in Dynamics 365 Business Central.
@@ -2894,6 +3057,7 @@ class CustomerPaymentsClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_customerpayment_get
         Operation id: dynamics_customerpayment_get
+        Response model: CustomerPayment
 
         Example request:
         GET https://{businesscentralPrefix}/api/v2.0/companies({id})/customerPaymentsJournals...
@@ -2923,7 +3087,8 @@ class CustomerPaymentsClient(_EntityClient):
             + _path_value(customer_payment_id)
             + ')'
         )
-        return self._client.get(path, query=query, params=params)
+        data = self._client.get(path, query=query, params=params)
+        return _models.CustomerPayment.model_validate(data)
 
     def list(
         self,
@@ -2932,7 +3097,7 @@ class CustomerPaymentsClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> list[dict[str, Any]]:
+    ) -> list[_models.CustomerPayment]:
         """List customerPayments
 
         List customerPayments objects.
@@ -2940,6 +3105,7 @@ class CustomerPaymentsClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_customerpayment_get
         Operation id: dynamics_customerpayment_list
+        Response model: list[CustomerPayment]
         """
 
         path = (
@@ -2949,19 +3115,20 @@ class CustomerPaymentsClient(_EntityClient):
             + _path_value(customer_payments_journal_id)
             + ')/customerPayments'
         )
-        return self._client.get_value(path, query=query, params=params)
+        items = self._client.get_value(path, query=query, params=params)
+        return [_models.CustomerPayment.model_validate(item) for item in items]
 
     def update(
         self,
         company_id: str,
         customer_payments_journal_id: str,
         customer_payment_id: str,
-        body: Mapping[str, Any] | None = None,
+        body: _models.CustomerPaymentUpdate | Mapping[str, Any] | None = None,
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
         etag: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.CustomerPayment:
         """Update customerPayments
 
         Updates a customer payment object in Dynamics 365 Business Central.
@@ -2969,6 +3136,8 @@ class CustomerPaymentsClient(_EntityClient):
         HTTP method: PATCH
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_customerpayment_update
         Operation id: dynamics_customerpayment_update
+        Request model: CustomerPaymentUpdate
+        Response model: CustomerPayment
 
         Example request:
         PATCH https://{businesscentralPrefix}/api/v2.0/companies({id})/customerPaymentsJourna...
@@ -3003,13 +3172,14 @@ class CustomerPaymentsClient(_EntityClient):
             + _path_value(customer_payment_id)
             + ')'
         )
-        return self._client.patch(
+        data = self._client.patch(
             path,
-            json=body,
+            json=_body_payload(body),
             query=query,
             params=params,
             etag=etag,
         )
+        return _models.CustomerPayment.model_validate(data)
 
 class CustomerPaymentJournalsClient(_EntityClient):
     """Generated operations for ``customer_payment_journals``."""
@@ -3018,11 +3188,11 @@ class CustomerPaymentJournalsClient(_EntityClient):
         self,
         company_id: str,
         customer_payment_journal_id: str,
-        body: Mapping[str, Any] | None = None,
+        body: _models.CustomerPaymentJournalCreate | Mapping[str, Any] | None = None,
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.CustomerPaymentJournal:
         """Create customerPaymentJournals
 
         Creates a customerPaymentJournal object in Dynamics 365 Business Central.
@@ -3030,6 +3200,8 @@ class CustomerPaymentJournalsClient(_EntityClient):
         HTTP method: POST
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_customerpaymentjournal_create
         Operation id: dynamics_customerpaymentjournal_create
+        Request model: CustomerPaymentJournalCreate
+        Response model: CustomerPaymentJournal
 
         Example request:
         POST https://{businesscentralPrefix}/api/v1.0/companies({id})/customerPaymentJournals
@@ -3062,7 +3234,13 @@ class CustomerPaymentJournalsClient(_EntityClient):
             + _path_value(customer_payment_journal_id)
             + ')'
         )
-        return self._client.post(path, json=body, query=query, params=params)
+        data = self._client.post(
+            path,
+            json=_body_payload(body),
+            query=query,
+            params=params,
+        )
+        return _models.CustomerPaymentJournal.model_validate(data)
 
     def delete(
         self,
@@ -3104,7 +3282,7 @@ class CustomerPaymentJournalsClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.CustomerPaymentJournal:
         """Get customerPaymentJournals
 
         Gets a customerPaymentJournal object in Dynamics 365 Business Central.
@@ -3112,6 +3290,7 @@ class CustomerPaymentJournalsClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_customerpaymentjournal_get
         Operation id: dynamics_customerpaymentjournal_get
+        Response model: CustomerPaymentJournal
 
         Example request:
         GET https://{businesscentralPrefix}/api/v1.0/companies({id})/customerPaymentJournals(...
@@ -3134,7 +3313,8 @@ class CustomerPaymentJournalsClient(_EntityClient):
             + _path_value(customer_payment_journal_id)
             + ')'
         )
-        return self._client.get(path, query=query, params=params)
+        data = self._client.get(path, query=query, params=params)
+        return _models.CustomerPaymentJournal.model_validate(data)
 
     def list(
         self,
@@ -3142,7 +3322,7 @@ class CustomerPaymentJournalsClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> list[dict[str, Any]]:
+    ) -> list[_models.CustomerPaymentJournal]:
         """List customerPaymentJournals
 
         List customerPaymentJournals objects.
@@ -3150,21 +3330,23 @@ class CustomerPaymentJournalsClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_customerpaymentjournal_get
         Operation id: dynamics_customerpaymentjournal_list
+        Response model: list[CustomerPaymentJournal]
         """
 
         path = '/companies(' + _path_value(company_id) + ')/customerPaymentJournals'
-        return self._client.get_value(path, query=query, params=params)
+        items = self._client.get_value(path, query=query, params=params)
+        return [_models.CustomerPaymentJournal.model_validate(item) for item in items]
 
     def update(
         self,
         company_id: str,
         customer_payment_journal_id: str,
-        body: Mapping[str, Any] | None = None,
+        body: _models.CustomerPaymentJournalUpdate | Mapping[str, Any] | None = None,
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
         etag: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.CustomerPaymentJournal:
         """Update customerPaymentJournals
 
         Updates a customerPaymentJournal object in Dynamics 365 Business Central.
@@ -3172,6 +3354,8 @@ class CustomerPaymentJournalsClient(_EntityClient):
         HTTP method: PATCH
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_customerpaymentjournal_update
         Operation id: dynamics_customerpaymentjournal_update
+        Request model: CustomerPaymentJournalUpdate
+        Response model: CustomerPaymentJournal
 
         Example request:
         PATCH https://{businesscentralPrefix}/api/v1.0/companies({id})/customerPaymentJournal...
@@ -3203,13 +3387,14 @@ class CustomerPaymentJournalsClient(_EntityClient):
             + _path_value(customer_payment_journal_id)
             + ')'
         )
-        return self._client.patch(
+        data = self._client.patch(
             path,
-            json=body,
+            json=_body_payload(body),
             query=query,
             params=params,
             etag=etag,
         )
+        return _models.CustomerPaymentJournal.model_validate(data)
 
 class CustomerReturnReasonsClient(_EntityClient):
     """Generated operations for ``customer_return_reasons``."""
@@ -3217,11 +3402,11 @@ class CustomerReturnReasonsClient(_EntityClient):
     def create(
         self,
         company_id: str,
-        body: Mapping[str, Any] | None = None,
+        body: _models.CustomerReturnReasonCreate | Mapping[str, Any] | None = None,
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.CustomerReturnReason:
         """Create customerReturnReasons
 
         Creates a customer return reason object in Dynamics 365 Business Central.
@@ -3229,6 +3414,8 @@ class CustomerReturnReasonsClient(_EntityClient):
         HTTP method: POST
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_customerreturnreason_create
         Operation id: dynamics_customerreturnreason_create
+        Request model: CustomerReturnReasonCreate
+        Response model: CustomerReturnReason
 
         Example request:
         POST https://{businesscentralPrefix}/api/v2.0/companies({id})/customerReturnReasons
@@ -3249,7 +3436,13 @@ class CustomerReturnReasonsClient(_EntityClient):
         """
 
         path = '/companies(' + _path_value(company_id) + ')/customerReturnReasons'
-        return self._client.post(path, json=body, query=query, params=params)
+        data = self._client.post(
+            path,
+            json=_body_payload(body),
+            query=query,
+            params=params,
+        )
+        return _models.CustomerReturnReason.model_validate(data)
 
     def delete(
         self,
@@ -3291,7 +3484,7 @@ class CustomerReturnReasonsClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.CustomerReturnReason:
         """Get customerReturnReasons
 
         Gets a customer return reason object in Dynamics 365 Business Central.
@@ -3299,6 +3492,7 @@ class CustomerReturnReasonsClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_customerreturnreason_get
         Operation id: dynamics_customerreturnreason_get
+        Response model: CustomerReturnReason
 
         Example request:
         GET https://{businesscentralPrefix}/api/v2.0/companies({id})/customerReturnReasons({id})
@@ -3318,7 +3512,8 @@ class CustomerReturnReasonsClient(_EntityClient):
             + _path_value(customer_return_reason_id)
             + ')'
         )
-        return self._client.get(path, query=query, params=params)
+        data = self._client.get(path, query=query, params=params)
+        return _models.CustomerReturnReason.model_validate(data)
 
     def list(
         self,
@@ -3326,7 +3521,7 @@ class CustomerReturnReasonsClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> list[dict[str, Any]]:
+    ) -> list[_models.CustomerReturnReason]:
         """List customerReturnReasons
 
         List customerReturnReasons objects.
@@ -3334,21 +3529,23 @@ class CustomerReturnReasonsClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_customerreturnreason_get
         Operation id: dynamics_customerreturnreason_list
+        Response model: list[CustomerReturnReason]
         """
 
         path = '/companies(' + _path_value(company_id) + ')/customerReturnReasons'
-        return self._client.get_value(path, query=query, params=params)
+        items = self._client.get_value(path, query=query, params=params)
+        return [_models.CustomerReturnReason.model_validate(item) for item in items]
 
     def update(
         self,
         company_id: str,
         customer_return_reason_id: str,
-        body: Mapping[str, Any] | None = None,
+        body: _models.CustomerReturnReasonUpdate | Mapping[str, Any] | None = None,
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
         etag: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.CustomerReturnReason:
         """Update customerReturnReasons
 
         Updates a  customer return reason object in Dynamics 365 Business Central.
@@ -3356,6 +3553,8 @@ class CustomerReturnReasonsClient(_EntityClient):
         HTTP method: PATCH
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_customerreturnreason_update
         Operation id: dynamics_customerreturnreason_update
+        Request model: CustomerReturnReasonUpdate
+        Response model: CustomerReturnReason
 
         Example request:
         PATCH https://{businesscentralPrefix}/api/v2.0/companies({id})/customerReturnReasons(...
@@ -3381,13 +3580,14 @@ class CustomerReturnReasonsClient(_EntityClient):
             + _path_value(customer_return_reason_id)
             + ')'
         )
-        return self._client.patch(
+        data = self._client.patch(
             path,
-            json=body,
+            json=_body_payload(body),
             query=query,
             params=params,
             etag=etag,
         )
+        return _models.CustomerReturnReason.model_validate(data)
 
 class CustomerSalesClient(_EntityClient):
     """Generated operations for ``customer_sales``."""
@@ -3398,7 +3598,7 @@ class CustomerSalesClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.CustomerSale:
         """Get customerSales
 
         Gets a customerSale object in Dynamics 365 Business Central.
@@ -3406,6 +3606,7 @@ class CustomerSalesClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_customersale_get
         Operation id: dynamics_customersale_get
+        Response model: CustomerSale
 
         Example request:
         GET https://{businesscentralPrefix}/api/v2.0/companies({id})/customerSales
@@ -3421,7 +3622,8 @@ class CustomerSalesClient(_EntityClient):
         """
 
         path = '/companies(' + _path_value(company_id) + ')/customerSales'
-        return self._client.get(path, query=query, params=params)
+        data = self._client.get(path, query=query, params=params)
+        return _models.CustomerSale.model_validate(data)
 
 class DefaultDimensionsClient(_EntityClient):
     """Generated operations for ``default_dimensions``."""
@@ -3434,7 +3636,7 @@ class DefaultDimensionsClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.DefaultDimension:
         """Create defaultDimensions for entities
 
         Creates a default dimension of the item object in Dynamics 365 Business Central.
@@ -3442,6 +3644,7 @@ class DefaultDimensionsClient(_EntityClient):
         HTTP method: POST
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_defaultdimension_create
         Operation id: dynamics_defaultdimension_create
+        Response model: DefaultDimension
 
         Example request:
         POST https://{businesscentralPrefix}/api/v2.0/companies({companyId})/items({itemId})/...
@@ -3465,7 +3668,13 @@ class DefaultDimensionsClient(_EntityClient):
             + _path_value(default_dimension_id)
             + ')'
         )
-        return self._client.post(path, json=body, query=query, params=params)
+        data = self._client.post(
+            path,
+            json=_body_payload(body),
+            query=query,
+            params=params,
+        )
+        return _models.DefaultDimension.model_validate(data)
 
     def default_dimensions(
         self,
@@ -3579,7 +3788,7 @@ class DefaultDimensionsClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.DefaultDimension:
         """Get customer defaultDimensions
 
         Gets a customer default dimensions in Dynamics 365 Business Central.
@@ -3587,6 +3796,7 @@ class DefaultDimensionsClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_customer_get_defaultdimensions
         Operation id: dynamics_customer_get_defaultdimensions
+        Response model: DefaultDimension
 
         Example request:
         GET https://{businesscentralPrefix}/api/v2.0/companies({companyId})/customers({custom...
@@ -3614,7 +3824,8 @@ class DefaultDimensionsClient(_EntityClient):
             + _path_value(customer_id)
             + ')/defaultDimensions'
         )
-        return self._client.get(path, query=query, params=params)
+        data = self._client.get(path, query=query, params=params)
+        return _models.DefaultDimension.model_validate(data)
 
     def default_dimensions_employee_get_defaultdimensions(
         self,
@@ -3623,7 +3834,7 @@ class DefaultDimensionsClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.DefaultDimension:
         """Get employee defaultDimensions
 
         Gets an employee default dimensions in Dynamics 365 Business Central.
@@ -3631,6 +3842,7 @@ class DefaultDimensionsClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_employee_get_defaultdimensions
         Operation id: dynamics_employee_get_defaultdimensions
+        Response model: DefaultDimension
 
         Example request:
         GET https://{businesscentralPrefix}/api/v2.0/companies({companyId})/employees({employ...
@@ -3658,7 +3870,8 @@ class DefaultDimensionsClient(_EntityClient):
             + _path_value(employee_id)
             + ')/defaultDimensions'
         )
-        return self._client.get(path, query=query, params=params)
+        data = self._client.get(path, query=query, params=params)
+        return _models.DefaultDimension.model_validate(data)
 
     def default_dimensions_vendor_get_defaultdimensions(
         self,
@@ -3667,7 +3880,7 @@ class DefaultDimensionsClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.DefaultDimension:
         """Get vendor defaultDimensions
 
         Gets a vendor default dimensions in Dynamics 365 Business Central.
@@ -3675,6 +3888,7 @@ class DefaultDimensionsClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_vendor_get_defaultdimensions
         Operation id: dynamics_vendor_get_defaultdimensions
+        Response model: DefaultDimension
 
         Example request:
         GET https://{businesscentralPrefix}/api/v2.0/companies({companyId})/vendors({vendorId...
@@ -3702,7 +3916,8 @@ class DefaultDimensionsClient(_EntityClient):
             + _path_value(vendor_id)
             + ')/defaultDimensions'
         )
-        return self._client.get(path, query=query, params=params)
+        data = self._client.get(path, query=query, params=params)
+        return _models.DefaultDimension.model_validate(data)
 
     def default_dimensions_customer_update_defaultdimensions(
         self,
@@ -3714,7 +3929,7 @@ class DefaultDimensionsClient(_EntityClient):
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
         etag: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.DefaultDimension:
         """Update customer defaultDimensions
 
         Updates the customer default dimensions in Dynamics 365 Business Central.
@@ -3722,6 +3937,7 @@ class DefaultDimensionsClient(_EntityClient):
         HTTP method: PATCH
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_customer_update_defaultdimensions
         Operation id: dynamics_customer_update_defaultdimensions
+        Response model: DefaultDimension
 
         Example request:
         PATCH https://{businesscentralPrefix}/api/v2.0/companies({companyId})/customers({cust...
@@ -3744,13 +3960,14 @@ class DefaultDimensionsClient(_EntityClient):
             + _path_value(dimension_id)
             + ')'
         )
-        return self._client.patch(
+        data = self._client.patch(
             path,
-            json=body,
+            json=_body_payload(body),
             query=query,
             params=params,
             etag=etag,
         )
+        return _models.DefaultDimension.model_validate(data)
 
     def default_dimensions_employee_update_defaultdimensions(
         self,
@@ -3762,7 +3979,7 @@ class DefaultDimensionsClient(_EntityClient):
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
         etag: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.DefaultDimension:
         """Update employee defaultDimensions
 
         Updates an employee default dimensions in Dynamics 365 Business Central.
@@ -3770,6 +3987,7 @@ class DefaultDimensionsClient(_EntityClient):
         HTTP method: PATCH
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_employee_update_defaultdimensions
         Operation id: dynamics_employee_update_defaultdimensions
+        Response model: DefaultDimension
 
         Example request:
         PATCH https://{businesscentralPrefix}/api/v2.0/companies({companyId})/employees({empl...
@@ -3792,13 +4010,14 @@ class DefaultDimensionsClient(_EntityClient):
             + _path_value(dimension_id)
             + ')'
         )
-        return self._client.patch(
+        data = self._client.patch(
             path,
-            json=body,
+            json=_body_payload(body),
             query=query,
             params=params,
             etag=etag,
         )
+        return _models.DefaultDimension.model_validate(data)
 
     def default_dimensions_vendor_update_defaultdimensions(
         self,
@@ -3810,7 +4029,7 @@ class DefaultDimensionsClient(_EntityClient):
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
         etag: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.DefaultDimension:
         """Update vendor defaultDimensions
 
         Updates the vendor default dimensions in Dynamics 365 Business Central.
@@ -3818,6 +4037,7 @@ class DefaultDimensionsClient(_EntityClient):
         HTTP method: PATCH
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_vendor_update_defaultdimensions
         Operation id: dynamics_vendor_update_defaultdimensions
+        Response model: DefaultDimension
 
         Example request:
         PATCH https://{businesscentralPrefix}/api/v2.0/companies({companyId})/vendors({vendor...
@@ -3840,13 +4060,14 @@ class DefaultDimensionsClient(_EntityClient):
             + _path_value(dimension_id)
             + ')'
         )
-        return self._client.patch(
+        data = self._client.patch(
             path,
-            json=body,
+            json=_body_payload(body),
             query=query,
             params=params,
             etag=etag,
         )
+        return _models.DefaultDimension.model_validate(data)
 
     def default_dimensions_customer_create_defaultdimensions(
         self,
@@ -3856,7 +4077,7 @@ class DefaultDimensionsClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.DefaultDimension:
         """Create customer defaultDimensions
 
         Creates a default dimensions of the customer object in Dynamics 365 Business Central.
@@ -3864,6 +4085,7 @@ class DefaultDimensionsClient(_EntityClient):
         HTTP method: POST
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_customer_create_defaultdimensions
         Operation id: dynamics_customer_create_defaultdimensions
+        Response model: DefaultDimension
 
         Example request:
         POST https://{businesscentralPrefix}/api/v2.0/companies({companyId})/customers({custo...
@@ -3884,7 +4106,13 @@ class DefaultDimensionsClient(_EntityClient):
             + _path_value(customer_id)
             + ')/defaultDimensions'
         )
-        return self._client.post(path, json=body, query=query, params=params)
+        data = self._client.post(
+            path,
+            json=_body_payload(body),
+            query=query,
+            params=params,
+        )
+        return _models.DefaultDimension.model_validate(data)
 
     def default_dimensions_employee_create_defaultdimensions(
         self,
@@ -3894,7 +4122,7 @@ class DefaultDimensionsClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.DefaultDimension:
         """Create employee defaultDimensions
 
         Creates a default dimensions of the employee object in Dynamics 365 Business Central.
@@ -3902,6 +4130,7 @@ class DefaultDimensionsClient(_EntityClient):
         HTTP method: POST
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_employee_create_defaultdimensions
         Operation id: dynamics_employee_create_defaultdimensions
+        Response model: DefaultDimension
 
         Example request:
         POST https://{businesscentralPrefix}/api/v2.0/companies({companyId})/employees({emplo...
@@ -3922,7 +4151,13 @@ class DefaultDimensionsClient(_EntityClient):
             + _path_value(employee_id)
             + ')/defaultDimensions'
         )
-        return self._client.post(path, json=body, query=query, params=params)
+        data = self._client.post(
+            path,
+            json=_body_payload(body),
+            query=query,
+            params=params,
+        )
+        return _models.DefaultDimension.model_validate(data)
 
     def default_dimensions_vendor_create_defaultdimensions(
         self,
@@ -3932,7 +4167,7 @@ class DefaultDimensionsClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.DefaultDimension:
         """Create vendor defaultDimensions
 
         Creates a default dimensions of the vendor object in Dynamics 365 Business Central.
@@ -3940,6 +4175,7 @@ class DefaultDimensionsClient(_EntityClient):
         HTTP method: POST
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_vendor_create_defaultdimensions
         Operation id: dynamics_vendor_create_defaultdimensions
+        Response model: DefaultDimension
 
         Example request:
         POST https://{businesscentralPrefix}/api/v2.0/companies({companyId})/vendors({vendorI...
@@ -3960,7 +4196,13 @@ class DefaultDimensionsClient(_EntityClient):
             + _path_value(vendor_id)
             + ')/defaultDimensions'
         )
-        return self._client.post(path, json=body, query=query, params=params)
+        data = self._client.post(
+            path,
+            json=_body_payload(body),
+            query=query,
+            params=params,
+        )
+        return _models.DefaultDimension.model_validate(data)
 
     def delete(
         self,
@@ -3999,7 +4241,7 @@ class DefaultDimensionsClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.DefaultDimension:
         """Get entity defaultDimensions
 
         Gets an item default dimension in Dynamics 365 Business Central.
@@ -4007,6 +4249,7 @@ class DefaultDimensionsClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_defaultdimension_get
         Operation id: dynamics_defaultdimension_get
+        Response model: DefaultDimension
 
         Example request:
         GET https://{businesscentralPrefix}/api/v2.0/companies({companyId})/items({itemId})/d...
@@ -4030,7 +4273,8 @@ class DefaultDimensionsClient(_EntityClient):
             + _path_value(default_dimension_id)
             + ')'
         )
-        return self._client.get(path, query=query, params=params)
+        data = self._client.get(path, query=query, params=params)
+        return _models.DefaultDimension.model_validate(data)
 
     def list(
         self,
@@ -4038,7 +4282,7 @@ class DefaultDimensionsClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> list[dict[str, Any]]:
+    ) -> list[_models.DefaultDimension]:
         """List defaultDimensions
 
         List defaultDimensions objects.
@@ -4046,10 +4290,12 @@ class DefaultDimensionsClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_defaultdimension_get
         Operation id: dynamics_defaultdimension_list
+        Response model: list[DefaultDimension]
         """
 
         path = '/companies(' + _path_value(company_id) + ')/defaultDimensions'
-        return self._client.get_value(path, query=query, params=params)
+        items = self._client.get_value(path, query=query, params=params)
+        return [_models.DefaultDimension.model_validate(item) for item in items]
 
     def update(
         self,
@@ -4060,7 +4306,7 @@ class DefaultDimensionsClient(_EntityClient):
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
         etag: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.DefaultDimension:
         """Update defaultDimensions for entities
 
         Updates the item default dimensions in Dynamics 365 Business Central.
@@ -4068,6 +4314,7 @@ class DefaultDimensionsClient(_EntityClient):
         HTTP method: PATCH
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_defaultdimension_update
         Operation id: dynamics_defaultdimension_update
+        Response model: DefaultDimension
 
         Example request:
         PATCH https://{businesscentralPrefix}/api/v2.0/companies({companyId})/items({itemId})...
@@ -4086,13 +4333,14 @@ class DefaultDimensionsClient(_EntityClient):
             + _path_value(default_dimension_id)
             + ')'
         )
-        return self._client.patch(
+        data = self._client.patch(
             path,
-            json=body,
+            json=_body_payload(body),
             query=query,
             params=params,
             etag=etag,
         )
+        return _models.DefaultDimension.model_validate(data)
 
 class DimensionsClient(_EntityClient):
     """Generated operations for ``dimensions``."""
@@ -4104,7 +4352,7 @@ class DimensionsClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.Dimension:
         """Get dimensions
 
         Gets a dimension object in Dynamics 365 Business Central.
@@ -4112,6 +4360,7 @@ class DimensionsClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_dimension_get
         Operation id: dynamics_dimension_get
+        Response model: Dimension
 
         Example request:
         GET https://{businesscentralPrefix}/api/v2.0/companies({id})/dimensions({id})
@@ -4132,7 +4381,8 @@ class DimensionsClient(_EntityClient):
             + _path_value(dimension_id)
             + ')'
         )
-        return self._client.get(path, query=query, params=params)
+        data = self._client.get(path, query=query, params=params)
+        return _models.Dimension.model_validate(data)
 
     def list(
         self,
@@ -4140,7 +4390,7 @@ class DimensionsClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> list[dict[str, Any]]:
+    ) -> list[_models.Dimension]:
         """List dimensions
 
         List dimensions objects.
@@ -4148,10 +4398,12 @@ class DimensionsClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_dimension_get
         Operation id: dynamics_dimension_list
+        Response model: list[Dimension]
         """
 
         path = '/companies(' + _path_value(company_id) + ')/dimensions'
-        return self._client.get_value(path, query=query, params=params)
+        items = self._client.get_value(path, query=query, params=params)
+        return [_models.Dimension.model_validate(item) for item in items]
 
 class DimensionSetLinesClient(_EntityClient):
     """Generated operations for ``dimension_set_lines``."""
@@ -4161,11 +4413,11 @@ class DimensionSetLinesClient(_EntityClient):
         company_id: str,
         sales_order_id: str,
         dimension_set_line_id: str,
-        body: Mapping[str, Any] | None = None,
+        body: _models.DimensionSetLineCreate | Mapping[str, Any] | None = None,
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.DimensionSetLine:
         """Create dimensionSetLines
 
         Creates a dimensionSetLine object in Dynamics 365 Business Central.
@@ -4173,6 +4425,8 @@ class DimensionSetLinesClient(_EntityClient):
         HTTP method: POST
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_dimensionsetline_create
         Operation id: dynamics_dimensionsetline_create
+        Request model: DimensionSetLineCreate
+        Response model: DimensionSetLine
 
         Example request:
         POST https://{businesscentralPrefix}/api/v2.0/companies({id})/salesOrders({id})/dimen...
@@ -4214,7 +4468,13 @@ class DimensionSetLinesClient(_EntityClient):
             + _path_value(dimension_set_line_id)
             + ')'
         )
-        return self._client.post(path, json=body, query=query, params=params)
+        data = self._client.post(
+            path,
+            json=_body_payload(body),
+            query=query,
+            params=params,
+        )
+        return _models.DimensionSetLine.model_validate(data)
 
     def delete(
         self,
@@ -4260,7 +4520,7 @@ class DimensionSetLinesClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.DimensionSetLine:
         """Get dimensionSetLines
 
         Gets a dimensionSetLine object in Dynamics 365 Business Central.
@@ -4268,6 +4528,7 @@ class DimensionSetLinesClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_dimensionsetline_get
         Operation id: dynamics_dimensionsetline_get
+        Response model: DimensionSetLine
 
         Example request:
         GET https://{businesscentralPrefix}/api/v2.0/companies({id})/salesOrders({id})/dimens...
@@ -4294,7 +4555,8 @@ class DimensionSetLinesClient(_EntityClient):
             + _path_value(dimension_set_line_id)
             + ')'
         )
-        return self._client.get(path, query=query, params=params)
+        data = self._client.get(path, query=query, params=params)
+        return _models.DimensionSetLine.model_validate(data)
 
     def list(
         self,
@@ -4303,7 +4565,7 @@ class DimensionSetLinesClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> list[dict[str, Any]]:
+    ) -> list[_models.DimensionSetLine]:
         """List dimensionSetLines
 
         List dimensionSetLines objects.
@@ -4311,6 +4573,7 @@ class DimensionSetLinesClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_dimensionsetline_get
         Operation id: dynamics_dimensionsetline_list
+        Response model: list[DimensionSetLine]
         """
 
         path = (
@@ -4320,7 +4583,8 @@ class DimensionSetLinesClient(_EntityClient):
             + _path_value(sales_order_id)
             + ')/dimensionSetLines'
         )
-        return self._client.get_value(path, query=query, params=params)
+        items = self._client.get_value(path, query=query, params=params)
+        return [_models.DimensionSetLine.model_validate(item) for item in items]
 
     def update(
         self,
@@ -4332,7 +4596,7 @@ class DimensionSetLinesClient(_EntityClient):
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
         etag: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.DimensionSetLine:
         """Update dimensionSetLines
 
         Updates a dimensionSetLine object in Dynamics 365 Business Central.
@@ -4340,6 +4604,7 @@ class DimensionSetLinesClient(_EntityClient):
         HTTP method: PATCH
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_dimensionsetline_update
         Operation id: dynamics_dimensionsetline_update
+        Response model: DimensionSetLine
 
         Example request:
         PATCH https://{businesscentralPrefix}/api/v2.0/companies({id})/salesOrders({id})/dime...
@@ -4375,13 +4640,14 @@ class DimensionSetLinesClient(_EntityClient):
             + _path_value(dimension_set_line_id)
             + ')'
         )
-        return self._client.patch(
+        data = self._client.patch(
             path,
-            json=body,
+            json=_body_payload(body),
             query=query,
             params=params,
             etag=etag,
         )
+        return _models.DimensionSetLine.model_validate(data)
 
 class DimensionValuesClient(_EntityClient):
     """Generated operations for ``dimension_values``."""
@@ -4394,7 +4660,7 @@ class DimensionValuesClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.DimensionValue:
         """Get dimensionValues
 
         Gets a dimension value object in Dynamics 365 Business Central.
@@ -4402,6 +4668,7 @@ class DimensionValuesClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_dimensionvalue_get
         Operation id: dynamics_dimensionvalue_get
+        Response model: DimensionValue
 
         Example request:
         GET https://{businesscentralPrefix}/api/v2.0/companies({id})/dimensions({id})/dimensi...
@@ -4425,7 +4692,8 @@ class DimensionValuesClient(_EntityClient):
             + _path_value(dimension_value_id)
             + ')'
         )
-        return self._client.get(path, query=query, params=params)
+        data = self._client.get(path, query=query, params=params)
+        return _models.DimensionValue.model_validate(data)
 
     def list(
         self,
@@ -4434,7 +4702,7 @@ class DimensionValuesClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> list[dict[str, Any]]:
+    ) -> list[_models.DimensionValue]:
         """List dimensionValues
 
         List dimensionValues objects.
@@ -4442,6 +4710,7 @@ class DimensionValuesClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_dimensionvalue_get
         Operation id: dynamics_dimensionvalue_list
+        Response model: list[DimensionValue]
         """
 
         path = (
@@ -4451,7 +4720,8 @@ class DimensionValuesClient(_EntityClient):
             + _path_value(dimension_id)
             + ')/dimensionValues'
         )
-        return self._client.get_value(path, query=query, params=params)
+        items = self._client.get_value(path, query=query, params=params)
+        return [_models.DimensionValue.model_validate(item) for item in items]
 
 class DisputeStatusClient(_EntityClient):
     """Generated operations for ``dispute_status``."""
@@ -4460,11 +4730,11 @@ class DisputeStatusClient(_EntityClient):
         self,
         company_id: str,
         dispute_status_id: str,
-        body: Mapping[str, Any] | None = None,
+        body: _models.DisputeStatusCreate | Mapping[str, Any] | None = None,
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.DisputeStatus:
         """Create disputeStatus
 
         Creates a dispute status object in Dynamics 365 Business Central.
@@ -4472,6 +4742,8 @@ class DisputeStatusClient(_EntityClient):
         HTTP method: POST
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_disputestatus_create
         Operation id: dynamics_disputestatus_create
+        Request model: DisputeStatusCreate
+        Response model: DisputeStatus
 
         Example request:
         POST https://{businesscentralPrefix}/api/v2.0/companies({id})/disputeStatus({id})
@@ -4499,7 +4771,13 @@ class DisputeStatusClient(_EntityClient):
             + _path_value(dispute_status_id)
             + ')'
         )
-        return self._client.post(path, json=body, query=query, params=params)
+        data = self._client.post(
+            path,
+            json=_body_payload(body),
+            query=query,
+            params=params,
+        )
+        return _models.DisputeStatus.model_validate(data)
 
     def delete(
         self,
@@ -4541,7 +4819,7 @@ class DisputeStatusClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.DisputeStatus:
         """Get disputeStatus
 
         Gets a dispute status object in Dynamics 365 Business Central.
@@ -4549,6 +4827,7 @@ class DisputeStatusClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_disputestatus_get
         Operation id: dynamics_disputestatus_get
+        Response model: DisputeStatus
 
         Example request:
         GET https://{businesscentralPrefix}/api/v2.0/companies({id})/disputeStatus({id})
@@ -4569,7 +4848,8 @@ class DisputeStatusClient(_EntityClient):
             + _path_value(dispute_status_id)
             + ')'
         )
-        return self._client.get(path, query=query, params=params)
+        data = self._client.get(path, query=query, params=params)
+        return _models.DisputeStatus.model_validate(data)
 
     def list(
         self,
@@ -4577,7 +4857,7 @@ class DisputeStatusClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> list[dict[str, Any]]:
+    ) -> list[_models.DisputeStatus]:
         """List disputeStatus
 
         List disputeStatus objects.
@@ -4585,21 +4865,23 @@ class DisputeStatusClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_disputestatus_get
         Operation id: dynamics_disputestatus_list
+        Response model: list[DisputeStatus]
         """
 
         path = '/companies(' + _path_value(company_id) + ')/disputeStatus'
-        return self._client.get_value(path, query=query, params=params)
+        items = self._client.get_value(path, query=query, params=params)
+        return [_models.DisputeStatus.model_validate(item) for item in items]
 
     def update(
         self,
         company_id: str,
         dispute_status_id: str,
-        body: Mapping[str, Any] | None = None,
+        body: _models.DisputeStatusUpdate | Mapping[str, Any] | None = None,
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
         etag: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.DisputeStatus:
         """Update disputeStatus
 
         Updates a  dispute status object in Dynamics 365 Business Central.
@@ -4607,6 +4889,8 @@ class DisputeStatusClient(_EntityClient):
         HTTP method: PATCH
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_disputestatus_update
         Operation id: dynamics_disputestatus_update
+        Request model: DisputeStatusUpdate
+        Response model: DisputeStatus
 
         Example request:
         PATCH https://{businesscentralPrefix}/api/v2.0/companies({id})/disputeStatus({id})
@@ -4633,13 +4917,14 @@ class DisputeStatusClient(_EntityClient):
             + _path_value(dispute_status_id)
             + ')'
         )
-        return self._client.patch(
+        data = self._client.patch(
             path,
-            json=body,
+            json=_body_payload(body),
             query=query,
             params=params,
             etag=etag,
         )
+        return _models.DisputeStatus.model_validate(data)
 
 class DocumentAttachmentsClient(_EntityClient):
     """Generated operations for ``document_attachments``."""
@@ -4648,11 +4933,11 @@ class DocumentAttachmentsClient(_EntityClient):
         self,
         company_id: str,
         document_attachment_id: str,
-        body: Mapping[str, Any] | None = None,
+        body: _models.DocumentAttachmentCreate | Mapping[str, Any] | None = None,
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.DocumentAttachment:
         """Create documentAttachments
 
         Creates a document attachment object in Dynamics 365 Business Central.
@@ -4660,6 +4945,8 @@ class DocumentAttachmentsClient(_EntityClient):
         HTTP method: POST
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_documentattachment_create
         Operation id: dynamics_documentattachment_create
+        Request model: DocumentAttachmentCreate
+        Response model: DocumentAttachment
 
         Example request:
         POST https://{businesscentralPrefix}/api/v2.0/companies({id})/documentAttachments({id})
@@ -4696,7 +4983,13 @@ class DocumentAttachmentsClient(_EntityClient):
             + _path_value(document_attachment_id)
             + ')'
         )
-        return self._client.post(path, json=body, query=query, params=params)
+        data = self._client.post(
+            path,
+            json=_body_payload(body),
+            query=query,
+            params=params,
+        )
+        return _models.DocumentAttachment.model_validate(data)
 
     def delete(
         self,
@@ -4738,7 +5031,7 @@ class DocumentAttachmentsClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.DocumentAttachment:
         """Get documentAttachments
 
         Gets a document attachment object in Dynamics 365 Business Central.
@@ -4746,6 +5039,7 @@ class DocumentAttachmentsClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_documentattachment_get
         Operation id: dynamics_documentattachment_get
+        Response model: DocumentAttachment
 
         Example request:
         GET https://{businesscentralPrefix}/api/v2.0/companies({id})/documentAttachments({id})
@@ -4772,7 +5066,8 @@ class DocumentAttachmentsClient(_EntityClient):
             + _path_value(document_attachment_id)
             + ')'
         )
-        return self._client.get(path, query=query, params=params)
+        data = self._client.get(path, query=query, params=params)
+        return _models.DocumentAttachment.model_validate(data)
 
     def list(
         self,
@@ -4780,7 +5075,7 @@ class DocumentAttachmentsClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> list[dict[str, Any]]:
+    ) -> list[_models.DocumentAttachment]:
         """List documentAttachments
 
         List documentAttachments objects.
@@ -4788,21 +5083,23 @@ class DocumentAttachmentsClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_documentattachment_get
         Operation id: dynamics_documentattachment_list
+        Response model: list[DocumentAttachment]
         """
 
         path = '/companies(' + _path_value(company_id) + ')/documentAttachments'
-        return self._client.get_value(path, query=query, params=params)
+        items = self._client.get_value(path, query=query, params=params)
+        return [_models.DocumentAttachment.model_validate(item) for item in items]
 
     def update(
         self,
         company_id: str,
         document_attachment_id: str,
-        body: Mapping[str, Any] | None = None,
+        body: _models.DocumentAttachmentUpdate | Mapping[str, Any] | None = None,
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
         etag: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.DocumentAttachment:
         """Update documentAttachments
 
         Updates a  document attachment object in Dynamics 365 Business Central.
@@ -4810,6 +5107,8 @@ class DocumentAttachmentsClient(_EntityClient):
         HTTP method: PATCH
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_documentattachment_update
         Operation id: dynamics_documentattachment_update
+        Request model: DocumentAttachmentUpdate
+        Response model: DocumentAttachment
 
         Example request:
         PATCH https://{businesscentralPrefix}/api/v2.0/companies({id})/documentAttachments({id})
@@ -4842,13 +5141,14 @@ class DocumentAttachmentsClient(_EntityClient):
             + _path_value(document_attachment_id)
             + ')'
         )
-        return self._client.patch(
+        data = self._client.patch(
             path,
-            json=body,
+            json=_body_payload(body),
             query=query,
             params=params,
             etag=etag,
         )
+        return _models.DocumentAttachment.model_validate(data)
 
 class EmployeesClient(_EntityClient):
     """Generated operations for ``employees``."""
@@ -4856,11 +5156,11 @@ class EmployeesClient(_EntityClient):
     def create(
         self,
         company_id: str,
-        body: Mapping[str, Any] | None = None,
+        body: _models.EmployeeCreate | Mapping[str, Any] | None = None,
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.Employee:
         """Create employees
 
         Creates an employee object in Dynamics 365 Business Central.
@@ -4868,6 +5168,8 @@ class EmployeesClient(_EntityClient):
         HTTP method: POST
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_employee_create
         Operation id: dynamics_employee_create
+        Request model: EmployeeCreate
+        Response model: Employee
 
         Example request:
         POST https://{businesscentralPrefix}/api/v2.0/companies({id})/employees
@@ -4901,7 +5203,13 @@ class EmployeesClient(_EntityClient):
         """
 
         path = '/companies(' + _path_value(company_id) + ')/employees'
-        return self._client.post(path, json=body, query=query, params=params)
+        data = self._client.post(
+            path,
+            json=_body_payload(body),
+            query=query,
+            params=params,
+        )
+        return _models.Employee.model_validate(data)
 
     def delete(
         self,
@@ -4943,7 +5251,7 @@ class EmployeesClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.Employee:
         """Get employees
 
         Gets an employee object in Dynamics 365 Business Central.
@@ -4951,6 +5259,7 @@ class EmployeesClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_employee_get
         Operation id: dynamics_employee_get
+        Response model: Employee
         """
 
         path = (
@@ -4960,7 +5269,8 @@ class EmployeesClient(_EntityClient):
             + _path_value(employee_id)
             + ')'
         )
-        return self._client.get(path, query=query, params=params)
+        data = self._client.get(path, query=query, params=params)
+        return _models.Employee.model_validate(data)
 
     def list(
         self,
@@ -4968,7 +5278,7 @@ class EmployeesClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> list[dict[str, Any]]:
+    ) -> list[_models.Employee]:
         """List employees
 
         List employees objects.
@@ -4976,21 +5286,23 @@ class EmployeesClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_employee_get
         Operation id: dynamics_employee_list
+        Response model: list[Employee]
         """
 
         path = '/companies(' + _path_value(company_id) + ')/employees'
-        return self._client.get_value(path, query=query, params=params)
+        items = self._client.get_value(path, query=query, params=params)
+        return [_models.Employee.model_validate(item) for item in items]
 
     def update(
         self,
         company_id: str,
         employee_id: str,
-        body: Mapping[str, Any] | None = None,
+        body: _models.EmployeeUpdate | Mapping[str, Any] | None = None,
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
         etag: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.Employee:
         """Update employees
 
         Updates an employee object in Dynamics 365 Business Central.
@@ -4998,6 +5310,8 @@ class EmployeesClient(_EntityClient):
         HTTP method: PATCH
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_employee_update
         Operation id: dynamics_employee_update
+        Request model: EmployeeUpdate
+        Response model: Employee
 
         Example request:
         PATCH https://{businesscentralPrefix}/api/v2.0/companies({id})/employees({id})
@@ -5031,13 +5345,14 @@ class EmployeesClient(_EntityClient):
             + _path_value(employee_id)
             + ')'
         )
-        return self._client.patch(
+        data = self._client.patch(
             path,
-            json=body,
+            json=_body_payload(body),
             query=query,
             params=params,
             etag=etag,
         )
+        return _models.Employee.model_validate(data)
 
 class FixedAssetsClient(_EntityClient):
     """Generated operations for ``fixed_assets``."""
@@ -5046,11 +5361,11 @@ class FixedAssetsClient(_EntityClient):
         self,
         company_id: str,
         fixed_asset_id: str,
-        body: Mapping[str, Any] | None = None,
+        body: _models.FixedAssetCreate | Mapping[str, Any] | None = None,
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.FixedAsset:
         """Create fixedAssets
 
         Creates a fixed asset object in Dynamics 365 Business Central.
@@ -5058,6 +5373,8 @@ class FixedAssetsClient(_EntityClient):
         HTTP method: POST
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_fixedasset_create
         Operation id: dynamics_fixedasset_create
+        Request model: FixedAssetCreate
+        Response model: FixedAsset
 
         Example request:
         POST https://{businesscentralPrefix}/api/v2.0/companies({id})/fixedAssets({id})
@@ -5097,7 +5414,13 @@ class FixedAssetsClient(_EntityClient):
             + _path_value(fixed_asset_id)
             + ')'
         )
-        return self._client.post(path, json=body, query=query, params=params)
+        data = self._client.post(
+            path,
+            json=_body_payload(body),
+            query=query,
+            params=params,
+        )
+        return _models.FixedAsset.model_validate(data)
 
     def delete(
         self,
@@ -5139,7 +5462,7 @@ class FixedAssetsClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.FixedAsset:
         """Get fixedAssets
 
         Gets a fixed asset object in Dynamics 365 Business Central.
@@ -5147,6 +5470,7 @@ class FixedAssetsClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_fixedasset_get
         Operation id: dynamics_fixedasset_get
+        Response model: FixedAsset
 
         Example request:
         GET https://{businesscentralPrefix}/api/v2.0/companies({id})/fixedAssets({id})
@@ -5174,7 +5498,8 @@ class FixedAssetsClient(_EntityClient):
             + _path_value(fixed_asset_id)
             + ')'
         )
-        return self._client.get(path, query=query, params=params)
+        data = self._client.get(path, query=query, params=params)
+        return _models.FixedAsset.model_validate(data)
 
     def list(
         self,
@@ -5182,7 +5507,7 @@ class FixedAssetsClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> list[dict[str, Any]]:
+    ) -> list[_models.FixedAsset]:
         """List fixedAssets
 
         List fixedAssets objects.
@@ -5190,21 +5515,23 @@ class FixedAssetsClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_fixedasset_get
         Operation id: dynamics_fixedasset_list
+        Response model: list[FixedAsset]
         """
 
         path = '/companies(' + _path_value(company_id) + ')/fixedAssets'
-        return self._client.get_value(path, query=query, params=params)
+        items = self._client.get_value(path, query=query, params=params)
+        return [_models.FixedAsset.model_validate(item) for item in items]
 
     def update(
         self,
         company_id: str,
         fixed_asset_id: str,
-        body: Mapping[str, Any] | None = None,
+        body: _models.FixedAssetUpdate | Mapping[str, Any] | None = None,
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
         etag: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.FixedAsset:
         """Update fixedAssets
 
         Updates a fixed asset object in Dynamics 365 Business Central.
@@ -5212,6 +5539,8 @@ class FixedAssetsClient(_EntityClient):
         HTTP method: PATCH
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_fixedasset_update
         Operation id: dynamics_fixedasset_update
+        Request model: FixedAssetUpdate
+        Response model: FixedAsset
 
         Example request:
         PATCH https://{businesscentralPrefix}/api/v2.0/companies({id})/fixedAssets({id})
@@ -5248,13 +5577,14 @@ class FixedAssetsClient(_EntityClient):
             + _path_value(fixed_asset_id)
             + ')'
         )
-        return self._client.patch(
+        data = self._client.patch(
             path,
-            json=body,
+            json=_body_payload(body),
             query=query,
             params=params,
             etag=etag,
         )
+        return _models.FixedAsset.model_validate(data)
 
 class FixedAssetLocationsClient(_EntityClient):
     """Generated operations for ``fixed_asset_locations``."""
@@ -5263,11 +5593,11 @@ class FixedAssetLocationsClient(_EntityClient):
         self,
         company_id: str,
         fixed_asset_location_id: str,
-        body: Mapping[str, Any] | None = None,
+        body: _models.FixedAssetLocationCreate | Mapping[str, Any] | None = None,
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.FixedAssetLocation:
         """Create fixedAssetLocations
 
         Creates a fixed asset location object in Dynamics 365 Business Central.
@@ -5275,6 +5605,8 @@ class FixedAssetLocationsClient(_EntityClient):
         HTTP method: POST
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_fixedassetlocation_create
         Operation id: dynamics_fixedassetlocation_create
+        Request model: FixedAssetLocationCreate
+        Response model: FixedAssetLocation
 
         Example request:
         POST https://{businesscentralPrefix}/api/v2.0/companies({id})/fixedAssetLocations({id})
@@ -5302,7 +5634,13 @@ class FixedAssetLocationsClient(_EntityClient):
             + _path_value(fixed_asset_location_id)
             + ')'
         )
-        return self._client.post(path, json=body, query=query, params=params)
+        data = self._client.post(
+            path,
+            json=_body_payload(body),
+            query=query,
+            params=params,
+        )
+        return _models.FixedAssetLocation.model_validate(data)
 
     def delete(
         self,
@@ -5344,7 +5682,7 @@ class FixedAssetLocationsClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.FixedAssetLocation:
         """Get fixedAssetLocations
 
         Gets a fixed asset location object in Dynamics 365 Business Central.
@@ -5352,6 +5690,7 @@ class FixedAssetLocationsClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_fixedassetlocation_get
         Operation id: dynamics_fixedassetlocation_get
+        Response model: FixedAssetLocation
 
         Example request:
         GET https://{businesscentralPrefix}/api/v2.0/companies({id})/fixedAssetLocations({id})
@@ -5372,7 +5711,8 @@ class FixedAssetLocationsClient(_EntityClient):
             + _path_value(fixed_asset_location_id)
             + ')'
         )
-        return self._client.get(path, query=query, params=params)
+        data = self._client.get(path, query=query, params=params)
+        return _models.FixedAssetLocation.model_validate(data)
 
     def list(
         self,
@@ -5380,7 +5720,7 @@ class FixedAssetLocationsClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> list[dict[str, Any]]:
+    ) -> list[_models.FixedAssetLocation]:
         """List fixedAssetLocations
 
         List fixedAssetLocations objects.
@@ -5388,21 +5728,23 @@ class FixedAssetLocationsClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_fixedassetlocation_get
         Operation id: dynamics_fixedassetlocation_list
+        Response model: list[FixedAssetLocation]
         """
 
         path = '/companies(' + _path_value(company_id) + ')/fixedAssetLocations'
-        return self._client.get_value(path, query=query, params=params)
+        items = self._client.get_value(path, query=query, params=params)
+        return [_models.FixedAssetLocation.model_validate(item) for item in items]
 
     def update(
         self,
         company_id: str,
         fixed_asset_location_id: str,
-        body: Mapping[str, Any] | None = None,
+        body: _models.FixedAssetLocationUpdate | Mapping[str, Any] | None = None,
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
         etag: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.FixedAssetLocation:
         """Update fixedAssetLocations
 
         Updates a  fixed asset location object in Dynamics 365 Business Central.
@@ -5410,6 +5752,8 @@ class FixedAssetLocationsClient(_EntityClient):
         HTTP method: PATCH
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_fixedassetlocation_update
         Operation id: dynamics_fixedassetlocation_update
+        Request model: FixedAssetLocationUpdate
+        Response model: FixedAssetLocation
 
         Example request:
         PATCH https://{businesscentralPrefix}/api/v2.0/companies({id})/fixedAssetLocations({id})
@@ -5437,13 +5781,14 @@ class FixedAssetLocationsClient(_EntityClient):
             + _path_value(fixed_asset_location_id)
             + ')'
         )
-        return self._client.patch(
+        data = self._client.patch(
             path,
-            json=body,
+            json=_body_payload(body),
             query=query,
             params=params,
             etag=etag,
         )
+        return _models.FixedAssetLocation.model_validate(data)
 
 class GeneralLedgerEntriesClient(_EntityClient):
     """Generated operations for ``general_ledger_entries``."""
@@ -5455,7 +5800,7 @@ class GeneralLedgerEntriesClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.GeneralLedgerEntry:
         """Get generalLedgerEntries
 
         Gets a generalLedgerEntry object in Dynamics 365 Business Central.
@@ -5463,6 +5808,7 @@ class GeneralLedgerEntriesClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_generalledgerentry_get
         Operation id: dynamics_generalledgerentry_get
+        Response model: GeneralLedgerEntry
 
         Example request:
         GET https://{businesscentralPrefix}/api/v2.0/companies({id})/generalLedgerEntries({id})
@@ -5490,7 +5836,8 @@ class GeneralLedgerEntriesClient(_EntityClient):
             + _path_value(general_ledger_entry_id)
             + ')'
         )
-        return self._client.get(path, query=query, params=params)
+        data = self._client.get(path, query=query, params=params)
+        return _models.GeneralLedgerEntry.model_validate(data)
 
     def list(
         self,
@@ -5498,7 +5845,7 @@ class GeneralLedgerEntriesClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> list[dict[str, Any]]:
+    ) -> list[_models.GeneralLedgerEntry]:
         """List generalLedgerEntries
 
         List generalLedgerEntries objects.
@@ -5506,10 +5853,12 @@ class GeneralLedgerEntriesClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_generalledgerentry_get
         Operation id: dynamics_generalledgerentry_list
+        Response model: list[GeneralLedgerEntry]
         """
 
         path = '/companies(' + _path_value(company_id) + ')/generalLedgerEntries'
-        return self._client.get_value(path, query=query, params=params)
+        items = self._client.get_value(path, query=query, params=params)
+        return [_models.GeneralLedgerEntry.model_validate(item) for item in items]
 
 class GeneralLedgerSetupsClient(_EntityClient):
     """Generated operations for ``general_ledger_setups``."""
@@ -5521,7 +5870,7 @@ class GeneralLedgerSetupsClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.GeneralLedgerSetup:
         """Get generalLedgerSetup
 
         Gets a general ledger setup object in Dynamics 365 Business Central.
@@ -5529,6 +5878,7 @@ class GeneralLedgerSetupsClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_generalledgersetup_get
         Operation id: dynamics_generalledgersetup_get
+        Response model: GeneralLedgerSetup
 
         Example request:
         GET https://{businesscentralPrefix}/api/v2.0/companies({id})/generalLedgerSetup({id})
@@ -5553,7 +5903,8 @@ class GeneralLedgerSetupsClient(_EntityClient):
             + _path_value(general_ledger_setup_id)
             + ')'
         )
-        return self._client.get(path, query=query, params=params)
+        data = self._client.get(path, query=query, params=params)
+        return _models.GeneralLedgerSetup.model_validate(data)
 
     def list(
         self,
@@ -5561,7 +5912,7 @@ class GeneralLedgerSetupsClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> list[dict[str, Any]]:
+    ) -> list[_models.GeneralLedgerSetup]:
         """List generalLedgerSetup
 
         List generalLedgerSetup objects.
@@ -5569,10 +5920,12 @@ class GeneralLedgerSetupsClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_generalledgersetup_get
         Operation id: dynamics_generalledgersetup_list
+        Response model: list[GeneralLedgerSetup]
         """
 
         path = '/companies(' + _path_value(company_id) + ')/generalLedgerSetup'
-        return self._client.get_value(path, query=query, params=params)
+        items = self._client.get_value(path, query=query, params=params)
+        return [_models.GeneralLedgerSetup.model_validate(item) for item in items]
 
 class GeneralProductPostingGroupsClient(_EntityClient):
     """Generated operations for ``general_product_posting_groups``."""
@@ -5584,7 +5937,7 @@ class GeneralProductPostingGroupsClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.GeneralProductPostingGroup:
         """Get generalProductPostingGroups
 
         Gets a general product posting group object in Dynamics 365 Business Central.
@@ -5592,6 +5945,7 @@ class GeneralProductPostingGroupsClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_generalproductpostinggroup_get
         Operation id: dynamics_generalproductpostinggroup_get
+        Response model: GeneralProductPostingGroup
 
         Example request:
         GET https://{businesscentralPrefix}/api/v2.0/companies({id})/generalProductPostingGro...
@@ -5614,7 +5968,8 @@ class GeneralProductPostingGroupsClient(_EntityClient):
             + _path_value(general_product_posting_group_id)
             + ')'
         )
-        return self._client.get(path, query=query, params=params)
+        data = self._client.get(path, query=query, params=params)
+        return _models.GeneralProductPostingGroup.model_validate(data)
 
     def list(
         self,
@@ -5622,7 +5977,7 @@ class GeneralProductPostingGroupsClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> list[dict[str, Any]]:
+    ) -> list[_models.GeneralProductPostingGroup]:
         """List generalProductPostingGroups
 
         List generalProductPostingGroups objects.
@@ -5630,10 +5985,12 @@ class GeneralProductPostingGroupsClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_generalproductpostinggroup_get
         Operation id: dynamics_generalproductpostinggroup_list
+        Response model: list[GeneralProductPostingGroup]
         """
 
         path = '/companies(' + _path_value(company_id) + ')/generalProductPostingGroups'
-        return self._client.get_value(path, query=query, params=params)
+        items = self._client.get_value(path, query=query, params=params)
+        return [_models.GeneralProductPostingGroup.model_validate(item) for item in items]
 
 class IncomeStatementsClient(_EntityClient):
     """Generated operations for ``income_statements``."""
@@ -5644,7 +6001,7 @@ class IncomeStatementsClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.IncomeStatement:
         """Get incomeStatement
 
         Gets an income statement object in Dynamics 365 Business Central.
@@ -5652,6 +6009,7 @@ class IncomeStatementsClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_incomestatement_get
         Operation id: dynamics_incomestatement_get
+        Response model: IncomeStatement
 
         Example request:
         GET https://{businesscentralPrefix}/api/v2.0/companies({id})/incomeStatements?$orderb...
@@ -5669,7 +6027,8 @@ class IncomeStatementsClient(_EntityClient):
         """
 
         path = '/companies(' + _path_value(company_id) + ')/incomeStatements'
-        return self._client.get(path, query=query, params=params)
+        data = self._client.get(path, query=query, params=params)
+        return _models.IncomeStatement.model_validate(data)
 
 class InventoryPostingGroupsClient(_EntityClient):
     """Generated operations for ``inventory_posting_groups``."""
@@ -5681,7 +6040,7 @@ class InventoryPostingGroupsClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.InventoryPostingGroup:
         """Get inventoryPostingGroups
 
         Gets an inventory posting group object in Dynamics 365 Business Central.
@@ -5689,6 +6048,7 @@ class InventoryPostingGroupsClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_inventorypostinggroup_get
         Operation id: dynamics_inventorypostinggroup_get
+        Response model: InventoryPostingGroup
 
         Example request:
         GET https://{businesscentralPrefix}/api/v2.0/companies({id})/inventoryPostingGroups({...
@@ -5709,7 +6069,8 @@ class InventoryPostingGroupsClient(_EntityClient):
             + _path_value(inventory_posting_group_id)
             + ')'
         )
-        return self._client.get(path, query=query, params=params)
+        data = self._client.get(path, query=query, params=params)
+        return _models.InventoryPostingGroup.model_validate(data)
 
     def list(
         self,
@@ -5717,7 +6078,7 @@ class InventoryPostingGroupsClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> list[dict[str, Any]]:
+    ) -> list[_models.InventoryPostingGroup]:
         """List inventoryPostingGroups
 
         List inventoryPostingGroups objects.
@@ -5725,10 +6086,12 @@ class InventoryPostingGroupsClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_inventorypostinggroup_get
         Operation id: dynamics_inventorypostinggroup_list
+        Response model: list[InventoryPostingGroup]
         """
 
         path = '/companies(' + _path_value(company_id) + ')/inventoryPostingGroups'
-        return self._client.get_value(path, query=query, params=params)
+        items = self._client.get_value(path, query=query, params=params)
+        return [_models.InventoryPostingGroup.model_validate(item) for item in items]
 
 class ItemsClient(_EntityClient):
     """Generated operations for ``items``."""
@@ -5736,11 +6099,11 @@ class ItemsClient(_EntityClient):
     def create(
         self,
         company_id: str,
-        body: Mapping[str, Any] | None = None,
+        body: _models.ItemCreate | Mapping[str, Any] | None = None,
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.Item:
         """Create items
 
         Creates an item object in Dynamics 365 Business Central.
@@ -5748,6 +6111,8 @@ class ItemsClient(_EntityClient):
         HTTP method: POST
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_item_create
         Operation id: dynamics_item_create
+        Request model: ItemCreate
+        Response model: Item
 
         Example request:
         POST https://{businesscentralPrefix}/api/v2.0/companies({id})/items
@@ -5781,7 +6146,13 @@ class ItemsClient(_EntityClient):
         """
 
         path = '/companies(' + _path_value(company_id) + ')/items'
-        return self._client.post(path, json=body, query=query, params=params)
+        data = self._client.post(
+            path,
+            json=_body_payload(body),
+            query=query,
+            params=params,
+        )
+        return _models.Item.model_validate(data)
 
     def delete(
         self,
@@ -5823,7 +6194,7 @@ class ItemsClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.Item:
         """Get items
 
         Gets an item object in Dynamics 365 Business Central.
@@ -5831,6 +6202,7 @@ class ItemsClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_item_get
         Operation id: dynamics_item_get
+        Response model: Item
 
         Example request:
         GET https://graph.microsoft.com/v2.0businesscentralPrefix/companies({id})/items({id})
@@ -5858,7 +6230,8 @@ class ItemsClient(_EntityClient):
             + _path_value(item_id)
             + ')'
         )
-        return self._client.get(path, query=query, params=params)
+        data = self._client.get(path, query=query, params=params)
+        return _models.Item.model_validate(data)
 
     def list(
         self,
@@ -5866,7 +6239,7 @@ class ItemsClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> list[dict[str, Any]]:
+    ) -> list[_models.Item]:
         """List items
 
         List items objects.
@@ -5874,21 +6247,23 @@ class ItemsClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_item_get
         Operation id: dynamics_item_list
+        Response model: list[Item]
         """
 
         path = '/companies(' + _path_value(company_id) + ')/items'
-        return self._client.get_value(path, query=query, params=params)
+        items = self._client.get_value(path, query=query, params=params)
+        return [_models.Item.model_validate(item) for item in items]
 
     def update(
         self,
         company_id: str,
         item_id: str,
-        body: Mapping[str, Any] | None = None,
+        body: _models.ItemUpdate | Mapping[str, Any] | None = None,
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
         etag: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.Item:
         """Update items
 
         Updates an item object in Dynamics 365 Business Central.
@@ -5896,6 +6271,8 @@ class ItemsClient(_EntityClient):
         HTTP method: PATCH
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_item_update
         Operation id: dynamics_item_update
+        Request model: ItemUpdate
+        Response model: Item
 
         Example request:
         PATCH https://{businesscentralPrefix}/api/v2.0/companies({id})/items({id})
@@ -5929,13 +6306,14 @@ class ItemsClient(_EntityClient):
             + _path_value(item_id)
             + ')'
         )
-        return self._client.patch(
+        data = self._client.patch(
             path,
-            json=body,
+            json=_body_payload(body),
             query=query,
             params=params,
             etag=etag,
         )
+        return _models.Item.model_validate(data)
 
 class ItemCategoriesClient(_EntityClient):
     """Generated operations for ``item_categories``."""
@@ -5943,11 +6321,11 @@ class ItemCategoriesClient(_EntityClient):
     def create(
         self,
         company_id: str,
-        body: Mapping[str, Any] | None = None,
+        body: _models.ItemCategoryCreate | Mapping[str, Any] | None = None,
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.ItemCategory:
         """Create itemCategories
 
         Creates a itemCategory object in Dynamics 365 Business Central.
@@ -5955,6 +6333,8 @@ class ItemCategoriesClient(_EntityClient):
         HTTP method: POST
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_itemcategory_create
         Operation id: dynamics_itemcategory_create
+        Request model: ItemCategoryCreate
+        Response model: ItemCategory
 
         Example request:
         POST https://{businesscentralPrefix}/api/v2.0/companies({id})/itemCategories
@@ -5978,7 +6358,13 @@ class ItemCategoriesClient(_EntityClient):
         """
 
         path = '/companies(' + _path_value(company_id) + ')/itemCategories'
-        return self._client.post(path, json=body, query=query, params=params)
+        data = self._client.post(
+            path,
+            json=_body_payload(body),
+            query=query,
+            params=params,
+        )
+        return _models.ItemCategory.model_validate(data)
 
     def delete(
         self,
@@ -6020,7 +6406,7 @@ class ItemCategoriesClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.ItemCategory:
         """Get itemCategories
 
         Gets a itemCategory object in Dynamics 365 Business Central.
@@ -6028,6 +6414,7 @@ class ItemCategoriesClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_itemcategory_get
         Operation id: dynamics_itemcategory_get
+        Response model: ItemCategory
 
         Example request:
         GET https://{businesscentralPrefix}/api/v2.0/companies({id})/itemCategories({id})
@@ -6048,7 +6435,8 @@ class ItemCategoriesClient(_EntityClient):
             + _path_value(item_category_id)
             + ')'
         )
-        return self._client.get(path, query=query, params=params)
+        data = self._client.get(path, query=query, params=params)
+        return _models.ItemCategory.model_validate(data)
 
     def list(
         self,
@@ -6056,7 +6444,7 @@ class ItemCategoriesClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> list[dict[str, Any]]:
+    ) -> list[_models.ItemCategory]:
         """List itemCategories
 
         List itemCategories objects.
@@ -6064,21 +6452,23 @@ class ItemCategoriesClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_itemcategory_get
         Operation id: dynamics_itemcategory_list
+        Response model: list[ItemCategory]
         """
 
         path = '/companies(' + _path_value(company_id) + ')/itemCategories'
-        return self._client.get_value(path, query=query, params=params)
+        items = self._client.get_value(path, query=query, params=params)
+        return [_models.ItemCategory.model_validate(item) for item in items]
 
     def update(
         self,
         company_id: str,
         item_category_id: str,
-        body: Mapping[str, Any] | None = None,
+        body: _models.ItemCategoryUpdate | Mapping[str, Any] | None = None,
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
         etag: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.ItemCategory:
         """Update itemCategories
 
         Updates a itemCategory object in Dynamics 365 Business Central.
@@ -6086,6 +6476,8 @@ class ItemCategoriesClient(_EntityClient):
         HTTP method: PATCH
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_itemcategory_update
         Operation id: dynamics_itemcategory_update
+        Request model: ItemCategoryUpdate
+        Response model: ItemCategory
 
         Example request:
         PATCH https://{businesscentralPrefix}/api/v2.0/companies({id})/itemCategories({id})
@@ -6114,13 +6506,14 @@ class ItemCategoriesClient(_EntityClient):
             + _path_value(item_category_id)
             + ')'
         )
-        return self._client.patch(
+        data = self._client.patch(
             path,
-            json=body,
+            json=_body_payload(body),
             query=query,
             params=params,
             etag=etag,
         )
+        return _models.ItemCategory.model_validate(data)
 
 class ItemLedgerEntriesClient(_EntityClient):
     """Generated operations for ``item_ledger_entries``."""
@@ -6132,7 +6525,7 @@ class ItemLedgerEntriesClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.ItemLedgerEntry:
         """Get itemLedgerEntries
 
         Gets an item ledger entry object in Dynamics 365 Business Central.
@@ -6140,6 +6533,7 @@ class ItemLedgerEntriesClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_itemledgerentry_get
         Operation id: dynamics_itemledgerentry_get
+        Response model: ItemLedgerEntry
 
         Example request:
         GET https://{businesscentralPrefix}/api/v2.0/companies({id})/itemLedgerEntries({id})
@@ -6167,7 +6561,8 @@ class ItemLedgerEntriesClient(_EntityClient):
             + _path_value(item_ledger_entry_id)
             + ')'
         )
-        return self._client.get(path, query=query, params=params)
+        data = self._client.get(path, query=query, params=params)
+        return _models.ItemLedgerEntry.model_validate(data)
 
     def list(
         self,
@@ -6175,7 +6570,7 @@ class ItemLedgerEntriesClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> list[dict[str, Any]]:
+    ) -> list[_models.ItemLedgerEntry]:
         """List itemLedgerEntries
 
         List itemLedgerEntries objects.
@@ -6183,10 +6578,12 @@ class ItemLedgerEntriesClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_itemledgerentry_get
         Operation id: dynamics_itemledgerentry_list
+        Response model: list[ItemLedgerEntry]
         """
 
         path = '/companies(' + _path_value(company_id) + ')/itemLedgerEntries'
-        return self._client.get_value(path, query=query, params=params)
+        items = self._client.get_value(path, query=query, params=params)
+        return [_models.ItemLedgerEntry.model_validate(item) for item in items]
 
 class ItemVariantsClient(_EntityClient):
     """Generated operations for ``item_variants``."""
@@ -6195,11 +6592,11 @@ class ItemVariantsClient(_EntityClient):
         self,
         company_id: str,
         item_variant_id: str,
-        body: Mapping[str, Any] | None = None,
+        body: _models.ItemVariantCreate | Mapping[str, Any] | None = None,
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.ItemVariant:
         """Create itemVariants
 
         Creates a itemVariant object in Dynamics 365 Business Central.
@@ -6207,6 +6604,8 @@ class ItemVariantsClient(_EntityClient):
         HTTP method: POST
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_itemvariant_create
         Operation id: dynamics_itemvariant_create
+        Request model: ItemVariantCreate
+        Response model: ItemVariant
 
         Example request:
         POST https://{businesscentralPrefix}/api/v2.0/companies({id})/itemVariants
@@ -6240,7 +6639,13 @@ class ItemVariantsClient(_EntityClient):
             + _path_value(item_variant_id)
             + ')'
         )
-        return self._client.post(path, json=body, query=query, params=params)
+        data = self._client.post(
+            path,
+            json=_body_payload(body),
+            query=query,
+            params=params,
+        )
+        return _models.ItemVariant.model_validate(data)
 
     def delete(
         self,
@@ -6282,7 +6687,7 @@ class ItemVariantsClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.ItemVariant:
         """Get itemVariants
 
         Gets a itemVariant object in Dynamics 365 Business Central.
@@ -6290,6 +6695,7 @@ class ItemVariantsClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_itemvariant_get
         Operation id: dynamics_itemvariant_get
+        Response model: ItemVariant
 
         Example request:
         GET https://{businesscentralPrefix}/api/v2.0/companies({id})/itemVariants({id})
@@ -6311,7 +6717,8 @@ class ItemVariantsClient(_EntityClient):
             + _path_value(item_variant_id)
             + ')'
         )
-        return self._client.get(path, query=query, params=params)
+        data = self._client.get(path, query=query, params=params)
+        return _models.ItemVariant.model_validate(data)
 
     def list(
         self,
@@ -6319,7 +6726,7 @@ class ItemVariantsClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> list[dict[str, Any]]:
+    ) -> list[_models.ItemVariant]:
         """List itemVariants
 
         List itemVariants objects.
@@ -6327,21 +6734,23 @@ class ItemVariantsClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_itemvariant_get
         Operation id: dynamics_itemvariant_list
+        Response model: list[ItemVariant]
         """
 
         path = '/companies(' + _path_value(company_id) + ')/itemVariants'
-        return self._client.get_value(path, query=query, params=params)
+        items = self._client.get_value(path, query=query, params=params)
+        return [_models.ItemVariant.model_validate(item) for item in items]
 
     def update(
         self,
         company_id: str,
         item_variant_id: str,
-        body: Mapping[str, Any] | None = None,
+        body: _models.ItemVariantUpdate | Mapping[str, Any] | None = None,
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
         etag: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.ItemVariant:
         """Update itemVariants
 
         Updates a itemVariant object in Dynamics 365 Business Central.
@@ -6349,6 +6758,8 @@ class ItemVariantsClient(_EntityClient):
         HTTP method: PATCH
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_itemvariant_update
         Operation id: dynamics_itemvariant_update
+        Request model: ItemVariantUpdate
+        Response model: ItemVariant
 
         Example request:
         PATCH https://{businesscentralPrefix}/api/v2.0/companies({id})/itemVariants({id})
@@ -6378,13 +6789,14 @@ class ItemVariantsClient(_EntityClient):
             + _path_value(item_variant_id)
             + ')'
         )
-        return self._client.patch(
+        data = self._client.patch(
             path,
-            json=body,
+            json=_body_payload(body),
             query=query,
             params=params,
             etag=etag,
         )
+        return _models.ItemVariant.model_validate(data)
 
 class JobQueueEntriesClient(_EntityClient):
     """Generated operations for ``job_queue_entries``."""
@@ -6396,7 +6808,7 @@ class JobQueueEntriesClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.JobQueueEntry:
         """Get jobQueueEntries
 
         Gets a job queue entry object in Dynamics 365 Business Central.
@@ -6404,6 +6816,7 @@ class JobQueueEntriesClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_jobqueueentry_get
         Operation id: dynamics_jobqueueentry_get
+        Response model: JobQueueEntry
 
         Example request:
         GET https://{businesscentralPrefix}/api/v2.0/companies({id})/jobQueueEntries({id})
@@ -6431,7 +6844,8 @@ class JobQueueEntriesClient(_EntityClient):
             + _path_value(job_queue_entry_id)
             + ')'
         )
-        return self._client.get(path, query=query, params=params)
+        data = self._client.get(path, query=query, params=params)
+        return _models.JobQueueEntry.model_validate(data)
 
     def list(
         self,
@@ -6439,7 +6853,7 @@ class JobQueueEntriesClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> list[dict[str, Any]]:
+    ) -> list[_models.JobQueueEntry]:
         """List jobQueueEntries
 
         List jobQueueEntries objects.
@@ -6447,10 +6861,12 @@ class JobQueueEntriesClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_jobqueueentry_get
         Operation id: dynamics_jobqueueentry_list
+        Response model: list[JobQueueEntry]
         """
 
         path = '/companies(' + _path_value(company_id) + ')/jobQueueEntries'
-        return self._client.get_value(path, query=query, params=params)
+        items = self._client.get_value(path, query=query, params=params)
+        return [_models.JobQueueEntry.model_validate(item) for item in items]
 
 class JobQueueLogEntriesClient(_EntityClient):
     """Generated operations for ``job_queue_log_entries``."""
@@ -6462,7 +6878,7 @@ class JobQueueLogEntriesClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.JobQueueLogEntry:
         """Get jobQueueLogEntries
 
         Gets a job queue log entry object in Dynamics 365 Business Central.
@@ -6470,6 +6886,7 @@ class JobQueueLogEntriesClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_jobqueuelogentry_get
         Operation id: dynamics_jobqueuelogentry_get
+        Response model: JobQueueLogEntry
 
         Example request:
         GET https://{businesscentralPrefix}/api/v2.0/companies({id})/jobQueueLogEntries({id})
@@ -6497,7 +6914,8 @@ class JobQueueLogEntriesClient(_EntityClient):
             + _path_value(job_queue_log_entry_id)
             + ')'
         )
-        return self._client.get(path, query=query, params=params)
+        data = self._client.get(path, query=query, params=params)
+        return _models.JobQueueLogEntry.model_validate(data)
 
     def list(
         self,
@@ -6505,7 +6923,7 @@ class JobQueueLogEntriesClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> list[dict[str, Any]]:
+    ) -> list[_models.JobQueueLogEntry]:
         """List jobQueueLogEntries
 
         List jobQueueLogEntries objects.
@@ -6513,10 +6931,12 @@ class JobQueueLogEntriesClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_jobqueuelogentry_get
         Operation id: dynamics_jobqueuelogentry_list
+        Response model: list[JobQueueLogEntry]
         """
 
         path = '/companies(' + _path_value(company_id) + ')/jobQueueLogEntries'
-        return self._client.get_value(path, query=query, params=params)
+        items = self._client.get_value(path, query=query, params=params)
+        return [_models.JobQueueLogEntry.model_validate(item) for item in items]
 
 class JournalsClient(_EntityClient):
     """Generated operations for ``journals``."""
@@ -6525,11 +6945,11 @@ class JournalsClient(_EntityClient):
         self,
         company_id: str,
         journal_id: str,
-        body: Mapping[str, Any] | None = None,
+        body: _models.JournalCreate | Mapping[str, Any] | None = None,
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.Journal:
         """Create journals
 
         Creates a journal object in Dynamics 365 Business Central.
@@ -6537,6 +6957,8 @@ class JournalsClient(_EntityClient):
         HTTP method: POST
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_journal_create
         Operation id: dynamics_journal_create
+        Request model: JournalCreate
+        Response model: Journal
 
         Example request:
         POST https://{businesscentralPrefix}/api/v2.0/companies({id})/journals
@@ -6566,7 +6988,13 @@ class JournalsClient(_EntityClient):
             + _path_value(journal_id)
             + ')'
         )
-        return self._client.post(path, json=body, query=query, params=params)
+        data = self._client.post(
+            path,
+            json=_body_payload(body),
+            query=query,
+            params=params,
+        )
+        return _models.Journal.model_validate(data)
 
     def delete(
         self,
@@ -6608,7 +7036,7 @@ class JournalsClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.Journal:
         """Get journals
 
         Gets a journal object in Dynamics 365 Business Central.
@@ -6616,6 +7044,7 @@ class JournalsClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_journal_get
         Operation id: dynamics_journal_get
+        Response model: Journal
 
         Example request:
         GET https://{businesscentralPrefix}/api/v2.0/companies({id})/journals({id})
@@ -6636,7 +7065,8 @@ class JournalsClient(_EntityClient):
             + _path_value(journal_id)
             + ')'
         )
-        return self._client.get(path, query=query, params=params)
+        data = self._client.get(path, query=query, params=params)
+        return _models.Journal.model_validate(data)
 
     def list(
         self,
@@ -6644,7 +7074,7 @@ class JournalsClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> list[dict[str, Any]]:
+    ) -> list[_models.Journal]:
         """List journals
 
         List journals objects.
@@ -6652,21 +7082,23 @@ class JournalsClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_journal_get
         Operation id: dynamics_journal_list
+        Response model: list[Journal]
         """
 
         path = '/companies(' + _path_value(company_id) + ')/journals'
-        return self._client.get_value(path, query=query, params=params)
+        items = self._client.get_value(path, query=query, params=params)
+        return [_models.Journal.model_validate(item) for item in items]
 
     def update(
         self,
         company_id: str,
         journal_id: str,
-        body: Mapping[str, Any] | None = None,
+        body: _models.JournalUpdate | Mapping[str, Any] | None = None,
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
         etag: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.Journal:
         """Update journals
 
         Updates a journal object in Dynamics 365 Business Central.
@@ -6674,6 +7106,8 @@ class JournalsClient(_EntityClient):
         HTTP method: PATCH
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_journal_update
         Operation id: dynamics_journal_update
+        Request model: JournalUpdate
+        Response model: Journal
 
         Example request:
         PATCH https://{businesscentralPrefix}/api/v2.0/companies({id})/journals({id})
@@ -6703,13 +7137,14 @@ class JournalsClient(_EntityClient):
             + _path_value(journal_id)
             + ')'
         )
-        return self._client.patch(
+        data = self._client.patch(
             path,
-            json=body,
+            json=_body_payload(body),
             query=query,
             params=params,
             etag=etag,
         )
+        return _models.Journal.model_validate(data)
 
 class JournalLinesClient(_EntityClient):
     """Generated operations for ``journal_lines``."""
@@ -6718,11 +7153,11 @@ class JournalLinesClient(_EntityClient):
         self,
         company_id: str,
         journal_id: str,
-        body: Mapping[str, Any] | None = None,
+        body: _models.JournalLineCreate | Mapping[str, Any] | None = None,
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.JournalLine:
         """Create journalLines
 
         Creates a journal line in Dynamics 365 Business Central.
@@ -6730,6 +7165,8 @@ class JournalLinesClient(_EntityClient):
         HTTP method: POST
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_journalLine_create
         Operation id: dynamics_journalLine_create
+        Request model: JournalLineCreate
+        Response model: JournalLine
 
         Example request:
         POST https://{businesscentralPrefix}/api/v2.0/companies({id})/journals({id})/journalL...
@@ -6769,7 +7206,13 @@ class JournalLinesClient(_EntityClient):
             + _path_value(journal_id)
             + ')/journalLines'
         )
-        return self._client.post(path, json=body, query=query, params=params)
+        data = self._client.post(
+            path,
+            json=_body_payload(body),
+            query=query,
+            params=params,
+        )
+        return _models.JournalLine.model_validate(data)
 
     def delete(
         self,
@@ -6815,7 +7258,7 @@ class JournalLinesClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.JournalLine:
         """Get journalLines
 
         Gets a journal line object in Dynamics 365 Business Central.
@@ -6823,6 +7266,7 @@ class JournalLinesClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_journalline_get
         Operation id: dynamics_journalline_get
+        Response model: JournalLine
 
         Example request:
         GET https://{businesscentralPrefix}/api/v2.0/companies({id})/journals({id})/journalLi...
@@ -6852,7 +7296,8 @@ class JournalLinesClient(_EntityClient):
             + _path_value(journal_line_id)
             + ')'
         )
-        return self._client.get(path, query=query, params=params)
+        data = self._client.get(path, query=query, params=params)
+        return _models.JournalLine.model_validate(data)
 
     def list(
         self,
@@ -6861,7 +7306,7 @@ class JournalLinesClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> list[dict[str, Any]]:
+    ) -> list[_models.JournalLine]:
         """List journalLines
 
         List journalLines objects.
@@ -6869,6 +7314,7 @@ class JournalLinesClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_journalline_get
         Operation id: dynamics_journalline_list
+        Response model: list[JournalLine]
         """
 
         path = (
@@ -6878,19 +7324,20 @@ class JournalLinesClient(_EntityClient):
             + _path_value(journal_id)
             + ')/journalLines'
         )
-        return self._client.get_value(path, query=query, params=params)
+        items = self._client.get_value(path, query=query, params=params)
+        return [_models.JournalLine.model_validate(item) for item in items]
 
     def update(
         self,
         company_id: str,
         journal_id: str,
         journal_line_id: str,
-        body: Mapping[str, Any] | None = None,
+        body: _models.JournalLineUpdate | Mapping[str, Any] | None = None,
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
         etag: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.JournalLine:
         """Update journalLines
 
         Updates a journal line in Dynamics 365 Business Central.
@@ -6898,6 +7345,8 @@ class JournalLinesClient(_EntityClient):
         HTTP method: PATCH
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_journalline_update
         Operation id: dynamics_journalline_update
+        Request model: JournalLineUpdate
+        Response model: JournalLine
 
         Example request:
         PATCH https://{businesscentralPrefix}/api/v2.0/companies({id})/journals({id})/journal...
@@ -6932,13 +7381,14 @@ class JournalLinesClient(_EntityClient):
             + _path_value(journal_line_id)
             + ')'
         )
-        return self._client.patch(
+        data = self._client.patch(
             path,
-            json=body,
+            json=_body_payload(body),
             query=query,
             params=params,
             etag=etag,
         )
+        return _models.JournalLine.model_validate(data)
 
 class LocationsClient(_EntityClient):
     """Generated operations for ``locations``."""
@@ -6946,11 +7396,11 @@ class LocationsClient(_EntityClient):
     def create(
         self,
         company_id: str,
-        body: Mapping[str, Any] | None = None,
+        body: _models.LocationCreate | Mapping[str, Any] | None = None,
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.Location:
         """Create locations
 
         Creates a location object in Dynamics 365 Business Central.
@@ -6958,6 +7408,8 @@ class LocationsClient(_EntityClient):
         HTTP method: POST
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_location_create
         Operation id: dynamics_location_create
+        Request model: LocationCreate
+        Response model: Location
 
         Example request:
         POST https://{businesscentralPrefix}/api/v2.0/companies({id})/locations
@@ -6991,7 +7443,13 @@ class LocationsClient(_EntityClient):
         """
 
         path = '/companies(' + _path_value(company_id) + ')/locations'
-        return self._client.post(path, json=body, query=query, params=params)
+        data = self._client.post(
+            path,
+            json=_body_payload(body),
+            query=query,
+            params=params,
+        )
+        return _models.Location.model_validate(data)
 
     def delete(
         self,
@@ -7033,7 +7491,7 @@ class LocationsClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.Location:
         """Get locations
 
         Gets a location object in Dynamics 365 Business Central.
@@ -7041,6 +7499,7 @@ class LocationsClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_location_get
         Operation id: dynamics_location_get
+        Response model: Location
 
         Example request:
         GET https://{businesscentralPrefix}/api/v2.0/companies({id})/locations({id})
@@ -7068,7 +7527,8 @@ class LocationsClient(_EntityClient):
             + _path_value(location_id)
             + ')'
         )
-        return self._client.get(path, query=query, params=params)
+        data = self._client.get(path, query=query, params=params)
+        return _models.Location.model_validate(data)
 
     def list(
         self,
@@ -7076,7 +7536,7 @@ class LocationsClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> list[dict[str, Any]]:
+    ) -> list[_models.Location]:
         """List locations
 
         List locations objects.
@@ -7084,21 +7544,23 @@ class LocationsClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_location_get
         Operation id: dynamics_location_list
+        Response model: list[Location]
         """
 
         path = '/companies(' + _path_value(company_id) + ')/locations'
-        return self._client.get_value(path, query=query, params=params)
+        items = self._client.get_value(path, query=query, params=params)
+        return [_models.Location.model_validate(item) for item in items]
 
     def update(
         self,
         company_id: str,
         location_id: str,
-        body: Mapping[str, Any] | None = None,
+        body: _models.LocationUpdate | Mapping[str, Any] | None = None,
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
         etag: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.Location:
         """Update locations
 
         Updates a  location object in Dynamics 365 Business Central.
@@ -7106,6 +7568,8 @@ class LocationsClient(_EntityClient):
         HTTP method: PATCH
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_location_update
         Operation id: dynamics_location_update
+        Request model: LocationUpdate
+        Response model: Location
 
         Example request:
         PATCH https://{businesscentralPrefix}/api/v2.0/companies({id})/locations({id})
@@ -7137,13 +7601,14 @@ class LocationsClient(_EntityClient):
             + _path_value(location_id)
             + ')'
         )
-        return self._client.patch(
+        data = self._client.patch(
             path,
-            json=body,
+            json=_body_payload(body),
             query=query,
             params=params,
             etag=etag,
         )
+        return _models.Location.model_validate(data)
 
 class OpportunitiesClient(_EntityClient):
     """Generated operations for ``opportunities``."""
@@ -7152,11 +7617,11 @@ class OpportunitiesClient(_EntityClient):
         self,
         company_id: str,
         opportunity_id: str,
-        body: Mapping[str, Any] | None = None,
+        body: _models.OpportunityCreate | Mapping[str, Any] | None = None,
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.Opportunity:
         """Create opportunities
 
         Creates an opportunity object in Dynamics 365 Business Central.
@@ -7164,6 +7629,8 @@ class OpportunitiesClient(_EntityClient):
         HTTP method: POST
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_opportunity_create
         Operation id: dynamics_opportunity_create
+        Request model: OpportunityCreate
+        Response model: Opportunity
 
         Example request:
         POST https://{businesscentralPrefix}/api/v2.0/companies({id})/opportunities({id})
@@ -7198,7 +7665,13 @@ class OpportunitiesClient(_EntityClient):
             + _path_value(opportunity_id)
             + ')'
         )
-        return self._client.post(path, json=body, query=query, params=params)
+        data = self._client.post(
+            path,
+            json=_body_payload(body),
+            query=query,
+            params=params,
+        )
+        return _models.Opportunity.model_validate(data)
 
     def delete(
         self,
@@ -7240,7 +7713,7 @@ class OpportunitiesClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.Opportunity:
         """Get opportunities
 
         Gets an opportunity object in Dynamics 365 Business Central.
@@ -7248,6 +7721,7 @@ class OpportunitiesClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_opportunity_get
         Operation id: dynamics_opportunity_get
+        Response model: Opportunity
 
         Example request:
         GET https://{businesscentralPrefix}/api/v2.0/companies({id})/opportunities({id})
@@ -7275,7 +7749,8 @@ class OpportunitiesClient(_EntityClient):
             + _path_value(opportunity_id)
             + ')'
         )
-        return self._client.get(path, query=query, params=params)
+        data = self._client.get(path, query=query, params=params)
+        return _models.Opportunity.model_validate(data)
 
     def list(
         self,
@@ -7283,7 +7758,7 @@ class OpportunitiesClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> list[dict[str, Any]]:
+    ) -> list[_models.Opportunity]:
         """List opportunities
 
         List opportunities objects.
@@ -7291,21 +7766,23 @@ class OpportunitiesClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_opportunity_get
         Operation id: dynamics_opportunity_list
+        Response model: list[Opportunity]
         """
 
         path = '/companies(' + _path_value(company_id) + ')/opportunities'
-        return self._client.get_value(path, query=query, params=params)
+        items = self._client.get_value(path, query=query, params=params)
+        return [_models.Opportunity.model_validate(item) for item in items]
 
     def update(
         self,
         company_id: str,
         opportunity_id: str,
-        body: Mapping[str, Any] | None = None,
+        body: _models.OpportunityUpdate | Mapping[str, Any] | None = None,
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
         etag: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.Opportunity:
         """Update opportunities
 
         Updates an  opportunity object in Dynamics 365 Business Central.
@@ -7313,6 +7790,8 @@ class OpportunitiesClient(_EntityClient):
         HTTP method: PATCH
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_opportunity_update
         Operation id: dynamics_opportunity_update
+        Request model: OpportunityUpdate
+        Response model: Opportunity
 
         Example request:
         PATCH https://{businesscentralPrefix}/api/v2.0/companies({id})/opportunities({id})
@@ -7345,13 +7824,14 @@ class OpportunitiesClient(_EntityClient):
             + _path_value(opportunity_id)
             + ')'
         )
-        return self._client.patch(
+        data = self._client.patch(
             path,
-            json=body,
+            json=_body_payload(body),
             query=query,
             params=params,
             etag=etag,
         )
+        return _models.Opportunity.model_validate(data)
 
 class PaymentMethodsClient(_EntityClient):
     """Generated operations for ``payment_methods``."""
@@ -7359,11 +7839,11 @@ class PaymentMethodsClient(_EntityClient):
     def create(
         self,
         company_id: str,
-        body: Mapping[str, Any] | None = None,
+        body: _models.PaymentMethodCreate | Mapping[str, Any] | None = None,
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.PaymentMethod:
         """Create paymentMethods
 
         Creates a paymentMethod object in Dynamics 365 Business Central.
@@ -7371,6 +7851,8 @@ class PaymentMethodsClient(_EntityClient):
         HTTP method: POST
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_paymentmethod_create
         Operation id: dynamics_paymentmethod_create
+        Request model: PaymentMethodCreate
+        Response model: PaymentMethod
 
         Example request:
         POST https://{businesscentralPrefix}/api/v2.0/companies({id})/paymentMethods
@@ -7395,7 +7877,13 @@ class PaymentMethodsClient(_EntityClient):
         """
 
         path = '/companies(' + _path_value(company_id) + ')/paymentMethods'
-        return self._client.post(path, json=body, query=query, params=params)
+        data = self._client.post(
+            path,
+            json=_body_payload(body),
+            query=query,
+            params=params,
+        )
+        return _models.PaymentMethod.model_validate(data)
 
     def delete(
         self,
@@ -7437,7 +7925,7 @@ class PaymentMethodsClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.PaymentMethod:
         """Get paymentMethods
 
         Gets a paymentMethod object in Dynamics 365 Business Central.
@@ -7445,6 +7933,7 @@ class PaymentMethodsClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_paymentmethod_get
         Operation id: dynamics_paymentmethod_get
+        Response model: PaymentMethod
 
         Example request:
         GET https://{businesscentralPrefix}/api/v1.0/companies({id})/paymentMethods({id})
@@ -7466,7 +7955,8 @@ class PaymentMethodsClient(_EntityClient):
             + _path_value(payment_method_id)
             + ')'
         )
-        return self._client.get(path, query=query, params=params)
+        data = self._client.get(path, query=query, params=params)
+        return _models.PaymentMethod.model_validate(data)
 
     def list(
         self,
@@ -7474,7 +7964,7 @@ class PaymentMethodsClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> list[dict[str, Any]]:
+    ) -> list[_models.PaymentMethod]:
         """List paymentMethods
 
         List paymentMethods objects.
@@ -7482,21 +7972,23 @@ class PaymentMethodsClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_paymentmethod_get
         Operation id: dynamics_paymentmethod_list
+        Response model: list[PaymentMethod]
         """
 
         path = '/companies(' + _path_value(company_id) + ')/paymentMethods'
-        return self._client.get_value(path, query=query, params=params)
+        items = self._client.get_value(path, query=query, params=params)
+        return [_models.PaymentMethod.model_validate(item) for item in items]
 
     def update(
         self,
         company_id: str,
         payment_method_id: str,
-        body: Mapping[str, Any] | None = None,
+        body: _models.PaymentMethodUpdate | Mapping[str, Any] | None = None,
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
         etag: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.PaymentMethod:
         """Update paymentMethods
 
         Updates a paymentMethod object in Dynamics 365 Business Central.
@@ -7504,6 +7996,8 @@ class PaymentMethodsClient(_EntityClient):
         HTTP method: PATCH
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_paymentmethod_update
         Operation id: dynamics_paymentmethod_update
+        Request model: PaymentMethodUpdate
+        Response model: PaymentMethod
 
         Example request:
         PATCH https://{businesscentralPrefix}/api/v2.0/companies({id})/paymentMethods({id})
@@ -7532,13 +8026,14 @@ class PaymentMethodsClient(_EntityClient):
             + _path_value(payment_method_id)
             + ')'
         )
-        return self._client.patch(
+        data = self._client.patch(
             path,
-            json=body,
+            json=_body_payload(body),
             query=query,
             params=params,
             etag=etag,
         )
+        return _models.PaymentMethod.model_validate(data)
 
 class PaymentTermsClient(_EntityClient):
     """Generated operations for ``payment_terms``."""
@@ -7546,11 +8041,11 @@ class PaymentTermsClient(_EntityClient):
     def create(
         self,
         company_id: str,
-        body: Mapping[str, Any] | None = None,
+        body: _models.PaymentTermCreate | Mapping[str, Any] | None = None,
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.PaymentTerm:
         """Create paymentTerms
 
         Creates a paymentTerm object in Dynamics 365 Business Central.
@@ -7558,6 +8053,8 @@ class PaymentTermsClient(_EntityClient):
         HTTP method: POST
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_paymentterm_create
         Operation id: dynamics_paymentterm_create
+        Request model: PaymentTermCreate
+        Response model: PaymentTerm
 
         Example request:
         POST https://{businesscentralPrefix}/api/v2.0/companies({id})/paymentTerms
@@ -7589,7 +8086,13 @@ class PaymentTermsClient(_EntityClient):
         """
 
         path = '/companies(' + _path_value(company_id) + ')/paymentTerms'
-        return self._client.post(path, json=body, query=query, params=params)
+        data = self._client.post(
+            path,
+            json=_body_payload(body),
+            query=query,
+            params=params,
+        )
+        return _models.PaymentTerm.model_validate(data)
 
     def delete(
         self,
@@ -7631,7 +8134,7 @@ class PaymentTermsClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.PaymentTerm:
         """Get paymentTerms
 
         Gets a paymentTerm object in Dynamics 365 Business Central.
@@ -7639,6 +8142,7 @@ class PaymentTermsClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_paymentterm_get
         Operation id: dynamics_paymentterm_get
+        Response model: PaymentTerm
 
         Example request:
         GET https://{businesscentralPrefix}/api/v2.0/companies({id})/paymentTerms({id})
@@ -7663,7 +8167,8 @@ class PaymentTermsClient(_EntityClient):
             + _path_value(payment_term_id)
             + ')'
         )
-        return self._client.get(path, query=query, params=params)
+        data = self._client.get(path, query=query, params=params)
+        return _models.PaymentTerm.model_validate(data)
 
     def list(
         self,
@@ -7671,7 +8176,7 @@ class PaymentTermsClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> list[dict[str, Any]]:
+    ) -> list[_models.PaymentTerm]:
         """List paymentTerms
 
         List paymentTerms objects.
@@ -7679,21 +8184,23 @@ class PaymentTermsClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_paymentterm_get
         Operation id: dynamics_paymentterm_list
+        Response model: list[PaymentTerm]
         """
 
         path = '/companies(' + _path_value(company_id) + ')/paymentTerms'
-        return self._client.get_value(path, query=query, params=params)
+        items = self._client.get_value(path, query=query, params=params)
+        return [_models.PaymentTerm.model_validate(item) for item in items]
 
     def update(
         self,
         company_id: str,
         payment_term_id: str,
-        body: Mapping[str, Any] | None = None,
+        body: _models.PaymentTermUpdate | Mapping[str, Any] | None = None,
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
         etag: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.PaymentTerm:
         """Update paymentTerms
 
         Updates a paymentTerm object in Dynamics 365 Business Central.
@@ -7701,6 +8208,8 @@ class PaymentTermsClient(_EntityClient):
         HTTP method: PATCH
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_paymentterm_update
         Operation id: dynamics_paymentterm_update
+        Request model: PaymentTermUpdate
+        Response model: PaymentTerm
 
         Example request:
         PATCH https://{businesscentralPrefix}/api/v2.0/companies({id})/paymentTerms({id})
@@ -7734,13 +8243,14 @@ class PaymentTermsClient(_EntityClient):
             + _path_value(payment_term_id)
             + ')'
         )
-        return self._client.patch(
+        data = self._client.patch(
             path,
-            json=body,
+            json=_body_payload(body),
             query=query,
             params=params,
             etag=etag,
         )
+        return _models.PaymentTerm.model_validate(data)
 
 class PdfDocumentsClient(_EntityClient):
     """Generated operations for ``pdf_documents``."""
@@ -7752,7 +8262,7 @@ class PdfDocumentsClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.PdfDocument:
         """Get pdfDocuments
 
         Gets a pdfDocument object in Dynamics 365 Business Central.
@@ -7760,6 +8270,7 @@ class PdfDocumentsClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_pdfdocument_get
         Operation id: dynamics_pdfdocument_get
+        Response model: PdfDocument
 
         Example request:
         GET https://{businesscentralPrefix}/api/v2.0/companies({id})/salesInvoices({id})/pdfD...
@@ -7780,7 +8291,8 @@ class PdfDocumentsClient(_EntityClient):
             + _path_value(sales_invoice_id)
             + ')/pdfDocument'
         )
-        return self._client.get(path, query=query, params=params)
+        data = self._client.get(path, query=query, params=params)
+        return _models.PdfDocument.model_validate(data)
 
 class PicturesClient(_EntityClient):
     """Generated operations for ``pictures``."""
@@ -7825,7 +8337,7 @@ class PicturesClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.Picture:
         """Get picture
 
         Gets a picture object in Dynamics 365 Business Central.
@@ -7833,6 +8345,7 @@ class PicturesClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_picture_get
         Operation id: dynamics_picture_get
+        Response model: Picture
 
         Example request:
         GET https://{businesscentralPrefix}/api/v2.0/companies(companyId)/items(itemId)/picture
@@ -7856,7 +8369,8 @@ class PicturesClient(_EntityClient):
             + _path_value(item_id)
             + ')/picture'
         )
-        return self._client.get(path, query=query, params=params)
+        data = self._client.get(path, query=query, params=params)
+        return _models.Picture.model_validate(data)
 
     def picture(
         self,
@@ -7895,7 +8409,7 @@ class PicturesClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.Picture:
         """Get item picture
 
         Gets an item picture in Dynamics 365 Business Central.
@@ -7903,6 +8417,7 @@ class PicturesClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_item_get_picture
         Operation id: dynamics_item_get_picture
+        Response model: Picture
 
         Example request:
         GET https://{businesscentralPrefix}/api/v2.0/companies({companyId})/items({itemId})/p...
@@ -7925,7 +8440,8 @@ class PicturesClient(_EntityClient):
             + _path_value(item_id)
             + ')/picture'
         )
-        return self._client.get(path, query=query, params=params)
+        data = self._client.get(path, query=query, params=params)
+        return _models.Picture.model_validate(data)
 
     def picture_item_update_picture(
         self,
@@ -7936,7 +8452,7 @@ class PicturesClient(_EntityClient):
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
         etag: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.Picture:
         """Update item picture
 
         Updates the item picture in Dynamics 365 Business Central.
@@ -7944,6 +8460,7 @@ class PicturesClient(_EntityClient):
         HTTP method: PATCH
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_item_update_picture
         Operation id: dynamics_item_update_picture
+        Response model: Picture
 
         Example request:
         PATCH https://{businesscentralPrefix}/api/v2.0/companies({companyId})/items({itemId})...
@@ -7956,13 +8473,14 @@ class PicturesClient(_EntityClient):
             + _path_value(item_id)
             + ')/picture'
         )
-        return self._client.patch(
+        data = self._client.patch(
             path,
-            json=body,
+            json=_body_payload(body),
             query=query,
             params=params,
             etag=etag,
         )
+        return _models.Picture.model_validate(data)
 
     def picture_item_create_picture(
         self,
@@ -7972,7 +8490,7 @@ class PicturesClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.Picture:
         """Create item picture
 
         Creates a picture of the item object in Dynamics 365 Business Central.
@@ -7980,6 +8498,7 @@ class PicturesClient(_EntityClient):
         HTTP method: POST
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_item_create_picture
         Operation id: dynamics_item_create_picture
+        Response model: Picture
 
         Example request:
         POST https://{businesscentralPrefix}/api/v2.0/companies({companyId})/items({itemId})/...
@@ -7992,7 +8511,13 @@ class PicturesClient(_EntityClient):
             + _path_value(item_id)
             + ')/picture'
         )
-        return self._client.post(path, json=body, query=query, params=params)
+        data = self._client.post(
+            path,
+            json=_body_payload(body),
+            query=query,
+            params=params,
+        )
+        return _models.Picture.model_validate(data)
 
 class PictureContentsClient(_EntityClient):
     """Generated operations for ``picture_contents``."""
@@ -8028,7 +8553,7 @@ class PictureContentsClient(_EntityClient):
         )
         return self._client.patch(
             path,
-            json=body,
+            json=_body_payload(body),
             query=query,
             params=params,
             etag=etag,
@@ -8065,7 +8590,7 @@ class PictureContentsClient(_EntityClient):
         )
         return self._client.patch(
             path,
-            json=body,
+            json=_body_payload(body),
             query=query,
             params=params,
             etag=etag,
@@ -8077,11 +8602,11 @@ class ProjectsClient(_EntityClient):
     def create(
         self,
         company_id: str,
-        body: Mapping[str, Any] | None = None,
+        body: _models.ProjectCreate | Mapping[str, Any] | None = None,
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.Project:
         """Create projects
 
         Creates a project object in Dynamics 365 Business Central.
@@ -8089,6 +8614,8 @@ class ProjectsClient(_EntityClient):
         HTTP method: POST
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_project_create
         Operation id: dynamics_project_create
+        Request model: ProjectCreate
+        Response model: Project
 
         Example request:
         POST https://{businesscentralPrefix}/api/v2.0/companies({id})/projects
@@ -8111,7 +8638,13 @@ class ProjectsClient(_EntityClient):
         """
 
         path = '/companies(' + _path_value(company_id) + ')/projects'
-        return self._client.post(path, json=body, query=query, params=params)
+        data = self._client.post(
+            path,
+            json=_body_payload(body),
+            query=query,
+            params=params,
+        )
+        return _models.Project.model_validate(data)
 
     def delete(
         self,
@@ -8153,7 +8686,7 @@ class ProjectsClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.Project:
         """Get projects
 
         Gets a project object in Dynamics 365 Business Central.
@@ -8161,6 +8694,7 @@ class ProjectsClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_project_get
         Operation id: dynamics_project_get
+        Response model: Project
 
         Example request:
         GET https://{businesscentralPrefix}/api/v2.0/companies({id})/projects({id})
@@ -8180,7 +8714,8 @@ class ProjectsClient(_EntityClient):
             + _path_value(project_id)
             + ')'
         )
-        return self._client.get(path, query=query, params=params)
+        data = self._client.get(path, query=query, params=params)
+        return _models.Project.model_validate(data)
 
     def list(
         self,
@@ -8188,7 +8723,7 @@ class ProjectsClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> list[dict[str, Any]]:
+    ) -> list[_models.Project]:
         """List projects
 
         List projects objects.
@@ -8196,21 +8731,23 @@ class ProjectsClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_project_get
         Operation id: dynamics_project_list
+        Response model: list[Project]
         """
 
         path = '/companies(' + _path_value(company_id) + ')/projects'
-        return self._client.get_value(path, query=query, params=params)
+        items = self._client.get_value(path, query=query, params=params)
+        return [_models.Project.model_validate(item) for item in items]
 
     def update(
         self,
         company_id: str,
         project_id: str,
-        body: Mapping[str, Any] | None = None,
+        body: _models.ProjectUpdate | Mapping[str, Any] | None = None,
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
         etag: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.Project:
         """Update projects
 
         Updates a project object in Dynamics 365 Business Central.
@@ -8218,6 +8755,8 @@ class ProjectsClient(_EntityClient):
         HTTP method: PATCH
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_project_update
         Operation id: dynamics_project_update
+        Request model: ProjectUpdate
+        Response model: Project
 
         Example request:
         PATCH https://{businesscentralPrefix}/api/v2.0/companies({id})/projects({id})
@@ -8245,13 +8784,14 @@ class ProjectsClient(_EntityClient):
             + _path_value(project_id)
             + ')'
         )
-        return self._client.patch(
+        data = self._client.patch(
             path,
-            json=body,
+            json=_body_payload(body),
             query=query,
             params=params,
             etag=etag,
         )
+        return _models.Project.model_validate(data)
 
 class PurchaseCreditMemosClient(_EntityClient):
     """Generated operations for ``purchase_credit_memos``."""
@@ -8260,11 +8800,11 @@ class PurchaseCreditMemosClient(_EntityClient):
         self,
         company_id: str,
         purchase_credit_memo_id: str,
-        body: Mapping[str, Any] | None = None,
+        body: _models.PurchaseCreditMemoCreate | Mapping[str, Any] | None = None,
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.PurchaseCreditMemo:
         """Create purchaseCreditMemos
 
         Creates a purchase credit memo object in Dynamics 365 Business Central.
@@ -8272,6 +8812,8 @@ class PurchaseCreditMemosClient(_EntityClient):
         HTTP method: POST
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_purchasecreditmemo_create
         Operation id: dynamics_purchasecreditmemo_create
+        Request model: PurchaseCreditMemoCreate
+        Response model: PurchaseCreditMemo
 
         Example request:
         POST https://{businesscentralPrefix}/api/v2.0/companies({id})/purchaseCreditMemos
@@ -8311,7 +8853,13 @@ class PurchaseCreditMemosClient(_EntityClient):
             + _path_value(purchase_credit_memo_id)
             + ')'
         )
-        return self._client.post(path, json=body, query=query, params=params)
+        data = self._client.post(
+            path,
+            json=_body_payload(body),
+            query=query,
+            params=params,
+        )
+        return _models.PurchaseCreditMemo.model_validate(data)
 
     def delete(
         self,
@@ -8353,7 +8901,7 @@ class PurchaseCreditMemosClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.PurchaseCreditMemo:
         """Get purchaseCreditMemos
 
         Gets a purchase credit memo object in Dynamics 365 Business Central.
@@ -8361,6 +8909,7 @@ class PurchaseCreditMemosClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_purchasecreditmemo_get
         Operation id: dynamics_purchasecreditmemo_get
+        Response model: PurchaseCreditMemo
 
         Example request:
         GET https://{businesscentralPrefix}/api/v2.0/companies({id})/purchaseCreditMemos({id})
@@ -8388,7 +8937,8 @@ class PurchaseCreditMemosClient(_EntityClient):
             + _path_value(purchase_credit_memo_id)
             + ')'
         )
-        return self._client.get(path, query=query, params=params)
+        data = self._client.get(path, query=query, params=params)
+        return _models.PurchaseCreditMemo.model_validate(data)
 
     def list(
         self,
@@ -8396,7 +8946,7 @@ class PurchaseCreditMemosClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> list[dict[str, Any]]:
+    ) -> list[_models.PurchaseCreditMemo]:
         """List purchaseCreditMemos
 
         List purchaseCreditMemos objects.
@@ -8404,21 +8954,23 @@ class PurchaseCreditMemosClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_purchasecreditmemo_get
         Operation id: dynamics_purchasecreditmemo_list
+        Response model: list[PurchaseCreditMemo]
         """
 
         path = '/companies(' + _path_value(company_id) + ')/purchaseCreditMemos'
-        return self._client.get_value(path, query=query, params=params)
+        items = self._client.get_value(path, query=query, params=params)
+        return [_models.PurchaseCreditMemo.model_validate(item) for item in items]
 
     def update(
         self,
         company_id: str,
         purchase_credit_memo_id: str,
-        body: Mapping[str, Any] | None = None,
+        body: _models.PurchaseCreditMemoUpdate | Mapping[str, Any] | None = None,
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
         etag: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.PurchaseCreditMemo:
         """Update purchaseCreditMemos
 
         Updates a  purchase credit memo object in Dynamics 365 Business Central.
@@ -8426,6 +8978,8 @@ class PurchaseCreditMemosClient(_EntityClient):
         HTTP method: PATCH
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_purchasecreditmemo_update
         Operation id: dynamics_purchasecreditmemo_update
+        Request model: PurchaseCreditMemoUpdate
+        Response model: PurchaseCreditMemo
 
         Example request:
         PATCH https://{businesscentralPrefix}/api/v2.0/companies({id})/purchaseCreditMemos({id})
@@ -8458,13 +9012,14 @@ class PurchaseCreditMemosClient(_EntityClient):
             + _path_value(purchase_credit_memo_id)
             + ')'
         )
-        return self._client.patch(
+        data = self._client.patch(
             path,
-            json=body,
+            json=_body_payload(body),
             query=query,
             params=params,
             etag=etag,
         )
+        return _models.PurchaseCreditMemo.model_validate(data)
 
 class PurchaseCreditMemoLinesClient(_EntityClient):
     """Generated operations for ``purchase_credit_memo_lines``."""
@@ -8473,11 +9028,11 @@ class PurchaseCreditMemoLinesClient(_EntityClient):
         self,
         company_id: str,
         purchase_credit_memo_line_id: str,
-        body: Mapping[str, Any] | None = None,
+        body: _models.PurchaseCreditMemoLineCreate | Mapping[str, Any] | None = None,
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.PurchaseCreditMemoLine:
         """Create purchaseCreditMemoLines
 
         Creates a purchase credit memo line object in Dynamics 365 Business Central.
@@ -8485,6 +9040,8 @@ class PurchaseCreditMemoLinesClient(_EntityClient):
         HTTP method: POST
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_purchasecreditmemoline_create
         Operation id: dynamics_purchasecreditmemoline_create
+        Request model: PurchaseCreditMemoLineCreate
+        Response model: PurchaseCreditMemoLine
 
         Example request:
         POST https://{businesscentralPrefix}/api/v2.0/companies({id})/purchaseCreditMemoLines...
@@ -8524,7 +9081,13 @@ class PurchaseCreditMemoLinesClient(_EntityClient):
             + _path_value(purchase_credit_memo_line_id)
             + ')'
         )
-        return self._client.post(path, json=body, query=query, params=params)
+        data = self._client.post(
+            path,
+            json=_body_payload(body),
+            query=query,
+            params=params,
+        )
+        return _models.PurchaseCreditMemoLine.model_validate(data)
 
     def delete(
         self,
@@ -8566,7 +9129,7 @@ class PurchaseCreditMemoLinesClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.PurchaseCreditMemoLine:
         """Get purchaseCreditMemoLines
 
         Gets a purchase credit memo line object in Dynamics 365 Business Central.
@@ -8574,6 +9137,7 @@ class PurchaseCreditMemoLinesClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_purchasecreditmemoline_get
         Operation id: dynamics_purchasecreditmemoline_get
+        Response model: PurchaseCreditMemoLine
 
         Example request:
         GET https://{businesscentralPrefix}/api/v2.0/companies({id})/purchaseCreditMemoLines(...
@@ -8601,7 +9165,8 @@ class PurchaseCreditMemoLinesClient(_EntityClient):
             + _path_value(purchase_credit_memo_line_id)
             + ')'
         )
-        return self._client.get(path, query=query, params=params)
+        data = self._client.get(path, query=query, params=params)
+        return _models.PurchaseCreditMemoLine.model_validate(data)
 
     def list(
         self,
@@ -8609,7 +9174,7 @@ class PurchaseCreditMemoLinesClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> list[dict[str, Any]]:
+    ) -> list[_models.PurchaseCreditMemoLine]:
         """List purchaseCreditMemoLines
 
         List purchaseCreditMemoLines objects.
@@ -8617,21 +9182,23 @@ class PurchaseCreditMemoLinesClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_purchasecreditmemoline_get
         Operation id: dynamics_purchasecreditmemoline_list
+        Response model: list[PurchaseCreditMemoLine]
         """
 
         path = '/companies(' + _path_value(company_id) + ')/purchaseCreditMemoLines'
-        return self._client.get_value(path, query=query, params=params)
+        items = self._client.get_value(path, query=query, params=params)
+        return [_models.PurchaseCreditMemoLine.model_validate(item) for item in items]
 
     def update(
         self,
         company_id: str,
         purchase_credit_memo_line_id: str,
-        body: Mapping[str, Any] | None = None,
+        body: _models.PurchaseCreditMemoLineUpdate | Mapping[str, Any] | None = None,
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
         etag: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.PurchaseCreditMemoLine:
         """Update purchaseCreditMemoLines
 
         Updates a  purchase credit memo line object in Dynamics 365 Business Central.
@@ -8639,6 +9206,8 @@ class PurchaseCreditMemoLinesClient(_EntityClient):
         HTTP method: PATCH
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_purchasecreditmemoline_update
         Operation id: dynamics_purchasecreditmemoline_update
+        Request model: PurchaseCreditMemoLineUpdate
+        Response model: PurchaseCreditMemoLine
 
         Example request:
         PATCH https://{businesscentralPrefix}/api/v2.0/companies({id})/purchaseCreditMemoLine...
@@ -8671,13 +9240,14 @@ class PurchaseCreditMemoLinesClient(_EntityClient):
             + _path_value(purchase_credit_memo_line_id)
             + ')'
         )
-        return self._client.patch(
+        data = self._client.patch(
             path,
-            json=body,
+            json=_body_payload(body),
             query=query,
             params=params,
             etag=etag,
         )
+        return _models.PurchaseCreditMemoLine.model_validate(data)
 
 class PurchaseInvoicesClient(_EntityClient):
     """Generated operations for ``purchase_invoices``."""
@@ -8685,11 +9255,11 @@ class PurchaseInvoicesClient(_EntityClient):
     def create(
         self,
         company_id: str,
-        body: Mapping[str, Any] | None = None,
+        body: _models.PurchaseInvoiceCreate | Mapping[str, Any] | None = None,
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.PurchaseInvoice:
         """Create purchaseInvoices
 
         Creates a purchase invoice object in Dynamics 365 Business Central.
@@ -8697,6 +9267,8 @@ class PurchaseInvoicesClient(_EntityClient):
         HTTP method: POST
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_purchaseInvoice_create
         Operation id: dynamics_purchaseInvoice_create
+        Request model: PurchaseInvoiceCreate
+        Response model: PurchaseInvoice
 
         Example request:
         POST https://{businesscentralPrefix}/api/v2.0/companies({id})/purchaseInvoices
@@ -8730,7 +9302,13 @@ class PurchaseInvoicesClient(_EntityClient):
         """
 
         path = '/companies(' + _path_value(company_id) + ')/purchaseInvoices'
-        return self._client.post(path, json=body, query=query, params=params)
+        data = self._client.post(
+            path,
+            json=_body_payload(body),
+            query=query,
+            params=params,
+        )
+        return _models.PurchaseInvoice.model_validate(data)
 
     def delete(
         self,
@@ -8772,7 +9350,7 @@ class PurchaseInvoicesClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.PurchaseInvoice:
         """Get purchaseInvoices
 
         Gets a purchase invoice object in Dynamics 365 Business Central.
@@ -8780,6 +9358,7 @@ class PurchaseInvoicesClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_purchaseinvoice_get
         Operation id: dynamics_purchaseinvoice_get
+        Response model: PurchaseInvoice
 
         Example request:
         GET https://{businesscentralPrefix}/api/v2.0/companies({id})/purchaseInvoices({id})
@@ -8807,7 +9386,8 @@ class PurchaseInvoicesClient(_EntityClient):
             + _path_value(purchase_invoice_id)
             + ')'
         )
-        return self._client.get(path, query=query, params=params)
+        data = self._client.get(path, query=query, params=params)
+        return _models.PurchaseInvoice.model_validate(data)
 
     def list(
         self,
@@ -8815,7 +9395,7 @@ class PurchaseInvoicesClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> list[dict[str, Any]]:
+    ) -> list[_models.PurchaseInvoice]:
         """List purchaseInvoices
 
         List purchaseInvoices objects.
@@ -8823,21 +9403,23 @@ class PurchaseInvoicesClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_purchaseinvoice_get
         Operation id: dynamics_purchaseinvoice_list
+        Response model: list[PurchaseInvoice]
         """
 
         path = '/companies(' + _path_value(company_id) + ')/purchaseInvoices'
-        return self._client.get_value(path, query=query, params=params)
+        items = self._client.get_value(path, query=query, params=params)
+        return [_models.PurchaseInvoice.model_validate(item) for item in items]
 
     def update(
         self,
         company_id: str,
         purchase_invoice_id: str,
-        body: Mapping[str, Any] | None = None,
+        body: _models.PurchaseInvoiceUpdate | Mapping[str, Any] | None = None,
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
         etag: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.PurchaseInvoice:
         """Update purchaseInvoices
 
         Updates a purchase invoice object in Dynamics 365 Business Central.
@@ -8845,6 +9427,8 @@ class PurchaseInvoicesClient(_EntityClient):
         HTTP method: PATCH
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_purchaseinvoice_update
         Operation id: dynamics_purchaseinvoice_update
+        Request model: PurchaseInvoiceUpdate
+        Response model: PurchaseInvoice
 
         Example request:
         PATCH https://{businesscentralPrefix}/api/v2.0/companies({id})/purchaseInvoices({id})
@@ -8877,13 +9461,14 @@ class PurchaseInvoicesClient(_EntityClient):
             + _path_value(purchase_invoice_id)
             + ')'
         )
-        return self._client.patch(
+        data = self._client.patch(
             path,
-            json=body,
+            json=_body_payload(body),
             query=query,
             params=params,
             etag=etag,
         )
+        return _models.PurchaseInvoice.model_validate(data)
 
 class PurchaseInvoiceLinesClient(_EntityClient):
     """Generated operations for ``purchase_invoice_lines``."""
@@ -8892,11 +9477,11 @@ class PurchaseInvoiceLinesClient(_EntityClient):
         self,
         company_id: str,
         purchase_invoice_id: str,
-        body: Mapping[str, Any] | None = None,
+        body: _models.PurchaseInvoiceLineCreate | Mapping[str, Any] | None = None,
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.PurchaseInvoiceLine:
         """Create purchaseInvoiceLines
 
         Creates a purchase invoice line object in Dynamics 365 Business Central.
@@ -8904,6 +9489,8 @@ class PurchaseInvoiceLinesClient(_EntityClient):
         HTTP method: POST
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_purchaseInvoiceLine_create
         Operation id: dynamics_purchaseInvoiceLine_create
+        Request model: PurchaseInvoiceLineCreate
+        Response model: PurchaseInvoiceLine
 
         Example request:
         POST https://{businesscentralPrefix}/api/v2.0/companies({id})/purchaseInvoices({id})/...
@@ -8943,7 +9530,13 @@ class PurchaseInvoiceLinesClient(_EntityClient):
             + _path_value(purchase_invoice_id)
             + ')/purchaseInvoiceLines'
         )
-        return self._client.post(path, json=body, query=query, params=params)
+        data = self._client.post(
+            path,
+            json=_body_payload(body),
+            query=query,
+            params=params,
+        )
+        return _models.PurchaseInvoiceLine.model_validate(data)
 
     def delete(
         self,
@@ -8989,7 +9582,7 @@ class PurchaseInvoiceLinesClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.PurchaseInvoiceLine:
         """Get purchaseInvoiceLines
 
         Gets a purchase invoice line object in Dynamics 365 Business Central.
@@ -8997,6 +9590,7 @@ class PurchaseInvoiceLinesClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_purchaseinvoiceline_get
         Operation id: dynamics_purchaseinvoiceline_get
+        Response model: PurchaseInvoiceLine
 
         Example request:
         GET https://{businesscentralPrefix}/api/v2.0/companies({id})/purchaseInvoices({id})/p...
@@ -9026,7 +9620,8 @@ class PurchaseInvoiceLinesClient(_EntityClient):
             + _path_value(purchase_invoice_line_id)
             + ')'
         )
-        return self._client.get(path, query=query, params=params)
+        data = self._client.get(path, query=query, params=params)
+        return _models.PurchaseInvoiceLine.model_validate(data)
 
     def list(
         self,
@@ -9035,7 +9630,7 @@ class PurchaseInvoiceLinesClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> list[dict[str, Any]]:
+    ) -> list[_models.PurchaseInvoiceLine]:
         """List purchaseInvoiceLines
 
         List purchaseInvoiceLines objects.
@@ -9043,6 +9638,7 @@ class PurchaseInvoiceLinesClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_purchaseinvoiceline_get
         Operation id: dynamics_purchaseinvoiceline_list
+        Response model: list[PurchaseInvoiceLine]
         """
 
         path = (
@@ -9052,19 +9648,20 @@ class PurchaseInvoiceLinesClient(_EntityClient):
             + _path_value(purchase_invoice_id)
             + ')/purchaseInvoiceLines'
         )
-        return self._client.get_value(path, query=query, params=params)
+        items = self._client.get_value(path, query=query, params=params)
+        return [_models.PurchaseInvoiceLine.model_validate(item) for item in items]
 
     def update(
         self,
         company_id: str,
         purchase_invoice_id: str,
         purchase_invoice_line_id: str,
-        body: Mapping[str, Any] | None = None,
+        body: _models.PurchaseInvoiceLineUpdate | Mapping[str, Any] | None = None,
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
         etag: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.PurchaseInvoiceLine:
         """Update purchaseInvoiceLines
 
         Updates a purchase invoice line object in Dynamics 365 Business Central.
@@ -9072,6 +9669,8 @@ class PurchaseInvoiceLinesClient(_EntityClient):
         HTTP method: PATCH
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_purchaseinvoiceline_update
         Operation id: dynamics_purchaseinvoiceline_update
+        Request model: PurchaseInvoiceLineUpdate
+        Response model: PurchaseInvoiceLine
 
         Example request:
         PATCH https://{businesscentralPrefix}/api/v2.0/companies({id})/purchaseInvoices({id})...
@@ -9106,13 +9705,14 @@ class PurchaseInvoiceLinesClient(_EntityClient):
             + _path_value(purchase_invoice_line_id)
             + ')'
         )
-        return self._client.patch(
+        data = self._client.patch(
             path,
-            json=body,
+            json=_body_payload(body),
             query=query,
             params=params,
             etag=etag,
         )
+        return _models.PurchaseInvoiceLine.model_validate(data)
 
 class PurchaseOrdersClient(_EntityClient):
     """Generated operations for ``purchase_orders``."""
@@ -9120,11 +9720,11 @@ class PurchaseOrdersClient(_EntityClient):
     def create(
         self,
         company_id: str,
-        body: Mapping[str, Any] | None = None,
+        body: _models.PurchaseOrderCreate | Mapping[str, Any] | None = None,
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.PurchaseOrder:
         """Create purchaseOrders
 
         Creates a purchase order object in Dynamics 365 Business Central.
@@ -9132,6 +9732,8 @@ class PurchaseOrdersClient(_EntityClient):
         HTTP method: POST
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_purchaseorder_create
         Operation id: dynamics_purchaseorder_create
+        Request model: PurchaseOrderCreate
+        Response model: PurchaseOrder
 
         Example request:
         POST https://{businesscentralPrefix}/api/v2.0/companies({id})/purchaseOrders
@@ -9165,7 +9767,13 @@ class PurchaseOrdersClient(_EntityClient):
         """
 
         path = '/companies(' + _path_value(company_id) + ')/purchaseOrders'
-        return self._client.post(path, json=body, query=query, params=params)
+        data = self._client.post(
+            path,
+            json=_body_payload(body),
+            query=query,
+            params=params,
+        )
+        return _models.PurchaseOrder.model_validate(data)
 
     def delete(
         self,
@@ -9207,7 +9815,7 @@ class PurchaseOrdersClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.PurchaseOrder:
         """Get purchaseOrders
 
         Gets a purchase order object in Dynamics 365 Business Central.
@@ -9215,6 +9823,7 @@ class PurchaseOrdersClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_purchaseorder_get
         Operation id: dynamics_purchaseorder_get
+        Response model: PurchaseOrder
 
         Example request:
         GET https://{businesscentralPrefix}/api/v2.0/companies({id})/purchaseOrders({id})
@@ -9242,7 +9851,8 @@ class PurchaseOrdersClient(_EntityClient):
             + _path_value(purchase_order_id)
             + ')'
         )
-        return self._client.get(path, query=query, params=params)
+        data = self._client.get(path, query=query, params=params)
+        return _models.PurchaseOrder.model_validate(data)
 
     def list(
         self,
@@ -9250,7 +9860,7 @@ class PurchaseOrdersClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> list[dict[str, Any]]:
+    ) -> list[_models.PurchaseOrder]:
         """List purchaseOrders
 
         List purchaseOrders objects.
@@ -9258,21 +9868,23 @@ class PurchaseOrdersClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_purchaseorder_get
         Operation id: dynamics_purchaseorder_list
+        Response model: list[PurchaseOrder]
         """
 
         path = '/companies(' + _path_value(company_id) + ')/purchaseOrders'
-        return self._client.get_value(path, query=query, params=params)
+        items = self._client.get_value(path, query=query, params=params)
+        return [_models.PurchaseOrder.model_validate(item) for item in items]
 
     def update(
         self,
         company_id: str,
         purchase_order_id: str,
-        body: Mapping[str, Any] | None = None,
+        body: _models.PurchaseOrderUpdate | Mapping[str, Any] | None = None,
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
         etag: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.PurchaseOrder:
         """Update purchaseOrders
 
         Updates a purchase order object in Dynamics 365 Business Central.
@@ -9280,6 +9892,8 @@ class PurchaseOrdersClient(_EntityClient):
         HTTP method: PATCH
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_purchaseorder_update
         Operation id: dynamics_purchaseorder_update
+        Request model: PurchaseOrderUpdate
+        Response model: PurchaseOrder
 
         Example request:
         PATCH https://{businesscentralPrefix}/api/v2.0/companies({id})/purchaseOrders({id})
@@ -9312,13 +9926,14 @@ class PurchaseOrdersClient(_EntityClient):
             + _path_value(purchase_order_id)
             + ')'
         )
-        return self._client.patch(
+        data = self._client.patch(
             path,
-            json=body,
+            json=_body_payload(body),
             query=query,
             params=params,
             etag=etag,
         )
+        return _models.PurchaseOrder.model_validate(data)
 
 class PurchaseOrderLinesClient(_EntityClient):
     """Generated operations for ``purchase_order_lines``."""
@@ -9327,11 +9942,11 @@ class PurchaseOrderLinesClient(_EntityClient):
         self,
         company_id: str,
         purchase_order_id: str,
-        body: Mapping[str, Any] | None = None,
+        body: _models.PurchaseOrderLineCreate | Mapping[str, Any] | None = None,
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.PurchaseOrderLine:
         """Create purchaseOrderLine
 
         Creates a purchase order line object in Dynamics 365 Business Central.
@@ -9339,6 +9954,8 @@ class PurchaseOrderLinesClient(_EntityClient):
         HTTP method: POST
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_purchaseorderline_create
         Operation id: dynamics_purchaseorderline_create
+        Request model: PurchaseOrderLineCreate
+        Response model: PurchaseOrderLine
 
         Example request:
         POST https://{businesscentralPrefix}/api/v2.0/companies({id})/purchaseOrderLines
@@ -9378,7 +9995,13 @@ class PurchaseOrderLinesClient(_EntityClient):
             + _path_value(purchase_order_id)
             + ')/purchaseOrderLines'
         )
-        return self._client.post(path, json=body, query=query, params=params)
+        data = self._client.post(
+            path,
+            json=_body_payload(body),
+            query=query,
+            params=params,
+        )
+        return _models.PurchaseOrderLine.model_validate(data)
 
     def delete(
         self,
@@ -9424,7 +10047,7 @@ class PurchaseOrderLinesClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.PurchaseOrderLine:
         """Get purchaseOrderLines
 
         Gets a purchase order line object in Dynamics 365 Business Central.
@@ -9432,6 +10055,7 @@ class PurchaseOrderLinesClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_purchaseorderline_get
         Operation id: dynamics_purchaseorderline_get
+        Response model: PurchaseOrderLine
 
         Example request:
         GET https://{businesscentralPrefix}/api/v2.0/companies({id})/purchaseOrderLines({purc...
@@ -9461,7 +10085,8 @@ class PurchaseOrderLinesClient(_EntityClient):
             + _path_value(purchase_order_line_id)
             + ')'
         )
-        return self._client.get(path, query=query, params=params)
+        data = self._client.get(path, query=query, params=params)
+        return _models.PurchaseOrderLine.model_validate(data)
 
     def list(
         self,
@@ -9470,7 +10095,7 @@ class PurchaseOrderLinesClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> list[dict[str, Any]]:
+    ) -> list[_models.PurchaseOrderLine]:
         """List purchaseOrderLines
 
         List purchaseOrderLines objects.
@@ -9478,6 +10103,7 @@ class PurchaseOrderLinesClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_purchaseorderline_get
         Operation id: dynamics_purchaseorderline_list
+        Response model: list[PurchaseOrderLine]
         """
 
         path = (
@@ -9487,19 +10113,20 @@ class PurchaseOrderLinesClient(_EntityClient):
             + _path_value(purchase_order_id)
             + ')/purchaseOrderLines'
         )
-        return self._client.get_value(path, query=query, params=params)
+        items = self._client.get_value(path, query=query, params=params)
+        return [_models.PurchaseOrderLine.model_validate(item) for item in items]
 
     def update(
         self,
         company_id: str,
         purchase_order_id: str,
         purchase_order_line_id: str,
-        body: Mapping[str, Any] | None = None,
+        body: _models.PurchaseOrderLineUpdate | Mapping[str, Any] | None = None,
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
         etag: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.PurchaseOrderLine:
         """Update purchaseOrderLine
 
         Updates a  purchase order line object in Dynamics 365 Business Central.
@@ -9507,6 +10134,8 @@ class PurchaseOrderLinesClient(_EntityClient):
         HTTP method: PATCH
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_purchaseorderline_update
         Operation id: dynamics_purchaseorderline_update
+        Request model: PurchaseOrderLineUpdate
+        Response model: PurchaseOrderLine
 
         Example request:
         PATCH https://{businesscentralPrefix}/api/v2.0/companies({id})/purchaseOrderLines({pu...
@@ -9541,13 +10170,14 @@ class PurchaseOrderLinesClient(_EntityClient):
             + _path_value(purchase_order_line_id)
             + ')'
         )
-        return self._client.patch(
+        data = self._client.patch(
             path,
-            json=body,
+            json=_body_payload(body),
             query=query,
             params=params,
             etag=etag,
         )
+        return _models.PurchaseOrderLine.model_validate(data)
 
 class PurchaseReceiptsClient(_EntityClient):
     """Generated operations for ``purchase_receipts``."""
@@ -9559,7 +10189,7 @@ class PurchaseReceiptsClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.PurchaseReceipt:
         """Get purchaseReceipts
 
         Gets a purchaseReceipt object in Dynamics 365 Business Central.
@@ -9567,6 +10197,7 @@ class PurchaseReceiptsClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_purchasereceipt_get
         Operation id: dynamics_purchasereceipt_get
+        Response model: PurchaseReceipt
 
         Example request:
         GET https://{businesscentralPrefix}/api/v2.0/companies({id})/purchaseReceipts({id})
@@ -9594,7 +10225,8 @@ class PurchaseReceiptsClient(_EntityClient):
             + _path_value(purchase_receipt_id)
             + ')'
         )
-        return self._client.get(path, query=query, params=params)
+        data = self._client.get(path, query=query, params=params)
+        return _models.PurchaseReceipt.model_validate(data)
 
     def list(
         self,
@@ -9602,7 +10234,7 @@ class PurchaseReceiptsClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> list[dict[str, Any]]:
+    ) -> list[_models.PurchaseReceipt]:
         """List purchaseReceipts
 
         List purchaseReceipts objects.
@@ -9610,10 +10242,12 @@ class PurchaseReceiptsClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_purchasereceipt_get
         Operation id: dynamics_purchasereceipt_list
+        Response model: list[PurchaseReceipt]
         """
 
         path = '/companies(' + _path_value(company_id) + ')/purchaseReceipts'
-        return self._client.get_value(path, query=query, params=params)
+        items = self._client.get_value(path, query=query, params=params)
+        return [_models.PurchaseReceipt.model_validate(item) for item in items]
 
 class PurchaseReceiptLinesClient(_EntityClient):
     """Generated operations for ``purchase_receipt_lines``."""
@@ -9626,7 +10260,7 @@ class PurchaseReceiptLinesClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.PurchaseReceiptLine:
         """Get purchaseReceiptLines
 
         Gets a purchaseReceiptLine object in Dynamics 365 Business Central.
@@ -9634,6 +10268,7 @@ class PurchaseReceiptLinesClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_purchasereceiptline_get
         Operation id: dynamics_purchasereceiptline_get
+        Response model: PurchaseReceiptLine
 
         Example request:
         GET https://{businesscentralPrefix}/api/v2.0/companies({id})/purchaseReceipts({id})/p...
@@ -9663,7 +10298,8 @@ class PurchaseReceiptLinesClient(_EntityClient):
             + _path_value(purchase_receipt_line_id)
             + ')'
         )
-        return self._client.get(path, query=query, params=params)
+        data = self._client.get(path, query=query, params=params)
+        return _models.PurchaseReceiptLine.model_validate(data)
 
     def list(
         self,
@@ -9672,7 +10308,7 @@ class PurchaseReceiptLinesClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> list[dict[str, Any]]:
+    ) -> list[_models.PurchaseReceiptLine]:
         """List purchaseReceiptLines
 
         List purchaseReceiptLines objects.
@@ -9680,6 +10316,7 @@ class PurchaseReceiptLinesClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_purchasereceiptline_get
         Operation id: dynamics_purchasereceiptline_list
+        Response model: list[PurchaseReceiptLine]
         """
 
         path = (
@@ -9689,7 +10326,8 @@ class PurchaseReceiptLinesClient(_EntityClient):
             + _path_value(purchase_receipt_id)
             + ')/purchaseReceiptLines'
         )
-        return self._client.get_value(path, query=query, params=params)
+        items = self._client.get_value(path, query=query, params=params)
+        return [_models.PurchaseReceiptLine.model_validate(item) for item in items]
 
 class RetainedEarningsStatementsClient(_EntityClient):
     """Generated operations for ``retained_earnings_statements``."""
@@ -9700,7 +10338,7 @@ class RetainedEarningsStatementsClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.RetainedEarningsStatement:
         """Get retainedEarningsStatement
 
         Gets a retained earnings statement object in Dynamics 365 Business Central.
@@ -9708,6 +10346,7 @@ class RetainedEarningsStatementsClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_retainedearningsstatement_get
         Operation id: dynamics_retainedearningsstatement_get
+        Response model: RetainedEarningsStatement
 
         Example request:
         GET https://{businesscentralPrefix}/api/v2.0/companies({id})/retainedEarningsStatemen...
@@ -9725,7 +10364,8 @@ class RetainedEarningsStatementsClient(_EntityClient):
         """
 
         path = '/companies(' + _path_value(company_id) + ')/retainedEarningsStatements'
-        return self._client.get(path, query=query, params=params)
+        data = self._client.get(path, query=query, params=params)
+        return _models.RetainedEarningsStatement.model_validate(data)
 
 class SalesCreditMemosClient(_EntityClient):
     """Generated operations for ``sales_credit_memos``."""
@@ -9733,11 +10373,11 @@ class SalesCreditMemosClient(_EntityClient):
     def create(
         self,
         company_id: str,
-        body: Mapping[str, Any] | None = None,
+        body: _models.SalesCreditMemoCreate | Mapping[str, Any] | None = None,
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.SalesCreditMemo:
         """Create salesCreditMemos
 
         Creates a sales credit memo object in Dynamics 365 Business Central.
@@ -9745,6 +10385,8 @@ class SalesCreditMemosClient(_EntityClient):
         HTTP method: POST
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_salesCreditMemo_create
         Operation id: dynamics_salesCreditMemo_create
+        Request model: SalesCreditMemoCreate
+        Response model: SalesCreditMemo
 
         Example request:
         POST https://{businesscentralPrefix}/api/v2.0/companies({id})/salesCreditMemos
@@ -9774,7 +10416,13 @@ class SalesCreditMemosClient(_EntityClient):
         """
 
         path = '/companies(' + _path_value(company_id) + ')/salesCreditMemos'
-        return self._client.post(path, json=body, query=query, params=params)
+        data = self._client.post(
+            path,
+            json=_body_payload(body),
+            query=query,
+            params=params,
+        )
+        return _models.SalesCreditMemo.model_validate(data)
 
     def delete(
         self,
@@ -9816,7 +10464,7 @@ class SalesCreditMemosClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.SalesCreditMemo:
         """Get salesCreditMemos
 
         Gets a sales credit memo object in Dynamics 365 Business Central.
@@ -9824,6 +10472,7 @@ class SalesCreditMemosClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_salescreditmemo_get
         Operation id: dynamics_salescreditmemo_get
+        Response model: SalesCreditMemo
 
         Example request:
         GET https://{businesscentralPrefix}/api/v2.0/companies({id})/salesCreditMemos({id})
@@ -9851,7 +10500,8 @@ class SalesCreditMemosClient(_EntityClient):
             + _path_value(sales_credit_memo_id)
             + ')'
         )
-        return self._client.get(path, query=query, params=params)
+        data = self._client.get(path, query=query, params=params)
+        return _models.SalesCreditMemo.model_validate(data)
 
     def list(
         self,
@@ -9859,7 +10509,7 @@ class SalesCreditMemosClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> list[dict[str, Any]]:
+    ) -> list[_models.SalesCreditMemo]:
         """List salesCreditMemos
 
         List salesCreditMemos objects.
@@ -9867,21 +10517,23 @@ class SalesCreditMemosClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_salescreditmemo_get
         Operation id: dynamics_salescreditmemo_list
+        Response model: list[SalesCreditMemo]
         """
 
         path = '/companies(' + _path_value(company_id) + ')/salesCreditMemos'
-        return self._client.get_value(path, query=query, params=params)
+        items = self._client.get_value(path, query=query, params=params)
+        return [_models.SalesCreditMemo.model_validate(item) for item in items]
 
     def update(
         self,
         company_id: str,
         sales_credit_memo_id: str,
-        body: Mapping[str, Any] | None = None,
+        body: _models.SalesCreditMemoUpdate | Mapping[str, Any] | None = None,
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
         etag: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.SalesCreditMemo:
         """Update salesCreditMemos
 
         Updates a sales credit memo object in Dynamics 365 Business Central.
@@ -9889,6 +10541,8 @@ class SalesCreditMemosClient(_EntityClient):
         HTTP method: PATCH
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_salescreditmemo_update
         Operation id: dynamics_salescreditmemo_update
+        Request model: SalesCreditMemoUpdate
+        Response model: SalesCreditMemo
 
         Example request:
         PATCH https://{businesscentralPrefix}/api/v2.0/companies({id})/salesCreditMemos({id})
@@ -9921,13 +10575,14 @@ class SalesCreditMemosClient(_EntityClient):
             + _path_value(sales_credit_memo_id)
             + ')'
         )
-        return self._client.patch(
+        data = self._client.patch(
             path,
-            json=body,
+            json=_body_payload(body),
             query=query,
             params=params,
             etag=etag,
         )
+        return _models.SalesCreditMemo.model_validate(data)
 
 class SalesCreditMemoLinesClient(_EntityClient):
     """Generated operations for ``sales_credit_memo_lines``."""
@@ -9936,11 +10591,11 @@ class SalesCreditMemoLinesClient(_EntityClient):
         self,
         company_id: str,
         sales_credit_memo_id: str,
-        body: Mapping[str, Any] | None = None,
+        body: _models.SalesCreditMemoLineCreate | Mapping[str, Any] | None = None,
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.SalesCreditMemoLine:
         """Create salesCreditMemoLines
 
         Creates a sales credit memo line object in Dynamics 365 Business Central.
@@ -9948,6 +10603,8 @@ class SalesCreditMemoLinesClient(_EntityClient):
         HTTP method: POST
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_salesCreditMemoLine_create
         Operation id: dynamics_salesCreditMemoLine_create
+        Request model: SalesCreditMemoLineCreate
+        Response model: SalesCreditMemoLine
 
         Example request:
         POST https://{businesscentralPrefix}/api/v2.0/companies({id})/salesCreditMemos({id})/...
@@ -9987,7 +10644,13 @@ class SalesCreditMemoLinesClient(_EntityClient):
             + _path_value(sales_credit_memo_id)
             + ')/salesCreditMemoLines'
         )
-        return self._client.post(path, json=body, query=query, params=params)
+        data = self._client.post(
+            path,
+            json=_body_payload(body),
+            query=query,
+            params=params,
+        )
+        return _models.SalesCreditMemoLine.model_validate(data)
 
     def delete(
         self,
@@ -10033,7 +10696,7 @@ class SalesCreditMemoLinesClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.SalesCreditMemoLine:
         """Get salesCreditMemoLines
 
         Gets a sales credit memo line in Dynamics 365 Business Central.
@@ -10041,6 +10704,7 @@ class SalesCreditMemoLinesClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_salescreditmemoline_get
         Operation id: dynamics_salescreditmemoline_get
+        Response model: SalesCreditMemoLine
 
         Example request:
         GET https://{businesscentralPrefix}/api/v2.0/companies({id})/salesCreditMemos({id})/s...
@@ -10070,7 +10734,8 @@ class SalesCreditMemoLinesClient(_EntityClient):
             + _path_value(sales_credit_memo_line_id)
             + ')'
         )
-        return self._client.get(path, query=query, params=params)
+        data = self._client.get(path, query=query, params=params)
+        return _models.SalesCreditMemoLine.model_validate(data)
 
     def list(
         self,
@@ -10079,7 +10744,7 @@ class SalesCreditMemoLinesClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> list[dict[str, Any]]:
+    ) -> list[_models.SalesCreditMemoLine]:
         """List salesCreditMemoLines
 
         List salesCreditMemoLines objects.
@@ -10087,6 +10752,7 @@ class SalesCreditMemoLinesClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_salescreditmemoline_get
         Operation id: dynamics_salescreditmemoline_list
+        Response model: list[SalesCreditMemoLine]
         """
 
         path = (
@@ -10096,19 +10762,20 @@ class SalesCreditMemoLinesClient(_EntityClient):
             + _path_value(sales_credit_memo_id)
             + ')/salesCreditMemoLines'
         )
-        return self._client.get_value(path, query=query, params=params)
+        items = self._client.get_value(path, query=query, params=params)
+        return [_models.SalesCreditMemoLine.model_validate(item) for item in items]
 
     def update(
         self,
         company_id: str,
         sales_credit_memo_id: str,
         sales_credit_memo_line_id: str,
-        body: Mapping[str, Any] | None = None,
+        body: _models.SalesCreditMemoLineUpdate | Mapping[str, Any] | None = None,
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
         etag: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.SalesCreditMemoLine:
         """Update salesCreditMemoLines
 
         Updates a sales credit memo line object in Dynamics 365 Business Central.
@@ -10116,6 +10783,8 @@ class SalesCreditMemoLinesClient(_EntityClient):
         HTTP method: PATCH
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_salescreditmemoline_update
         Operation id: dynamics_salescreditmemoline_update
+        Request model: SalesCreditMemoLineUpdate
+        Response model: SalesCreditMemoLine
 
         Example request:
         PATCH https://{businesscentralPrefix}/api/v2.0/companies({id})/salesCreditMemos({id})...
@@ -10150,13 +10819,14 @@ class SalesCreditMemoLinesClient(_EntityClient):
             + _path_value(sales_credit_memo_line_id)
             + ')'
         )
-        return self._client.patch(
+        data = self._client.patch(
             path,
-            json=body,
+            json=_body_payload(body),
             query=query,
             params=params,
             etag=etag,
         )
+        return _models.SalesCreditMemoLine.model_validate(data)
 
 class SalesInvoicesClient(_EntityClient):
     """Generated operations for ``sales_invoices``."""
@@ -10164,11 +10834,11 @@ class SalesInvoicesClient(_EntityClient):
     def create(
         self,
         company_id: str,
-        body: Mapping[str, Any] | None = None,
+        body: _models.SalesInvoiceCreate | Mapping[str, Any] | None = None,
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.SalesInvoice:
         """Create salesInvoices
 
         Create a sales invoice object in Dynamics 365 Business Central.
@@ -10176,6 +10846,8 @@ class SalesInvoicesClient(_EntityClient):
         HTTP method: POST
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_salesInvoice_create
         Operation id: dynamics_salesInvoice_create
+        Request model: SalesInvoiceCreate
+        Response model: SalesInvoice
 
         Example request:
         POST https://{businesscentralPrefix}/api/v2.0/companies({id})/salesInvoices
@@ -10209,7 +10881,13 @@ class SalesInvoicesClient(_EntityClient):
         """
 
         path = '/companies(' + _path_value(company_id) + ')/salesInvoices'
-        return self._client.post(path, json=body, query=query, params=params)
+        data = self._client.post(
+            path,
+            json=_body_payload(body),
+            query=query,
+            params=params,
+        )
+        return _models.SalesInvoice.model_validate(data)
 
     def delete(
         self,
@@ -10251,7 +10929,7 @@ class SalesInvoicesClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.SalesInvoice:
         """Get salesInvoices
 
         Gets a sales invoice object in Dynamics 365 Business Central.
@@ -10259,6 +10937,7 @@ class SalesInvoicesClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_salesinvoice_get
         Operation id: dynamics_salesinvoice_get
+        Response model: SalesInvoice
 
         Example request:
         GET https://{businesscentralPrefix}/api/v2.0/companies({id})/salesInvoices({id})
@@ -10286,7 +10965,8 @@ class SalesInvoicesClient(_EntityClient):
             + _path_value(sales_invoice_id)
             + ')'
         )
-        return self._client.get(path, query=query, params=params)
+        data = self._client.get(path, query=query, params=params)
+        return _models.SalesInvoice.model_validate(data)
 
     def list(
         self,
@@ -10294,7 +10974,7 @@ class SalesInvoicesClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> list[dict[str, Any]]:
+    ) -> list[_models.SalesInvoice]:
         """List salesInvoices
 
         List salesInvoices objects.
@@ -10302,21 +10982,23 @@ class SalesInvoicesClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_salesinvoice_get
         Operation id: dynamics_salesinvoice_list
+        Response model: list[SalesInvoice]
         """
 
         path = '/companies(' + _path_value(company_id) + ')/salesInvoices'
-        return self._client.get_value(path, query=query, params=params)
+        items = self._client.get_value(path, query=query, params=params)
+        return [_models.SalesInvoice.model_validate(item) for item in items]
 
     def update(
         self,
         company_id: str,
         sales_invoice_id: str,
-        body: Mapping[str, Any] | None = None,
+        body: _models.SalesInvoiceUpdate | Mapping[str, Any] | None = None,
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
         etag: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.SalesInvoice:
         """Update salesInvoices
 
         Updates a sales invoice object in Dynamics 365 Business Central.
@@ -10324,6 +11006,8 @@ class SalesInvoicesClient(_EntityClient):
         HTTP method: PATCH
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_salesinvoice_update
         Operation id: dynamics_salesinvoice_update
+        Request model: SalesInvoiceUpdate
+        Response model: SalesInvoice
 
         Example request:
         PATCH https://{businesscentralPrefix}/api/v2.0/companies({id})/salesInvoices({id})
@@ -10356,13 +11040,14 @@ class SalesInvoicesClient(_EntityClient):
             + _path_value(sales_invoice_id)
             + ')'
         )
-        return self._client.patch(
+        data = self._client.patch(
             path,
-            json=body,
+            json=_body_payload(body),
             query=query,
             params=params,
             etag=etag,
         )
+        return _models.SalesInvoice.model_validate(data)
 
 class SalesInvoiceLinesClient(_EntityClient):
     """Generated operations for ``sales_invoice_lines``."""
@@ -10371,11 +11056,11 @@ class SalesInvoiceLinesClient(_EntityClient):
         self,
         company_id: str,
         sales_invoice_id: str,
-        body: Mapping[str, Any] | None = None,
+        body: _models.SalesInvoiceLineCreate | Mapping[str, Any] | None = None,
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.SalesInvoiceLine:
         """Create salesInvoiceLines
 
         Creates a sales invoice line object in Dynamics 365 Business Central.
@@ -10383,6 +11068,8 @@ class SalesInvoiceLinesClient(_EntityClient):
         HTTP method: POST
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_salesInvoiceLine_create
         Operation id: dynamics_salesInvoiceLine_create
+        Request model: SalesInvoiceLineCreate
+        Response model: SalesInvoiceLine
 
         Example request:
         POST https://{businesscentralPrefix}/api/v2.0/companies({id})/salesInvoices({id})/sal...
@@ -10422,7 +11109,13 @@ class SalesInvoiceLinesClient(_EntityClient):
             + _path_value(sales_invoice_id)
             + ')/salesInvoiceLines'
         )
-        return self._client.post(path, json=body, query=query, params=params)
+        data = self._client.post(
+            path,
+            json=_body_payload(body),
+            query=query,
+            params=params,
+        )
+        return _models.SalesInvoiceLine.model_validate(data)
 
     def delete(
         self,
@@ -10468,7 +11161,7 @@ class SalesInvoiceLinesClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.SalesInvoiceLine:
         """Get salesInvoiceLines
 
         Gets a sales invoice line object in Dynamics 365 Business Central.
@@ -10476,6 +11169,7 @@ class SalesInvoiceLinesClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_salesinvoiceline_get
         Operation id: dynamics_salesinvoiceline_get
+        Response model: SalesInvoiceLine
 
         Example request:
         GET https://{businesscentralPrefix}/api/v2.0/companies({id})/salesInvoices({id})/sale...
@@ -10505,7 +11199,8 @@ class SalesInvoiceLinesClient(_EntityClient):
             + _path_value(sales_invoice_line_id)
             + ')'
         )
-        return self._client.get(path, query=query, params=params)
+        data = self._client.get(path, query=query, params=params)
+        return _models.SalesInvoiceLine.model_validate(data)
 
     def list(
         self,
@@ -10514,7 +11209,7 @@ class SalesInvoiceLinesClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> list[dict[str, Any]]:
+    ) -> list[_models.SalesInvoiceLine]:
         """List salesInvoiceLines
 
         List salesInvoiceLines objects.
@@ -10522,6 +11217,7 @@ class SalesInvoiceLinesClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_salesinvoiceline_get
         Operation id: dynamics_salesinvoiceline_list
+        Response model: list[SalesInvoiceLine]
         """
 
         path = (
@@ -10531,19 +11227,20 @@ class SalesInvoiceLinesClient(_EntityClient):
             + _path_value(sales_invoice_id)
             + ')/salesInvoiceLines'
         )
-        return self._client.get_value(path, query=query, params=params)
+        items = self._client.get_value(path, query=query, params=params)
+        return [_models.SalesInvoiceLine.model_validate(item) for item in items]
 
     def update(
         self,
         company_id: str,
         sales_invoice_id: str,
         sales_invoice_line_id: str,
-        body: Mapping[str, Any] | None = None,
+        body: _models.SalesInvoiceLineUpdate | Mapping[str, Any] | None = None,
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
         etag: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.SalesInvoiceLine:
         """Update salesInvoiceLines
 
         Updates a sales invoice line object in Dynamics 365 Business Central.
@@ -10551,6 +11248,8 @@ class SalesInvoiceLinesClient(_EntityClient):
         HTTP method: PATCH
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_salesinvoiceline_update
         Operation id: dynamics_salesinvoiceline_update
+        Request model: SalesInvoiceLineUpdate
+        Response model: SalesInvoiceLine
 
         Example request:
         PATCH https://{businesscentralPrefix}/api/v2.0/companies({id})/salesInvoices{id}/sale...
@@ -10585,13 +11284,14 @@ class SalesInvoiceLinesClient(_EntityClient):
             + _path_value(sales_invoice_line_id)
             + ')'
         )
-        return self._client.patch(
+        data = self._client.patch(
             path,
-            json=body,
+            json=_body_payload(body),
             query=query,
             params=params,
             etag=etag,
         )
+        return _models.SalesInvoiceLine.model_validate(data)
 
 class SalesOrdersClient(_EntityClient):
     """Generated operations for ``sales_orders``."""
@@ -10599,11 +11299,11 @@ class SalesOrdersClient(_EntityClient):
     def create(
         self,
         company_id: str,
-        body: Mapping[str, Any] | None = None,
+        body: _models.SalesOrderCreate | Mapping[str, Any] | None = None,
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.SalesOrder:
         """Create salesOrders
 
         Creates a sales order object in Dynamics 365 Business Central.
@@ -10611,6 +11311,8 @@ class SalesOrdersClient(_EntityClient):
         HTTP method: POST
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_salesOrder_create
         Operation id: dynamics_salesOrder_create
+        Request model: SalesOrderCreate
+        Response model: SalesOrder
 
         Example request:
         POST https://{businesscentralPrefix}/api/v2.0/companies({id})/salesOrders
@@ -10640,7 +11342,13 @@ class SalesOrdersClient(_EntityClient):
         """
 
         path = '/companies(' + _path_value(company_id) + ')/salesOrders'
-        return self._client.post(path, json=body, query=query, params=params)
+        data = self._client.post(
+            path,
+            json=_body_payload(body),
+            query=query,
+            params=params,
+        )
+        return _models.SalesOrder.model_validate(data)
 
     def delete(
         self,
@@ -10682,7 +11390,7 @@ class SalesOrdersClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.SalesOrder:
         """Get salesOrders
 
         Gets a sales order object in Dynamics 365 Business Central.
@@ -10690,6 +11398,7 @@ class SalesOrdersClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_salesorder_get
         Operation id: dynamics_salesorder_get
+        Response model: SalesOrder
 
         Example request:
         GET https://{businesscentralPrefix}/api/v2.0/companies({id})/salesOrders({id})
@@ -10717,7 +11426,8 @@ class SalesOrdersClient(_EntityClient):
             + _path_value(sales_order_id)
             + ')'
         )
-        return self._client.get(path, query=query, params=params)
+        data = self._client.get(path, query=query, params=params)
+        return _models.SalesOrder.model_validate(data)
 
     def list(
         self,
@@ -10725,7 +11435,7 @@ class SalesOrdersClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> list[dict[str, Any]]:
+    ) -> list[_models.SalesOrder]:
         """List salesOrders
 
         List salesOrders objects.
@@ -10733,21 +11443,23 @@ class SalesOrdersClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_salesorder_get
         Operation id: dynamics_salesorder_list
+        Response model: list[SalesOrder]
         """
 
         path = '/companies(' + _path_value(company_id) + ')/salesOrders'
-        return self._client.get_value(path, query=query, params=params)
+        items = self._client.get_value(path, query=query, params=params)
+        return [_models.SalesOrder.model_validate(item) for item in items]
 
     def update(
         self,
         company_id: str,
         sales_order_id: str,
-        body: Mapping[str, Any] | None = None,
+        body: _models.SalesOrderUpdate | Mapping[str, Any] | None = None,
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
         etag: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.SalesOrder:
         """Update salesOrders
 
         Updates a sales order object in Dynamics 365 Business Central.
@@ -10755,6 +11467,8 @@ class SalesOrdersClient(_EntityClient):
         HTTP method: PATCH
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_salesorder_update
         Operation id: dynamics_salesorder_update
+        Request model: SalesOrderUpdate
+        Response model: SalesOrder
 
         Example request:
         PATCH https://{businesscentralPrefix}/api/v2.0/companies({id})/salesOrders({id})
@@ -10787,13 +11501,14 @@ class SalesOrdersClient(_EntityClient):
             + _path_value(sales_order_id)
             + ')'
         )
-        return self._client.patch(
+        data = self._client.patch(
             path,
-            json=body,
+            json=_body_payload(body),
             query=query,
             params=params,
             etag=etag,
         )
+        return _models.SalesOrder.model_validate(data)
 
 class SalesOrderLinesClient(_EntityClient):
     """Generated operations for ``sales_order_lines``."""
@@ -10802,11 +11517,11 @@ class SalesOrderLinesClient(_EntityClient):
         self,
         company_id: str,
         sales_order_id: str,
-        body: Mapping[str, Any] | None = None,
+        body: _models.SalesOrderLineCreate | Mapping[str, Any] | None = None,
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.SalesOrderLine:
         """Create salesOrderLines
 
         Creates a sales order line object in Dynamics 365 Business Central.
@@ -10814,6 +11529,8 @@ class SalesOrderLinesClient(_EntityClient):
         HTTP method: POST
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_salesOrderLine_create
         Operation id: dynamics_salesOrderLine_create
+        Request model: SalesOrderLineCreate
+        Response model: SalesOrderLine
 
         Example request:
         POST https://{businesscentralPrefix}/api/v2.0/companies({id})/salesOrders({id})/sales...
@@ -10853,7 +11570,13 @@ class SalesOrderLinesClient(_EntityClient):
             + _path_value(sales_order_id)
             + ')/salesOrderLines'
         )
-        return self._client.post(path, json=body, query=query, params=params)
+        data = self._client.post(
+            path,
+            json=_body_payload(body),
+            query=query,
+            params=params,
+        )
+        return _models.SalesOrderLine.model_validate(data)
 
     def delete(
         self,
@@ -10899,7 +11622,7 @@ class SalesOrderLinesClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.SalesOrderLine:
         """Get salesOrderLines
 
         Gets a sales order line object in Dynamics 365 Business Central.
@@ -10907,6 +11630,7 @@ class SalesOrderLinesClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_salesorderline_get
         Operation id: dynamics_salesorderline_get
+        Response model: SalesOrderLine
 
         Example request:
         GET https://{businesscentralPrefix}/api/v2.0/companies({id})/salesOrders({id})/salesO...
@@ -10936,7 +11660,8 @@ class SalesOrderLinesClient(_EntityClient):
             + _path_value(sales_order_line_id)
             + ')'
         )
-        return self._client.get(path, query=query, params=params)
+        data = self._client.get(path, query=query, params=params)
+        return _models.SalesOrderLine.model_validate(data)
 
     def list(
         self,
@@ -10945,7 +11670,7 @@ class SalesOrderLinesClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> list[dict[str, Any]]:
+    ) -> list[_models.SalesOrderLine]:
         """List salesOrderLines
 
         List salesOrderLines objects.
@@ -10953,6 +11678,7 @@ class SalesOrderLinesClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_salesorderline_get
         Operation id: dynamics_salesorderline_list
+        Response model: list[SalesOrderLine]
         """
 
         path = (
@@ -10962,19 +11688,20 @@ class SalesOrderLinesClient(_EntityClient):
             + _path_value(sales_order_id)
             + ')/salesOrderLines'
         )
-        return self._client.get_value(path, query=query, params=params)
+        items = self._client.get_value(path, query=query, params=params)
+        return [_models.SalesOrderLine.model_validate(item) for item in items]
 
     def update(
         self,
         company_id: str,
         sales_order_id: str,
         sales_order_line_id: str,
-        body: Mapping[str, Any] | None = None,
+        body: _models.SalesOrderLineUpdate | Mapping[str, Any] | None = None,
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
         etag: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.SalesOrderLine:
         """Update salesOrderLines
 
         Update a sales order line object in Dynamics 365 Business Central.
@@ -10982,6 +11709,8 @@ class SalesOrderLinesClient(_EntityClient):
         HTTP method: PATCH
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_salesorderline_update
         Operation id: dynamics_salesorderline_update
+        Request model: SalesOrderLineUpdate
+        Response model: SalesOrderLine
 
         Example request:
         PATCH https://{businesscentralPrefix}/api/v2.0/companies({id})/salesOrders({id})/sale...
@@ -11016,13 +11745,14 @@ class SalesOrderLinesClient(_EntityClient):
             + _path_value(sales_order_line_id)
             + ')'
         )
-        return self._client.patch(
+        data = self._client.patch(
             path,
-            json=body,
+            json=_body_payload(body),
             query=query,
             params=params,
             etag=etag,
         )
+        return _models.SalesOrderLine.model_validate(data)
 
 class SalesQuotesClient(_EntityClient):
     """Generated operations for ``sales_quotes``."""
@@ -11030,11 +11760,11 @@ class SalesQuotesClient(_EntityClient):
     def create(
         self,
         company_id: str,
-        body: Mapping[str, Any] | None = None,
+        body: _models.SalesQuoteCreate | Mapping[str, Any] | None = None,
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.SalesQuote:
         """Create salesQuotes
 
         Creates a sales quote object in Dynamics 365 Business Central.
@@ -11042,6 +11772,8 @@ class SalesQuotesClient(_EntityClient):
         HTTP method: POST
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_salesQuote_create
         Operation id: dynamics_salesQuote_create
+        Request model: SalesQuoteCreate
+        Response model: SalesQuote
 
         Example request:
         POST https://{businesscentralPrefix}/api/v2.0/companies({id})/salesQuotes
@@ -11058,7 +11790,13 @@ class SalesQuotesClient(_EntityClient):
         """
 
         path = '/companies(' + _path_value(company_id) + ')/salesQuotes'
-        return self._client.post(path, json=body, query=query, params=params)
+        data = self._client.post(
+            path,
+            json=_body_payload(body),
+            query=query,
+            params=params,
+        )
+        return _models.SalesQuote.model_validate(data)
 
     def delete(
         self,
@@ -11100,7 +11838,7 @@ class SalesQuotesClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.SalesQuote:
         """Get salesQuotes
 
         Gets a sales quote object in Dynamics 365 Business Central.
@@ -11108,6 +11846,7 @@ class SalesQuotesClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_salesquote_get
         Operation id: dynamics_salesquote_get
+        Response model: SalesQuote
 
         Example request:
         GET https://{businesscentralPrefix}/api/v2.0/companies({id})/salesQuotes({id})
@@ -11135,7 +11874,8 @@ class SalesQuotesClient(_EntityClient):
             + _path_value(sales_quote_id)
             + ')'
         )
-        return self._client.get(path, query=query, params=params)
+        data = self._client.get(path, query=query, params=params)
+        return _models.SalesQuote.model_validate(data)
 
     def list(
         self,
@@ -11143,7 +11883,7 @@ class SalesQuotesClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> list[dict[str, Any]]:
+    ) -> list[_models.SalesQuote]:
         """List salesQuotes
 
         List salesQuotes objects.
@@ -11151,21 +11891,23 @@ class SalesQuotesClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_salesquote_get
         Operation id: dynamics_salesquote_list
+        Response model: list[SalesQuote]
         """
 
         path = '/companies(' + _path_value(company_id) + ')/salesQuotes'
-        return self._client.get_value(path, query=query, params=params)
+        items = self._client.get_value(path, query=query, params=params)
+        return [_models.SalesQuote.model_validate(item) for item in items]
 
     def update(
         self,
         company_id: str,
         sales_quote_id: str,
-        body: Mapping[str, Any] | None = None,
+        body: _models.SalesQuoteUpdate | Mapping[str, Any] | None = None,
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
         etag: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.SalesQuote:
         """Update salesQuotes
 
         Updates a sales quote object in Dynamics 365 Business Central.
@@ -11173,6 +11915,8 @@ class SalesQuotesClient(_EntityClient):
         HTTP method: PATCH
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_salesquote_update
         Operation id: dynamics_salesquote_update
+        Request model: SalesQuoteUpdate
+        Response model: SalesQuote
 
         Example request:
         PATCH https://{businesscentralPrefix}/api/v2.0/companies({id})/salesQuotes({id})
@@ -11205,13 +11949,14 @@ class SalesQuotesClient(_EntityClient):
             + _path_value(sales_quote_id)
             + ')'
         )
-        return self._client.patch(
+        data = self._client.patch(
             path,
-            json=body,
+            json=_body_payload(body),
             query=query,
             params=params,
             etag=etag,
         )
+        return _models.SalesQuote.model_validate(data)
 
 class SalesQuoteLinesClient(_EntityClient):
     """Generated operations for ``sales_quote_lines``."""
@@ -11220,11 +11965,11 @@ class SalesQuoteLinesClient(_EntityClient):
         self,
         company_id: str,
         sales_quote_id: str,
-        body: Mapping[str, Any] | None = None,
+        body: _models.SalesQuoteLineCreate | Mapping[str, Any] | None = None,
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.SalesQuoteLine:
         """Create salesQuoteLines
 
         Creates a sales quote line object in Dynamics 365 Business Central.
@@ -11232,6 +11977,8 @@ class SalesQuoteLinesClient(_EntityClient):
         HTTP method: POST
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_salesQuoteLine_create
         Operation id: dynamics_salesQuoteLine_create
+        Request model: SalesQuoteLineCreate
+        Response model: SalesQuoteLine
 
         Example request:
         POST https://{businesscentralPrefix}/api/v2.0/companies({id})/salesQuotes({id})/sales...
@@ -11271,7 +12018,13 @@ class SalesQuoteLinesClient(_EntityClient):
             + _path_value(sales_quote_id)
             + ')/salesQuoteLines'
         )
-        return self._client.post(path, json=body, query=query, params=params)
+        data = self._client.post(
+            path,
+            json=_body_payload(body),
+            query=query,
+            params=params,
+        )
+        return _models.SalesQuoteLine.model_validate(data)
 
     def delete(
         self,
@@ -11317,7 +12070,7 @@ class SalesQuoteLinesClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.SalesQuoteLine:
         """Get salesQuoteLines
 
         Gets a sales quote line object in Dynamics 365 Business Central.
@@ -11325,6 +12078,7 @@ class SalesQuoteLinesClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_salesquoteline_get
         Operation id: dynamics_salesquoteline_get
+        Response model: SalesQuoteLine
 
         Example request:
         GET https://{businesscentralPrefix}/api/v2.0/companies({id})/salesQuotes({id})/salesQ...
@@ -11354,7 +12108,8 @@ class SalesQuoteLinesClient(_EntityClient):
             + _path_value(sales_quote_line_id)
             + ')'
         )
-        return self._client.get(path, query=query, params=params)
+        data = self._client.get(path, query=query, params=params)
+        return _models.SalesQuoteLine.model_validate(data)
 
     def list(
         self,
@@ -11363,7 +12118,7 @@ class SalesQuoteLinesClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> list[dict[str, Any]]:
+    ) -> list[_models.SalesQuoteLine]:
         """List salesQuoteLines
 
         List salesQuoteLines objects.
@@ -11371,6 +12126,7 @@ class SalesQuoteLinesClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_salesquoteline_get
         Operation id: dynamics_salesquoteline_list
+        Response model: list[SalesQuoteLine]
         """
 
         path = (
@@ -11380,19 +12136,20 @@ class SalesQuoteLinesClient(_EntityClient):
             + _path_value(sales_quote_id)
             + ')/salesQuoteLines'
         )
-        return self._client.get_value(path, query=query, params=params)
+        items = self._client.get_value(path, query=query, params=params)
+        return [_models.SalesQuoteLine.model_validate(item) for item in items]
 
     def update(
         self,
         company_id: str,
         sales_quote_id: str,
         sales_quote_line_id: str,
-        body: Mapping[str, Any] | None = None,
+        body: _models.SalesQuoteLineUpdate | Mapping[str, Any] | None = None,
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
         etag: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.SalesQuoteLine:
         """Update salesQuoteLines
 
         Updates a sales quote line in Dynamics 365 Business Central.
@@ -11400,6 +12157,8 @@ class SalesQuoteLinesClient(_EntityClient):
         HTTP method: PATCH
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_salesquoteline_update
         Operation id: dynamics_salesquoteline_update
+        Request model: SalesQuoteLineUpdate
+        Response model: SalesQuoteLine
 
         Example request:
         PATCH https://{businesscentralPrefix}/api/v2.0/companies({id})/salesQuotes({id})/sale...
@@ -11434,13 +12193,14 @@ class SalesQuoteLinesClient(_EntityClient):
             + _path_value(sales_quote_line_id)
             + ')'
         )
-        return self._client.patch(
+        data = self._client.patch(
             path,
-            json=body,
+            json=_body_payload(body),
             query=query,
             params=params,
             etag=etag,
         )
+        return _models.SalesQuoteLine.model_validate(data)
 
 class SalesShipmentsClient(_EntityClient):
     """Generated operations for ``sales_shipments``."""
@@ -11452,7 +12212,7 @@ class SalesShipmentsClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.SalesShipment:
         """Get salesShipments
 
         Gets a salesShipment object in Dynamics 365 Business Central.
@@ -11460,6 +12220,7 @@ class SalesShipmentsClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_salesshipment_get
         Operation id: dynamics_salesshipment_get
+        Response model: SalesShipment
 
         Example request:
         GET https://{businesscentralPrefix}/api/v2.0/companies({id})/salesShipments({id})
@@ -11487,7 +12248,8 @@ class SalesShipmentsClient(_EntityClient):
             + _path_value(sales_shipment_id)
             + ')'
         )
-        return self._client.get(path, query=query, params=params)
+        data = self._client.get(path, query=query, params=params)
+        return _models.SalesShipment.model_validate(data)
 
     def list(
         self,
@@ -11495,7 +12257,7 @@ class SalesShipmentsClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> list[dict[str, Any]]:
+    ) -> list[_models.SalesShipment]:
         """List salesShipments
 
         List salesShipments objects.
@@ -11503,10 +12265,12 @@ class SalesShipmentsClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_salesshipment_get
         Operation id: dynamics_salesshipment_list
+        Response model: list[SalesShipment]
         """
 
         path = '/companies(' + _path_value(company_id) + ')/salesShipments'
-        return self._client.get_value(path, query=query, params=params)
+        items = self._client.get_value(path, query=query, params=params)
+        return [_models.SalesShipment.model_validate(item) for item in items]
 
 class SalesShipmentLinesClient(_EntityClient):
     """Generated operations for ``sales_shipment_lines``."""
@@ -11519,7 +12283,7 @@ class SalesShipmentLinesClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.SalesShipmentLine:
         """Get salesShipmentLines
 
         Gets a salesShipmentLine object in Dynamics 365 Business Central.
@@ -11527,6 +12291,7 @@ class SalesShipmentLinesClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_salesshipmentline_get
         Operation id: dynamics_salesshipmentline_get
+        Response model: SalesShipmentLine
 
         Example request:
         GET https://{businesscentralPrefix}/api/v2.0/companies({id})/salesShipments({id})/sal...
@@ -11556,7 +12321,8 @@ class SalesShipmentLinesClient(_EntityClient):
             + _path_value(sales_shipment_line_id)
             + ')'
         )
-        return self._client.get(path, query=query, params=params)
+        data = self._client.get(path, query=query, params=params)
+        return _models.SalesShipmentLine.model_validate(data)
 
     def list(
         self,
@@ -11565,7 +12331,7 @@ class SalesShipmentLinesClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> list[dict[str, Any]]:
+    ) -> list[_models.SalesShipmentLine]:
         """List salesShipmentLines
 
         List salesShipmentLines objects.
@@ -11573,6 +12339,7 @@ class SalesShipmentLinesClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_salesshipmentline_get
         Operation id: dynamics_salesshipmentline_list
+        Response model: list[SalesShipmentLine]
         """
 
         path = (
@@ -11582,7 +12349,8 @@ class SalesShipmentLinesClient(_EntityClient):
             + _path_value(sales_shipment_id)
             + ')/salesShipmentLines'
         )
-        return self._client.get_value(path, query=query, params=params)
+        items = self._client.get_value(path, query=query, params=params)
+        return [_models.SalesShipmentLine.model_validate(item) for item in items]
 
 class SalespeoplePurchasersClient(_EntityClient):
     """Generated operations for ``salespeople_purchasers``."""
@@ -11591,11 +12359,11 @@ class SalespeoplePurchasersClient(_EntityClient):
         self,
         company_id: str,
         salespeople_purchaser_id: str,
-        body: Mapping[str, Any] | None = None,
+        body: _models.SalespeoplePurchaserCreate | Mapping[str, Any] | None = None,
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.SalespeoplePurchaser:
         """Create salespersonPurchasers
 
         Creates a salesperson purchaser object in Dynamics 365 Business Central.
@@ -11603,6 +12371,8 @@ class SalespeoplePurchasersClient(_EntityClient):
         HTTP method: POST
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_salespersonpurchaser_create
         Operation id: dynamics_salespersonpurchaser_create
+        Request model: SalespeoplePurchaserCreate
+        Response model: SalespeoplePurchaser
 
         Example request:
         POST https://{businesscentralPrefix}/api/v2.0/companies({id})/salespeoplePurchasers({...
@@ -11642,7 +12412,13 @@ class SalespeoplePurchasersClient(_EntityClient):
             + _path_value(salespeople_purchaser_id)
             + ')'
         )
-        return self._client.post(path, json=body, query=query, params=params)
+        data = self._client.post(
+            path,
+            json=_body_payload(body),
+            query=query,
+            params=params,
+        )
+        return _models.SalespeoplePurchaser.model_validate(data)
 
     def delete(
         self,
@@ -11684,7 +12460,7 @@ class SalespeoplePurchasersClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.SalespeoplePurchaser:
         """Get salespersonPurchasers
 
         Gets a salesperson purchaser object in Dynamics 365 Business Central.
@@ -11692,6 +12468,7 @@ class SalespeoplePurchasersClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_salespersonpurchaser_get
         Operation id: dynamics_salespersonpurchaser_get
+        Response model: SalespeoplePurchaser
 
         Example request:
         GET https://{businesscentralPrefix}/api/v2.0/companies({id})/salespeoplePurchasers({id})
@@ -11719,7 +12496,8 @@ class SalespeoplePurchasersClient(_EntityClient):
             + _path_value(salespeople_purchaser_id)
             + ')'
         )
-        return self._client.get(path, query=query, params=params)
+        data = self._client.get(path, query=query, params=params)
+        return _models.SalespeoplePurchaser.model_validate(data)
 
     def list(
         self,
@@ -11727,7 +12505,7 @@ class SalespeoplePurchasersClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> list[dict[str, Any]]:
+    ) -> list[_models.SalespeoplePurchaser]:
         """List salespeoplePurchasers
 
         List salespeoplePurchasers objects.
@@ -11735,21 +12513,23 @@ class SalespeoplePurchasersClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_salespersonpurchaser_get
         Operation id: dynamics_salespersonpurchaser_list
+        Response model: list[SalespeoplePurchaser]
         """
 
         path = '/companies(' + _path_value(company_id) + ')/salespeoplePurchasers'
-        return self._client.get_value(path, query=query, params=params)
+        items = self._client.get_value(path, query=query, params=params)
+        return [_models.SalespeoplePurchaser.model_validate(item) for item in items]
 
     def update(
         self,
         company_id: str,
         salespeople_purchaser_id: str,
-        body: Mapping[str, Any] | None = None,
+        body: _models.SalespeoplePurchaserUpdate | Mapping[str, Any] | None = None,
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
         etag: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.SalespeoplePurchaser:
         """Update salespersonPurchasers
 
         Updates a  salesperson purchaser object in Dynamics 365 Business Central.
@@ -11757,6 +12537,8 @@ class SalespeoplePurchasersClient(_EntityClient):
         HTTP method: PATCH
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_salespersonpurchaser_update
         Operation id: dynamics_salespersonpurchaser_update
+        Request model: SalespeoplePurchaserUpdate
+        Response model: SalespeoplePurchaser
 
         Example request:
         PATCH https://{businesscentralPrefix}/api/v2.0/companies({id})/salespeoplePurchasers(...
@@ -11791,13 +12573,14 @@ class SalespeoplePurchasersClient(_EntityClient):
             + _path_value(salespeople_purchaser_id)
             + ')'
         )
-        return self._client.patch(
+        data = self._client.patch(
             path,
-            json=body,
+            json=_body_payload(body),
             query=query,
             params=params,
             etag=etag,
         )
+        return _models.SalespeoplePurchaser.model_validate(data)
 
 class ShipmentMethodsClient(_EntityClient):
     """Generated operations for ``shipment_methods``."""
@@ -11805,11 +12588,11 @@ class ShipmentMethodsClient(_EntityClient):
     def create(
         self,
         company_id: str,
-        body: Mapping[str, Any] | None = None,
+        body: _models.ShipmentMethodCreate | Mapping[str, Any] | None = None,
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.ShipmentMethod:
         """Create shipmentMethods
 
         Creates a shipmentMethod object in Dynamics 365 Business Central.
@@ -11817,6 +12600,8 @@ class ShipmentMethodsClient(_EntityClient):
         HTTP method: POST
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_shipmentmethod_create
         Operation id: dynamics_shipmentmethod_create
+        Request model: ShipmentMethodCreate
+        Response model: ShipmentMethod
 
         Example request:
         POST https://{businesscentralPrefix}/api/v2.0/companies({id})/shipmentMethods
@@ -11842,7 +12627,13 @@ class ShipmentMethodsClient(_EntityClient):
         """
 
         path = '/companies(' + _path_value(company_id) + ')/shipmentMethods'
-        return self._client.post(path, json=body, query=query, params=params)
+        data = self._client.post(
+            path,
+            json=_body_payload(body),
+            query=query,
+            params=params,
+        )
+        return _models.ShipmentMethod.model_validate(data)
 
     def delete(
         self,
@@ -11881,7 +12672,7 @@ class ShipmentMethodsClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.ShipmentMethod:
         """Get shipmentMethods
 
         Gets a shipmentMethod object in Dynamics 365 Business Central.
@@ -11889,6 +12680,7 @@ class ShipmentMethodsClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_shipmentmethod_get
         Operation id: dynamics_shipmentmethod_get
+        Response model: ShipmentMethod
 
         Example request:
         GET https://{businesscentralPrefix}/api/v1.0/companies({id})/shipmentMethods({id})
@@ -11909,7 +12701,8 @@ class ShipmentMethodsClient(_EntityClient):
             + _path_value(shipment_method_id)
             + ')'
         )
-        return self._client.get(path, query=query, params=params)
+        data = self._client.get(path, query=query, params=params)
+        return _models.ShipmentMethod.model_validate(data)
 
     def list(
         self,
@@ -11917,7 +12710,7 @@ class ShipmentMethodsClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> list[dict[str, Any]]:
+    ) -> list[_models.ShipmentMethod]:
         """List shipmentMethods
 
         List shipmentMethods objects.
@@ -11925,21 +12718,23 @@ class ShipmentMethodsClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_shipmentmethod_get
         Operation id: dynamics_shipmentmethod_list
+        Response model: list[ShipmentMethod]
         """
 
         path = '/companies(' + _path_value(company_id) + ')/shipmentMethods'
-        return self._client.get_value(path, query=query, params=params)
+        items = self._client.get_value(path, query=query, params=params)
+        return [_models.ShipmentMethod.model_validate(item) for item in items]
 
     def update(
         self,
         company_id: str,
         shipment_method_id: str,
-        body: Mapping[str, Any] | None = None,
+        body: _models.ShipmentMethodUpdate | Mapping[str, Any] | None = None,
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
         etag: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.ShipmentMethod:
         """Update shipmentMethod
 
         Updates shipmentMethod object in Dynamics 365 Business Central.
@@ -11947,6 +12742,8 @@ class ShipmentMethodsClient(_EntityClient):
         HTTP method: PATCH
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_shipmentmethod_update
         Operation id: dynamics_shipmentmethod_update
+        Request model: ShipmentMethodUpdate
+        Response model: ShipmentMethod
 
         Example request:
         PATCH https://{businesscentralPrefix}/api/v2.0/companies({id})/shipmentMethods({id})
@@ -11976,24 +12773,25 @@ class ShipmentMethodsClient(_EntityClient):
             + _path_value(shipment_method_id)
             + ')'
         )
-        return self._client.patch(
+        data = self._client.patch(
             path,
-            json=body,
+            json=_body_payload(body),
             query=query,
             params=params,
             etag=etag,
         )
+        return _models.ShipmentMethod.model_validate(data)
 
     def update_shipmentmethods_update(
         self,
         company_id: str,
         shipment_method_id: str,
-        body: Mapping[str, Any] | None = None,
+        body: _models.ShipmentMethodUpdate | Mapping[str, Any] | None = None,
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
         etag: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.ShipmentMethod:
         """Update shipmentMethods
 
         Updates a shipment method object in Dynamics 365 Business Central.
@@ -12001,6 +12799,8 @@ class ShipmentMethodsClient(_EntityClient):
         HTTP method: PATCH
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_shipmentmethods_update
         Operation id: dynamics_shipmentmethods_update
+        Request model: ShipmentMethodUpdate
+        Response model: ShipmentMethod
 
         Example request:
         PATCH https://{businesscentralPrefix}/api/v2.0/companies({id})/shipmentMethods({id})
@@ -12029,24 +12829,25 @@ class ShipmentMethodsClient(_EntityClient):
             + _path_value(shipment_method_id)
             + ')'
         )
-        return self._client.patch(
+        data = self._client.patch(
             path,
-            json=body,
+            json=_body_payload(body),
             query=query,
             params=params,
             etag=etag,
         )
+        return _models.ShipmentMethod.model_validate(data)
 
 class SubscriptionsClient(_EntityClient):
     """Generated operations for ``subscriptions``."""
 
     def create(
         self,
-        body: Mapping[str, Any] | None = None,
+        body: _models.SubscriptionCreate | Mapping[str, Any] | None = None,
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.Subscription:
         """Create subscription
 
         Creates a subscriptions object in Dynamics 365 Business Central.
@@ -12054,6 +12855,8 @@ class SubscriptionsClient(_EntityClient):
         HTTP method: POST
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_subscriptions_create
         Operation id: dynamics_subscriptions_create
+        Request model: SubscriptionCreate
+        Response model: Subscription
 
         Example request:
         POST https://{businesscentralPrefix}/api/v1.0/subscriptions
@@ -12087,7 +12890,13 @@ class SubscriptionsClient(_EntityClient):
         """
 
         path = '/subscriptions'
-        return self._client.post(path, json=body, query=query, params=params)
+        data = self._client.post(
+            path,
+            json=_body_payload(body),
+            query=query,
+            params=params,
+        )
+        return _models.Subscription.model_validate(data)
 
     def delete(
         self,
@@ -12117,7 +12926,7 @@ class SubscriptionsClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.Subscription:
         """Get subscriptions
 
         Gets a subscriptions object in Dynamics 365 Business Central.
@@ -12125,6 +12934,7 @@ class SubscriptionsClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_subscriptions_get
         Operation id: dynamics_subscriptions_get
+        Response model: Subscription
 
         Example request:
         https://{businesscentralPrefix}/api/v1.0/subscriptions
@@ -12146,7 +12956,8 @@ class SubscriptionsClient(_EntityClient):
         """
 
         path = '/subscriptions'
-        return self._client.get(path, query=query, params=params)
+        data = self._client.get(path, query=query, params=params)
+        return _models.Subscription.model_validate(data)
 
     def update(
         self,
@@ -12155,7 +12966,7 @@ class SubscriptionsClient(_EntityClient):
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
         etag: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.Subscription:
         """Update subscriptions
 
         Updates a subscriptions object in Dynamics 365 Business Central.
@@ -12163,6 +12974,7 @@ class SubscriptionsClient(_EntityClient):
         HTTP method: PATCH
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_subscriptions_update
         Operation id: dynamics_subscriptions_update
+        Response model: Subscription
 
         Example request:
         https://{businesscentralPrefix}/api/v1.0/subscriptions({'id'})
@@ -12184,13 +12996,14 @@ class SubscriptionsClient(_EntityClient):
         """
 
         path = "/subscriptions({'id'})"
-        return self._client.patch(
+        data = self._client.patch(
             path,
-            json=body,
+            json=_body_payload(body),
             query=query,
             params=params,
             etag=etag,
         )
+        return _models.Subscription.model_validate(data)
 
 class TaxAreasClient(_EntityClient):
     """Generated operations for ``tax_areas``."""
@@ -12199,11 +13012,11 @@ class TaxAreasClient(_EntityClient):
         self,
         company_id: str,
         tax_area_id: str,
-        body: Mapping[str, Any] | None = None,
+        body: _models.TaxAreaCreate | Mapping[str, Any] | None = None,
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.TaxArea:
         """Create taxAreas
 
         Creates a tax area object in Dynamics for Financials.
@@ -12211,6 +13024,8 @@ class TaxAreasClient(_EntityClient):
         HTTP method: POST
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_taxArea_create
         Operation id: dynamics_taxArea_create
+        Request model: TaxAreaCreate
+        Response model: TaxArea
 
         Example request:
         POST https://{businesscentralPrefix}/api/v2.0/companies({id})/taxAreas
@@ -12238,7 +13053,13 @@ class TaxAreasClient(_EntityClient):
             + _path_value(tax_area_id)
             + ')'
         )
-        return self._client.post(path, json=body, query=query, params=params)
+        data = self._client.post(
+            path,
+            json=_body_payload(body),
+            query=query,
+            params=params,
+        )
+        return _models.TaxArea.model_validate(data)
 
     def delete(
         self,
@@ -12280,7 +13101,7 @@ class TaxAreasClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.TaxArea:
         """Get taxAreas
 
         Gets a tax area object in Dynamics 365 Business Central.
@@ -12288,6 +13109,7 @@ class TaxAreasClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_taxarea_get
         Operation id: dynamics_taxarea_get
+        Response model: TaxArea
 
         Example request:
         GET https://{businesscentralPrefix}/api/v2.0/companies({id})/taxAreas({id})
@@ -12309,7 +13131,8 @@ class TaxAreasClient(_EntityClient):
             + _path_value(tax_area_id)
             + ')'
         )
-        return self._client.get(path, query=query, params=params)
+        data = self._client.get(path, query=query, params=params)
+        return _models.TaxArea.model_validate(data)
 
     def list(
         self,
@@ -12317,7 +13140,7 @@ class TaxAreasClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> list[dict[str, Any]]:
+    ) -> list[_models.TaxArea]:
         """List taxAreas
 
         List taxAreas objects.
@@ -12325,10 +13148,12 @@ class TaxAreasClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_taxarea_get
         Operation id: dynamics_taxarea_list
+        Response model: list[TaxArea]
         """
 
         path = '/companies(' + _path_value(company_id) + ')/taxAreas'
-        return self._client.get_value(path, query=query, params=params)
+        items = self._client.get_value(path, query=query, params=params)
+        return [_models.TaxArea.model_validate(item) for item in items]
 
     def update(
         self,
@@ -12339,7 +13164,7 @@ class TaxAreasClient(_EntityClient):
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
         etag: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.TaxArea:
         """Update taxAreas
 
         Updates a tax areas object in Dynamics 365 Business Central.
@@ -12347,6 +13172,7 @@ class TaxAreasClient(_EntityClient):
         HTTP method: PATCH
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_taxarea_update
         Operation id: dynamics_taxarea_update
+        Response model: TaxArea
 
         Example request:
         PATCH https://{businesscentralPrefix}/api/v2.0/companies({id})/taxAreas({id})
@@ -12377,13 +13203,14 @@ class TaxAreasClient(_EntityClient):
             + _path_value(tax_area_id)
             + ')'
         )
-        return self._client.patch(
+        data = self._client.patch(
             path,
-            json=body,
+            json=_body_payload(body),
             query=query,
             params=params,
             etag=etag,
         )
+        return _models.TaxArea.model_validate(data)
 
 class TaxGroupsClient(_EntityClient):
     """Generated operations for ``tax_groups``."""
@@ -12391,11 +13218,11 @@ class TaxGroupsClient(_EntityClient):
     def create(
         self,
         company_id: str,
-        body: Mapping[str, Any] | None = None,
+        body: _models.TaxGroupCreate | Mapping[str, Any] | None = None,
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.TaxGroup:
         """Create taxGroups
 
         Creates a taxGroup object in Dynamics 365 Business Central.
@@ -12403,6 +13230,8 @@ class TaxGroupsClient(_EntityClient):
         HTTP method: POST
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_taxgroup_create
         Operation id: dynamics_taxgroup_create
+        Request model: TaxGroupCreate
+        Response model: TaxGroup
 
         Example request:
         POST https://{businesscentralPrefix}/api/v1.0/companies({id})/taxGroups
@@ -12427,7 +13256,13 @@ class TaxGroupsClient(_EntityClient):
         """
 
         path = '/companies(' + _path_value(company_id) + ')/taxGroups'
-        return self._client.post(path, json=body, query=query, params=params)
+        data = self._client.post(
+            path,
+            json=_body_payload(body),
+            query=query,
+            params=params,
+        )
+        return _models.TaxGroup.model_validate(data)
 
     def delete(
         self,
@@ -12469,7 +13304,7 @@ class TaxGroupsClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.TaxGroup:
         """Get taxGroups
 
         Gets a taxGroup object in Dynamics 365 Business Central.
@@ -12477,6 +13312,7 @@ class TaxGroupsClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_taxgroup_get
         Operation id: dynamics_taxgroup_get
+        Response model: TaxGroup
 
         Example request:
         GET https://{businesscentralPrefix}/api/v1.0/companies({id})/taxGroups({id})
@@ -12498,7 +13334,8 @@ class TaxGroupsClient(_EntityClient):
             + _path_value(tax_group_id)
             + ')'
         )
-        return self._client.get(path, query=query, params=params)
+        data = self._client.get(path, query=query, params=params)
+        return _models.TaxGroup.model_validate(data)
 
     def list(
         self,
@@ -12506,7 +13343,7 @@ class TaxGroupsClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> list[dict[str, Any]]:
+    ) -> list[_models.TaxGroup]:
         """List taxGroups
 
         List taxGroups objects.
@@ -12514,21 +13351,23 @@ class TaxGroupsClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_taxgroup_get
         Operation id: dynamics_taxgroup_list
+        Response model: list[TaxGroup]
         """
 
         path = '/companies(' + _path_value(company_id) + ')/taxGroups'
-        return self._client.get_value(path, query=query, params=params)
+        items = self._client.get_value(path, query=query, params=params)
+        return [_models.TaxGroup.model_validate(item) for item in items]
 
     def update(
         self,
         company_id: str,
         tax_group_id: str,
-        body: Mapping[str, Any] | None = None,
+        body: _models.TaxGroupUpdate | Mapping[str, Any] | None = None,
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
         etag: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.TaxGroup:
         """Update taxGroups
 
         Updates a taxGroup object in Dynamics 365 Business Central.
@@ -12536,6 +13375,8 @@ class TaxGroupsClient(_EntityClient):
         HTTP method: PATCH
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_taxgroup_update
         Operation id: dynamics_taxgroup_update
+        Request model: TaxGroupUpdate
+        Response model: TaxGroup
 
         Example request:
         PATCH https://{businesscentralPrefix}/api/v1.0/companies({id})/taxGroups({id})
@@ -12565,13 +13406,14 @@ class TaxGroupsClient(_EntityClient):
             + _path_value(tax_group_id)
             + ')'
         )
-        return self._client.patch(
+        data = self._client.patch(
             path,
-            json=body,
+            json=_body_payload(body),
             query=query,
             params=params,
             etag=etag,
         )
+        return _models.TaxGroup.model_validate(data)
 
 class TimeRegistrationEntriesClient(_EntityClient):
     """Generated operations for ``time_registration_entries``."""
@@ -12580,11 +13422,11 @@ class TimeRegistrationEntriesClient(_EntityClient):
         self,
         company_id: str,
         timeregistration_id: str,
-        body: Mapping[str, Any] | None = None,
+        body: _models.TimeRegistrationEntryCreate | Mapping[str, Any] | None = None,
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.TimeRegistrationEntry:
         """Create timeRegistrationEntry
 
         Creates a attachment object in Dynamics 365 Business Central.
@@ -12592,6 +13434,8 @@ class TimeRegistrationEntriesClient(_EntityClient):
         HTTP method: POST
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_timeRegistrationEntry_create
         Operation id: dynamics_timeRegistrationEntry_create
+        Request model: TimeRegistrationEntryCreate
+        Response model: TimeRegistrationEntry
 
         Example request:
         POST https://{businesscentralPrefix}/api/v2.0/companies({id})/timeRegistrationEntries
@@ -12630,7 +13474,13 @@ class TimeRegistrationEntriesClient(_EntityClient):
             + _path_value(timeregistration_id)
             + ')'
         )
-        return self._client.post(path, json=body, query=query, params=params)
+        data = self._client.post(
+            path,
+            json=_body_payload(body),
+            query=query,
+            params=params,
+        )
+        return _models.TimeRegistrationEntry.model_validate(data)
 
     def delete(
         self,
@@ -12672,7 +13522,7 @@ class TimeRegistrationEntriesClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.TimeRegistrationEntry:
         """Get timeRegistrationEntries
 
         Gets timeRegistrationEntries object in Dynamics 365 Business Central.
@@ -12680,6 +13530,7 @@ class TimeRegistrationEntriesClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_timeRegistrationEntry_get
         Operation id: dynamics_timeRegistrationEntry_get
+        Response model: TimeRegistrationEntry
 
         Example request:
         GET https://{businesscentralPrefix}/api/v2.0/companies({id})timeRegistrationEntries?$...
@@ -12707,7 +13558,8 @@ class TimeRegistrationEntriesClient(_EntityClient):
             + _path_value(timeregistration_id)
             + ')'
         )
-        return self._client.get(path, query=query, params=params)
+        data = self._client.get(path, query=query, params=params)
+        return _models.TimeRegistrationEntry.model_validate(data)
 
     def list(
         self,
@@ -12715,7 +13567,7 @@ class TimeRegistrationEntriesClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> list[dict[str, Any]]:
+    ) -> list[_models.TimeRegistrationEntry]:
         """List timeRegistrationEntries
 
         List timeRegistrationEntries objects.
@@ -12723,21 +13575,23 @@ class TimeRegistrationEntriesClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_timeRegistrationEntry_get
         Operation id: dynamics_timeRegistrationEntry_list
+        Response model: list[TimeRegistrationEntry]
         """
 
         path = '/companies(' + _path_value(company_id) + ')/timeRegistrationEntries'
-        return self._client.get_value(path, query=query, params=params)
+        items = self._client.get_value(path, query=query, params=params)
+        return [_models.TimeRegistrationEntry.model_validate(item) for item in items]
 
     def update(
         self,
         company_id: str,
         timeregistration_id: str,
-        body: Mapping[str, Any] | None = None,
+        body: _models.TimeRegistrationEntryUpdate | Mapping[str, Any] | None = None,
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
         etag: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.TimeRegistrationEntry:
         """Update timeRegistrationEntries
 
         Patch a timeRegistrationEntries in Dynamics 365 Business Central.
@@ -12745,6 +13599,8 @@ class TimeRegistrationEntriesClient(_EntityClient):
         HTTP method: PATCH
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_timeRegistrationEntry_update
         Operation id: dynamics_timeRegistrationEntry_update
+        Request model: TimeRegistrationEntryUpdate
+        Response model: TimeRegistrationEntry
 
         Example request:
         PATCH https://{businesscentralPrefix}/api/v2.0/companies({id})/timeRegistrationEntrie...
@@ -12777,13 +13633,14 @@ class TimeRegistrationEntriesClient(_EntityClient):
             + _path_value(timeregistration_id)
             + ')'
         )
-        return self._client.patch(
+        data = self._client.patch(
             path,
-            json=body,
+            json=_body_payload(body),
             query=query,
             params=params,
             etag=etag,
         )
+        return _models.TimeRegistrationEntry.model_validate(data)
 
 class TrialBalancesClient(_EntityClient):
     """Generated operations for ``trial_balances``."""
@@ -12795,7 +13652,7 @@ class TrialBalancesClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.TrialBalance:
         """Get trialBalance
 
         Gets a trial balance object in Dynamics 365 Business Central.
@@ -12803,6 +13660,7 @@ class TrialBalancesClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_trialbalance_get
         Operation id: dynamics_trialbalance_get
+        Response model: TrialBalance
 
         Example request:
         GET https://{businesscentralPrefix}/api/v2.0/companies({id})/trialBalances?$orderby n...
@@ -12826,7 +13684,8 @@ class TrialBalancesClient(_EntityClient):
             + _path_value(trial_balance_id)
             + ')'
         )
-        return self._client.get(path, query=query, params=params)
+        data = self._client.get(path, query=query, params=params)
+        return _models.TrialBalance.model_validate(data)
 
     def list(
         self,
@@ -12834,7 +13693,7 @@ class TrialBalancesClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> list[dict[str, Any]]:
+    ) -> list[_models.TrialBalance]:
         """List trialBalances
 
         List trialBalances objects.
@@ -12842,10 +13701,12 @@ class TrialBalancesClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_trialbalance_get
         Operation id: dynamics_trialbalance_list
+        Response model: list[TrialBalance]
         """
 
         path = '/companies(' + _path_value(company_id) + ')/trialBalances'
-        return self._client.get_value(path, query=query, params=params)
+        items = self._client.get_value(path, query=query, params=params)
+        return [_models.TrialBalance.model_validate(item) for item in items]
 
 class UnitsOfMeasuresClient(_EntityClient):
     """Generated operations for ``units_of_measures``."""
@@ -12853,11 +13714,11 @@ class UnitsOfMeasuresClient(_EntityClient):
     def create(
         self,
         company_id: str,
-        body: Mapping[str, Any] | None = None,
+        body: _models.UnitsOfMeasureCreate | Mapping[str, Any] | None = None,
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.UnitsOfMeasure:
         """Create unitsOfMeasure
 
         Creates a unitOfMeasure object in Dynamics 365 Business Central.
@@ -12865,6 +13726,8 @@ class UnitsOfMeasuresClient(_EntityClient):
         HTTP method: POST
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_unitofmeasure_create
         Operation id: dynamics_unitofmeasure_create
+        Request model: UnitsOfMeasureCreate
+        Response model: UnitsOfMeasure
 
         Example request:
         POST https://{businesscentralPrefix}/api/v1.0/companies({id})/unitsOfMeasure
@@ -12892,7 +13755,13 @@ class UnitsOfMeasuresClient(_EntityClient):
         """
 
         path = '/companies(' + _path_value(company_id) + ')/unitsOfMeasure'
-        return self._client.post(path, json=body, query=query, params=params)
+        data = self._client.post(
+            path,
+            json=_body_payload(body),
+            query=query,
+            params=params,
+        )
+        return _models.UnitsOfMeasure.model_validate(data)
 
     def delete(
         self,
@@ -12934,7 +13803,7 @@ class UnitsOfMeasuresClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.UnitsOfMeasure:
         """Get unitsOfMeasure
 
         Gets a unitOfMeasure object in Dynamics 365 Business Central.
@@ -12942,6 +13811,7 @@ class UnitsOfMeasuresClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_unitofmeasure_get
         Operation id: dynamics_unitofmeasure_get
+        Response model: UnitsOfMeasure
 
         Example request:
         GET https://{businesscentralPrefix}/api/v1.0/companies({id})/unitsOfMeasure({id})
@@ -12964,7 +13834,8 @@ class UnitsOfMeasuresClient(_EntityClient):
             + _path_value(units_of_measure_id)
             + ')'
         )
-        return self._client.get(path, query=query, params=params)
+        data = self._client.get(path, query=query, params=params)
+        return _models.UnitsOfMeasure.model_validate(data)
 
     def list(
         self,
@@ -12972,7 +13843,7 @@ class UnitsOfMeasuresClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> list[dict[str, Any]]:
+    ) -> list[_models.UnitsOfMeasure]:
         """List unitsOfMeasure
 
         List unitsOfMeasure objects.
@@ -12980,21 +13851,23 @@ class UnitsOfMeasuresClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_unitofmeasure_get
         Operation id: dynamics_unitofmeasure_list
+        Response model: list[UnitsOfMeasure]
         """
 
         path = '/companies(' + _path_value(company_id) + ')/unitsOfMeasure'
-        return self._client.get_value(path, query=query, params=params)
+        items = self._client.get_value(path, query=query, params=params)
+        return [_models.UnitsOfMeasure.model_validate(item) for item in items]
 
     def update(
         self,
         company_id: str,
         units_of_measure_id: str,
-        body: Mapping[str, Any] | None = None,
+        body: _models.UnitsOfMeasureUpdate | Mapping[str, Any] | None = None,
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
         etag: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.UnitsOfMeasure:
         """Update unitsOfMeasure
 
         Updates a unitOfMeasure object in Dynamics 365 Business Central.
@@ -13002,6 +13875,8 @@ class UnitsOfMeasuresClient(_EntityClient):
         HTTP method: PATCH
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_unitofmeasure_update
         Operation id: dynamics_unitofmeasure_update
+        Request model: UnitsOfMeasureUpdate
+        Response model: UnitsOfMeasure
 
         Example request:
         PATCH https://{businesscentralPrefix}/api/v1.0/companies({id})/unitsOfMeasure({id})
@@ -13032,13 +13907,14 @@ class UnitsOfMeasuresClient(_EntityClient):
             + _path_value(units_of_measure_id)
             + ')'
         )
-        return self._client.patch(
+        data = self._client.patch(
             path,
-            json=body,
+            json=_body_payload(body),
             query=query,
             params=params,
             etag=etag,
         )
+        return _models.UnitsOfMeasure.model_validate(data)
 
 class VendorsClient(_EntityClient):
     """Generated operations for ``vendors``."""
@@ -13046,11 +13922,11 @@ class VendorsClient(_EntityClient):
     def create(
         self,
         company_id: str,
-        body: Mapping[str, Any] | None = None,
+        body: _models.VendorCreate | Mapping[str, Any] | None = None,
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.Vendor:
         """Create vendors
 
         Creates a vendor object in Dynamics 365 Business Central.
@@ -13058,6 +13934,8 @@ class VendorsClient(_EntityClient):
         HTTP method: POST
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_vendor_create
         Operation id: dynamics_vendor_create
+        Request model: VendorCreate
+        Response model: Vendor
 
         Example request:
         POST https://{businesscentralPrefix}/api/v2.0/companies({id})/vendors
@@ -13091,7 +13969,13 @@ class VendorsClient(_EntityClient):
         """
 
         path = '/companies(' + _path_value(company_id) + ')/vendors'
-        return self._client.post(path, json=body, query=query, params=params)
+        data = self._client.post(
+            path,
+            json=_body_payload(body),
+            query=query,
+            params=params,
+        )
+        return _models.Vendor.model_validate(data)
 
     def delete(
         self,
@@ -13133,7 +14017,7 @@ class VendorsClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.Vendor:
         """Get vendors
 
         Gets a vendor object in Dynamics 365 Business Central.
@@ -13141,6 +14025,7 @@ class VendorsClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_vendor_get
         Operation id: dynamics_vendor_get
+        Response model: Vendor
 
         Example request:
         GET https://{businesscentralPrefix}/api/v2.0/companies({id})/vendors({id})
@@ -13168,7 +14053,8 @@ class VendorsClient(_EntityClient):
             + _path_value(vendor_id)
             + ')'
         )
-        return self._client.get(path, query=query, params=params)
+        data = self._client.get(path, query=query, params=params)
+        return _models.Vendor.model_validate(data)
 
     def list(
         self,
@@ -13176,7 +14062,7 @@ class VendorsClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> list[dict[str, Any]]:
+    ) -> list[_models.Vendor]:
         """List vendors
 
         List vendors objects.
@@ -13184,21 +14070,23 @@ class VendorsClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_vendor_get
         Operation id: dynamics_vendor_list
+        Response model: list[Vendor]
         """
 
         path = '/companies(' + _path_value(company_id) + ')/vendors'
-        return self._client.get_value(path, query=query, params=params)
+        items = self._client.get_value(path, query=query, params=params)
+        return [_models.Vendor.model_validate(item) for item in items]
 
     def update(
         self,
         company_id: str,
         vendor_id: str,
-        body: Mapping[str, Any] | None = None,
+        body: _models.VendorUpdate | Mapping[str, Any] | None = None,
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
         etag: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.Vendor:
         """Update vendors
 
         Updates a vendor object in Dynamics 365 Business Central.
@@ -13206,6 +14094,8 @@ class VendorsClient(_EntityClient):
         HTTP method: PATCH
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_vendor_update
         Operation id: dynamics_vendor_update
+        Request model: VendorUpdate
+        Response model: Vendor
 
         Example request:
         PATCH https://{businesscentralPrefix}/api/v2.0/companies({id})/vendors({id})
@@ -13239,13 +14129,14 @@ class VendorsClient(_EntityClient):
             + _path_value(vendor_id)
             + ')'
         )
-        return self._client.patch(
+        data = self._client.patch(
             path,
-            json=body,
+            json=_body_payload(body),
             query=query,
             params=params,
             etag=etag,
         )
+        return _models.Vendor.model_validate(data)
 
 class VendorPaymentsClient(_EntityClient):
     """Generated operations for ``vendor_payments``."""
@@ -13257,7 +14148,7 @@ class VendorPaymentsClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.VendorPayment:
         """Create vendorPayments
 
         Creates a vendorPayment object in Dynamics 365 Business Central.
@@ -13265,6 +14156,7 @@ class VendorPaymentsClient(_EntityClient):
         HTTP method: POST
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_vendorpayment_create
         Operation id: dynamics_vendorpayment_create
+        Response model: VendorPayment
 
         Example request:
         POST https://{businesscentralPrefix}/api/v2.0/companies({id})/vendorPayments
@@ -13284,7 +14176,13 @@ class VendorPaymentsClient(_EntityClient):
         """
 
         path = '/companies(' + _path_value(company_id) + ')/vendorPayments'
-        return self._client.post(path, json=body, query=query, params=params)
+        data = self._client.post(
+            path,
+            json=_body_payload(body),
+            query=query,
+            params=params,
+        )
+        return _models.VendorPayment.model_validate(data)
 
     def delete(
         self,
@@ -13326,7 +14224,7 @@ class VendorPaymentsClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.VendorPayment:
         """Get vendorPayments
 
         Gets a vendorPayment object in Dynamics 365 Business Central.
@@ -13334,6 +14232,7 @@ class VendorPaymentsClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_vendorpayment_get
         Operation id: dynamics_vendorpayment_get
+        Response model: VendorPayment
 
         Example request:
         GET https://{businesscentralPrefix}/api/v2.0/companies({id})/vendorPayments({id})
@@ -13351,7 +14250,8 @@ class VendorPaymentsClient(_EntityClient):
             + _path_value(vendor_payment_id)
             + ')'
         )
-        return self._client.get(path, query=query, params=params)
+        data = self._client.get(path, query=query, params=params)
+        return _models.VendorPayment.model_validate(data)
 
     def list(
         self,
@@ -13359,7 +14259,7 @@ class VendorPaymentsClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> list[dict[str, Any]]:
+    ) -> list[_models.VendorPayment]:
         """List vendorPayments
 
         List vendorPayments objects.
@@ -13367,10 +14267,12 @@ class VendorPaymentsClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_vendorpayment_get
         Operation id: dynamics_vendorpayment_list
+        Response model: list[VendorPayment]
         """
 
         path = '/companies(' + _path_value(company_id) + ')/vendorPayments'
-        return self._client.get_value(path, query=query, params=params)
+        items = self._client.get_value(path, query=query, params=params)
+        return [_models.VendorPayment.model_validate(item) for item in items]
 
     def update(
         self,
@@ -13381,7 +14283,7 @@ class VendorPaymentsClient(_EntityClient):
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
         etag: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.VendorPayment:
         """Update vendorPayments
 
         Updates a vendorPayment object in Dynamics 365 Business Central.
@@ -13389,6 +14291,7 @@ class VendorPaymentsClient(_EntityClient):
         HTTP method: PATCH
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_vendorpayment_update
         Operation id: dynamics_vendorpayment_update
+        Response model: VendorPayment
 
         Example request:
         PATCH https://{businesscentralPrefix}/api/v2.0/companies({id})/vendorPayments({id})
@@ -13414,13 +14317,14 @@ class VendorPaymentsClient(_EntityClient):
             + _path_value(id)
             + ')'
         )
-        return self._client.patch(
+        data = self._client.patch(
             path,
-            json=body,
+            json=_body_payload(body),
             query=query,
             params=params,
             etag=etag,
         )
+        return _models.VendorPayment.model_validate(data)
 
 class VendorPaymentJournalsClient(_EntityClient):
     """Generated operations for ``vendor_payment_journals``."""
@@ -13428,11 +14332,11 @@ class VendorPaymentJournalsClient(_EntityClient):
     def create(
         self,
         company_id: str,
-        body: Mapping[str, Any] | None = None,
+        body: _models.VendorPaymentJournalCreate | Mapping[str, Any] | None = None,
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.VendorPaymentJournal:
         """Create vendorPaymentJournals
 
         Creates a vendorPaymentJournal object in Dynamics 365 Business Central.
@@ -13440,6 +14344,8 @@ class VendorPaymentJournalsClient(_EntityClient):
         HTTP method: POST
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_vendorpaymentjournal_create
         Operation id: dynamics_vendorpaymentjournal_create
+        Request model: VendorPaymentJournalCreate
+        Response model: VendorPaymentJournal
 
         Example request:
         POST https://{businesscentralPrefix}/api/v2.0/companies({id})/vendorPaymentJournals
@@ -13466,7 +14372,13 @@ class VendorPaymentJournalsClient(_EntityClient):
         """
 
         path = '/companies(' + _path_value(company_id) + ')/vendorPaymentJournals'
-        return self._client.post(path, json=body, query=query, params=params)
+        data = self._client.post(
+            path,
+            json=_body_payload(body),
+            query=query,
+            params=params,
+        )
+        return _models.VendorPaymentJournal.model_validate(data)
 
     def delete(
         self,
@@ -13508,7 +14420,7 @@ class VendorPaymentJournalsClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.VendorPaymentJournal:
         """Get vendorPaymentJournals
 
         Gets a vendorPaymentJournal object in Dynamics 365 Business Central.
@@ -13516,6 +14428,7 @@ class VendorPaymentJournalsClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_vendorpaymentjournal_get
         Operation id: dynamics_vendorpaymentjournal_get
+        Response model: VendorPaymentJournal
 
         Example request:
         GET https://{businesscentralPrefix}/api/v2.0/companies({id})/vendorPaymentJournals({id})
@@ -13538,7 +14451,8 @@ class VendorPaymentJournalsClient(_EntityClient):
             + _path_value(vendor_payment_journal_id)
             + ')'
         )
-        return self._client.get(path, query=query, params=params)
+        data = self._client.get(path, query=query, params=params)
+        return _models.VendorPaymentJournal.model_validate(data)
 
     def list(
         self,
@@ -13546,7 +14460,7 @@ class VendorPaymentJournalsClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> list[dict[str, Any]]:
+    ) -> list[_models.VendorPaymentJournal]:
         """List vendorPaymentJournals
 
         List vendorPaymentJournals objects.
@@ -13554,21 +14468,23 @@ class VendorPaymentJournalsClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_vendorpaymentjournal_get
         Operation id: dynamics_vendorpaymentjournal_list
+        Response model: list[VendorPaymentJournal]
         """
 
         path = '/companies(' + _path_value(company_id) + ')/vendorPaymentJournals'
-        return self._client.get_value(path, query=query, params=params)
+        items = self._client.get_value(path, query=query, params=params)
+        return [_models.VendorPaymentJournal.model_validate(item) for item in items]
 
     def update(
         self,
         company_id: str,
         vendor_payment_journal_id: str,
-        body: Mapping[str, Any] | None = None,
+        body: _models.VendorPaymentJournalUpdate | Mapping[str, Any] | None = None,
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
         etag: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.VendorPaymentJournal:
         """Update vendorPaymentJournals
 
         Updates a vendorPaymentJournal object in Dynamics 365 Business Central.
@@ -13576,6 +14492,8 @@ class VendorPaymentJournalsClient(_EntityClient):
         HTTP method: PATCH
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_vendorpaymentjournal_update
         Operation id: dynamics_vendorpaymentjournal_update
+        Request model: VendorPaymentJournalUpdate
+        Response model: VendorPaymentJournal
 
         Example request:
         PATCH https://{businesscentralPrefix}/api/v2.0/companies({id})/vendorPaymentJournals(...
@@ -13607,13 +14525,14 @@ class VendorPaymentJournalsClient(_EntityClient):
             + _path_value(vendor_payment_journal_id)
             + ')'
         )
-        return self._client.patch(
+        data = self._client.patch(
             path,
-            json=body,
+            json=_body_payload(body),
             query=query,
             params=params,
             etag=etag,
         )
+        return _models.VendorPaymentJournal.model_validate(data)
 
 class VendorPurchasesClient(_EntityClient):
     """Generated operations for ``vendor_purchases``."""
@@ -13627,7 +14546,7 @@ class VendorPurchasesClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> dict[str, Any]:
+    ) -> _models.VendorPurchase:
         """Get vendorPurchases
 
         Gets a vendorPurchase object in Dynamics 365 Business Central.
@@ -13635,6 +14554,7 @@ class VendorPurchasesClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_vendorpurchase_get
         Operation id: dynamics_vendorpurchase_get
+        Response model: VendorPurchase
 
         Example request:
         GET https://{businesscentralPrefix}/api/v2.0/companies({id})/vendorPurchases({vendorI...
@@ -13660,7 +14580,8 @@ class VendorPurchasesClient(_EntityClient):
             + _path_value(vendor_name)
             + "')"
         )
-        return self._client.get(path, query=query, params=params)
+        data = self._client.get(path, query=query, params=params)
+        return _models.VendorPurchase.model_validate(data)
 
     def list(
         self,
@@ -13668,7 +14589,7 @@ class VendorPurchasesClient(_EntityClient):
         *,
         query: ODataQuery | dict[str, Any] | None = None,
         params: dict[str, Any] | None = None,
-    ) -> list[dict[str, Any]]:
+    ) -> list[_models.VendorPurchase]:
         """List vendorPurchases
 
         List vendorPurchases objects.
@@ -13676,7 +14597,9 @@ class VendorPurchasesClient(_EntityClient):
         HTTP method: GET
         Docs: https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/api-reference/v2.0/api/dynamics_vendorpurchase_get
         Operation id: dynamics_vendorpurchase_list
+        Response model: list[VendorPurchase]
         """
 
         path = '/companies(' + _path_value(company_id) + ')/vendorPurchases'
-        return self._client.get_value(path, query=query, params=params)
+        items = self._client.get_value(path, query=query, params=params)
+        return [_models.VendorPurchase.model_validate(item) for item in items]
